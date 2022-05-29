@@ -1,4 +1,4 @@
-package com.hudu.newarchitecture.modules;
+package io.apsy.hudu.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

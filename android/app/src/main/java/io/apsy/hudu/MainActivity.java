@@ -1,4 +1,4 @@
-package com.hudu;
+package io.apsy.hudu;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
