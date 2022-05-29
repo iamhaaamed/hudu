@@ -3,6 +3,9 @@ export const BLACK_TRANSPARENT = 'rgba(0,0,0,.6)';
 export const WHITE_TRANSPARENT = 'rgba(255,255,255,.6)';
 export const BLACK = '#000000';
 export const SEMI_BLACK = '#1F1F1F';
+export const BACKGROUND = '#F4F8FD';
+export const DISABLE_COLOR = '#AAB3C9';
+export const TAB_BAR_BACKGROUND = '#DFECFA';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';
