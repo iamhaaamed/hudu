@@ -1,4 +1,4 @@
-package com.hudu.newarchitecture.components;
+package io.apsy.hudu.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
