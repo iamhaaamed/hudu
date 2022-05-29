@@ -34,11 +34,11 @@ const fontWeight = {
 };
 
 const fontFamily = {
-  light: 'Poppins-Light',
-  regular: 'Poppins-Regular',
-  medium: 'Poppins-Medium',
-  semiBold: 'Poppins-SemiBold',
-  bold: 'Poppins-Bold',
+  light: 'HelveticaNeue-Light',
+  regular: 'HelveticaNeue',
+  medium: 'HelveticaNeue-Medium',
+  bold: 'HelveticaNeu-Bold',
+  thin: 'HelveticaNeue-Thin',
 };
 
 export {
