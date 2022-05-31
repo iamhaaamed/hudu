@@ -8,6 +8,9 @@ export {default as CustomKeyboardAwareScrollView} from './atoms/CustomKeyboardAw
 export {default as CustomPicker} from './atoms/CustomPicker';
 export {default as ProjectItem} from './atoms/ProjectItem';
 export {default as FavoriteIcon} from './atoms/FavoriteIcon';
+export {default as ProjectFavoriteIcon} from './atoms/ProjectFavoriteIcon';
+export {default as EmptyData} from './atoms/EmptyData';
+export {default as FavoriteItem} from './atoms/FavoriteItem';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';

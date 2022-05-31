@@ -138,7 +138,7 @@ const SectionSearchBox = ({
       {fetchData?.length > 0 && (
         <VStack
           position="absolute"
-          zIndex={20}
+          zIndex={200}
           bg={Colors.WHITE}
           alignSelf="center"
           w="100%"

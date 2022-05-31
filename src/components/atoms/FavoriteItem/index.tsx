@@ -2,10 +2,10 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Box, VStack, HStack} from 'native-base';
 import {Colors} from '~/styles';
-import {CustomImage, ProjectFavoriteIcon} from '~/components';
+import {CustomImage, FavoriteIcon} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 
-const ProjectItem = ({item}: {item?: any}) => {
+const FavoriteItem = ({item}: {item?: any}) => {
   const onPressHandler = () => {};
 
   return (
@@ -27,7 +27,7 @@ const ProjectItem = ({item}: {item?: any}) => {
           resizeMode="stretch">
           <VStack flex={1} justifyContent="space-between">
             <HStack w="100%" px="2" py="2">
-              <ProjectFavoriteIcon />
+              <FavoriteIcon />
             </HStack>
             <HStack alignItems="center" w="100%" px="2" h={verticalScale(24)}>
               <Box
@@ -85,7 +85,7 @@ const ProjectItem = ({item}: {item?: any}) => {
   );
 };
 
-export default ProjectItem;
+export default FavoriteItem;
 
 const styles = StyleSheet.create({
   image: {
