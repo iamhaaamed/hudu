@@ -1,29 +1,12 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Center} from 'native-base';
 import images from '~/assets/images';
 import {CustomImage} from '~/components';
 import {StyleSheet} from 'react-native';
 import {verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
-import {userDataStore} from '~/stores';
 
-export default function SplashScreen({navigation}: {navigation: any}) {
-  const {isOnboardingViewed} = userDataStore();
-
-  useEffect(() => {
-    setTimeout(() => {
-      goToNext();
-    }, 3000);
-  }, []);
-
-  const goToNext = () => {
-    if (isOnboardingViewed) {
-      navigation.replace('MainStack');
-    } else {
-      navigation.replace('onBoarding');
-    }
-  };
-
+export default function SplashScreen() {
   return (
     <Center flex={1} bg={Colors.BACKGROUND}>
       <CustomImage

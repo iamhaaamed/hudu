@@ -6,6 +6,12 @@ export const SEMI_BLACK = '#1F1F1F';
 export const BACKGROUND = '#F4F8FD';
 export const DISABLE_COLOR = '#AAB3C9';
 export const TAB_BAR_BACKGROUND = '#DFECFA';
+export const TAB_BAR_SHADOW = 'rgba(53,131,235,0.3)';
+export const BORDER_RATING = '#353639';
+export const GOLDEN = '#F8BF00';
+export const SEARCH_BACKGROUND = '#F5F5F5';
+export const LABEL_COLOR = '#BDBDBD';
+export const PLACEHOLDER = '#747783';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';

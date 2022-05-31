@@ -2,22 +2,23 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Colors} from '~/styles';
 import {TabBarButton} from '~/components';
+import {
+  PlusIcon,
+  PlusIconFill,
+  HomeIcon,
+  HomeIconFill,
+  FavoriteIcon,
+  FavoriteIconFill,
+  ProjectsIcon,
+  ProjectsIconFill,
+  HuduIcon,
+  HuduIconFill,
+} from '~/assets/icons';
 
-const CustomTabBar = ({
-  state,
-  descriptors,
-  navigation,
-}: {
-  state?: any;
-  descriptors?: any;
-  navigation?: any;
-}) => {
+const CustomTabBar = ({state, navigation}: {state?: any; navigation?: any}) => {
   return (
-    <View
-      style={[styles.container, {backgroundColor: Colors.TAB_BAR_BACKGROUND}]}>
+    <View style={styles.container}>
       {state.routes.map((route: any, index: number) => {
-        const {options} = descriptors[route.key];
-
         const isFocused = state.index === index;
 
         const onPress = () => {
@@ -33,17 +34,44 @@ const CustomTabBar = ({
           }
         };
 
-        const icon =
-          options.tabBarIcon !== undefined ? options.tabBarIcon : null;
+        switch (route.name) {
+          case 'HomeStack':
+            return (
+              <TabBarButton key={route.name} onPress={onPress}>
+                {isFocused ? <HomeIconFill /> : <HomeIcon />}
+              </TabBarButton>
+            );
+          case 'FavoriteStack':
+            return (
+              <TabBarButton key={route.name} onPress={onPress}>
+                {isFocused ? <FavoriteIconFill /> : <FavoriteIcon />}
+              </TabBarButton>
+            );
+          case 'PostStack':
+            return (
+              <TabBarButton
+                style={styles.tabBarButton}
+                key={route.name}
+                onPress={onPress}>
+                {isFocused ? <PlusIconFill /> : <PlusIcon />}
+              </TabBarButton>
+            );
+          case 'ProjectsStack':
+            return (
+              <TabBarButton key={route.name} onPress={onPress}>
+                {isFocused ? <ProjectsIconFill /> : <ProjectsIcon />}
+              </TabBarButton>
+            );
+          case 'ProfileStack':
+            return (
+              <TabBarButton key={route.name} onPress={onPress}>
+                {isFocused ? <HuduIconFill /> : <HuduIcon />}
+              </TabBarButton>
+            );
 
-        return (
-          <TabBarButton
-            key={`key${index}`}
-            onPress={onPress}
-            isFocused={isFocused}
-            icon={icon}
-          />
-        );
+          default:
+            return;
+        }
       })}
     </View>
   );
@@ -54,5 +82,16 @@ export default CustomTabBar;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    height: 50,
+    alignItems: 'flex-end',
+    backgroundColor: Colors.TAB_BAR_BACKGROUND,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+  },
+  tabBarButton: {
+    flex: 1,
+    height: 62,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
 });

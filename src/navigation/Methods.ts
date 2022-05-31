@@ -3,6 +3,7 @@ import {
   createNavigationContainerRef,
   StackActions,
 } from '@react-navigation/native';
+import {RootStackParamList} from './types';
 //import {RootStackParamList} from './types';
 
 export const navigationRef = createNavigationContainerRef();
@@ -23,7 +24,10 @@ const navigationMethod = (successCallback: () => unknown) => {
 /**
  * Navigate to a new route.
  */
-export function navigate(name: string, params?: object) {
+export function navigate<T extends keyof RootStackParamList>(
+  name: T,
+  params?: RootStackParamList[T],
+) {
   navigationMethod(() => {
     // @ts-ignore Suspended complexity warning typescript.
     navigationRef.navigate(name, params);
@@ -88,21 +92,3 @@ export function goBack() {
 export function getRootState() {
   return navigationMethod(navigationRef.getRootState);
 }
-
-/**
- * Returns the route object for the currently focused screen.
- */
-
-/*
-
-export function navigate<T extends keyof RootStackParamList>(
-    name: T,
-    params?: RootStackParamList[T],
-) {
-    navigationMethod(() => {
-        // @ts-ignore Suspended complexity warning typescript.
-        navigationRef.navigate(name, params);
-    });
-}
-
-*/
