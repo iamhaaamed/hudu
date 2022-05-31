@@ -14,6 +14,7 @@ const CustomImage = ({
   resizeMode = FastImage.resizeMode.contain,
   backgroundColor = Colors.GARY_1,
   local = false,
+  children,
 }: {
   imageSource?: any;
   style?: any;
@@ -21,6 +22,7 @@ const CustomImage = ({
   resizeMode?: 'cover' | 'center' | 'contain' | 'repeat' | 'stretch';
   backgroundColor?: any;
   local?: boolean;
+  children?: any;
 }) => {
   const [imageZoom, setImageZoom] = useState<boolean>(false);
 
@@ -53,8 +55,9 @@ const CustomImage = ({
                   priority: FastImage.priority.high,
                 }
           }
-          resizeMode={resizeMode}
-        />
+          resizeMode={resizeMode}>
+          {children && children}
+        </FastImage>
       </TouchableOpacity>
       <ModalContainer
         isVisible={imageZoom}

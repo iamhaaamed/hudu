@@ -29,7 +29,7 @@ const data = [
   },
 ];
 
-export default function OnboardingScreen({navigation}: {navigation: any}) {
+export default function OnboardingScreen() {
   const {setIsOnboardingViewed} = userDataStore(state => state);
 
   const [page, setPage] = useState(0);
@@ -42,7 +42,6 @@ export default function OnboardingScreen({navigation}: {navigation: any}) {
 
   const onPressDone = async () => {
     setIsOnboardingViewed(true);
-    navigation.replace('MainStack');
   };
 
   return (
