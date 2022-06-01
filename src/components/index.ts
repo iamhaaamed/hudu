@@ -24,6 +24,7 @@ export {default as SectionListerProjectRow} from './molecules/SectionListerProje
 export {default as SectionHudurProjectRow} from './molecules/SectionHudurProjectRow';
 export {default as SectionLeaveReview} from './molecules/SectionLeaveReview';
 export {default as ReviewModal} from './molecules/ReviewModal';
+export {default as SectionProfile} from './molecules/SectionProfile';
 
 //organisms
 export {default as CustomTabBar} from './organisms/CustomTabBar';

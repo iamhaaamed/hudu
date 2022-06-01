@@ -1,8 +1,15 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Platform, UIManager} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Platform,
+  UIManager,
+  StatusBar,
+} from 'react-native';
 import {NativeBaseProvider} from 'native-base';
 import AppNavigator from '~/navigation/AppNavigator';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {Colors} from '~/styles';
 
 if (
   Platform.OS === 'android' &&
@@ -17,6 +24,7 @@ const App = () => {
       <GestureHandlerRootView style={styles.flex1}>
         <NativeBaseProvider>
           <AppNavigator />
+          <StatusBar backgroundColor={Colors.WHITE} barStyle="dark-content" />
         </NativeBaseProvider>
       </GestureHandlerRootView>
     </SafeAreaView>
