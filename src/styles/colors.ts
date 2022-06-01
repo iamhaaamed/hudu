@@ -12,10 +12,13 @@ export const GOLDEN = '#F8BF00';
 export const SEARCH_BACKGROUND = '#F5F5F5';
 export const LABEL_COLOR = '#BDBDBD';
 export const PLACEHOLDER = '#747783';
+export const PLACEHOLDER2 = '#484848';
 export const RIGHT_ACTION_BACKGROUND = '#E5EEF7';
 export const LEFT_ACTION_BACKGROUND = '#FCEFEF';
 export const DELETE = '#5F0A0A';
 export const WAITING_BACKGROUND = '#E1ECFC';
+export const BORDER_COLOR = '#393939';
+export const INPUT = '#213950';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';

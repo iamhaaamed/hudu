@@ -1,9 +1,13 @@
 import React, {useRef} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {HStack, Text, VStack, Center, Icon} from 'native-base';
-import {scale, fontFamily, verticalScale} from '~/utils/style';
+import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
-import {SectionProjectLabel, CustomImage, CustomButton} from '~/components';
+import {
+  SectionProjectLabel,
+  CustomImage,
+  SectionLeaveReview,
+} from '~/components';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,8 +18,6 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   const deleteOnPress = () => {};
 
   const editOnPress = () => {};
-
-  const reviewOnPress = () => {};
 
   const renderRightActions = () => {
     return (
@@ -112,15 +114,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
               ${item?.lowBid}
             </Text>
           </HStack>
-          {item?.id === 1 && (
-            <CustomButton
-              outline
-              title="Leave a review"
-              onPress={reviewOnPress}
-              color={Colors.BLACK_3}
-              height={verticalScale(35)}
-            />
-          )}
+          {item?.id === 1 && <SectionLeaveReview {...{item, type: 'hudur'}} />}
         </VStack>
       </HStack>
     </Swipeable>
