@@ -118,7 +118,6 @@ export default React.forwardRef(
                       <VStack p="2">
                         {item?.title && (
                           <Text
-                            numberOfLines={1}
                             fontSize={scale(12)}
                             fontFamily={fontFamily.regular}
                             color={isEnable ? Colors.WHITE : Colors.BLACK_2}>
@@ -127,7 +126,6 @@ export default React.forwardRef(
                         )}
                         {item?.subtitle && (
                           <Text
-                            numberOfLines={1}
                             fontSize={scale(10)}
                             fontFamily={fontFamily.regular}
                             color={Colors.BLACK_2}>

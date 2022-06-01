@@ -2,6 +2,7 @@ import React from 'react';
 import {SafeAreaView, StyleSheet, Platform, UIManager} from 'react-native';
 import {NativeBaseProvider} from 'native-base';
 import AppNavigator from '~/navigation/AppNavigator';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 if (
   Platform.OS === 'android' &&
@@ -13,9 +14,11 @@ if (
 const App = () => {
   return (
     <SafeAreaView style={styles.flex1}>
-      <NativeBaseProvider>
-        <AppNavigator />
-      </NativeBaseProvider>
+      <GestureHandlerRootView style={styles.flex1}>
+        <NativeBaseProvider>
+          <AppNavigator />
+        </NativeBaseProvider>
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 };

@@ -41,6 +41,7 @@
     "react-native": "0.68.2",
     "react-native-config": "^1.4.5",
     "react-native-fast-image": "^8.5.11",
+    "react-native-gesture-handler": "^2.4.2",
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-pager-view": "^5.4.24",
