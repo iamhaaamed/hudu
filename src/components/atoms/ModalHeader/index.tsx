@@ -18,15 +18,17 @@ const ModalHeader = ({text, onPress}: {text?: string; onPress?: any}) => {
         color={Colors.BLACK_1}>
         {text}
       </Text>
-      <TouchableOpacity activeOpacity={0.7} onPress={onPressHandler}>
-        <Center p="1">
-          <Icon
-            as={<MaterialCommunityIcons name="close" />}
-            size={scale(24)}
-            color={Colors.BLACK_1}
-          />
-        </Center>
-      </TouchableOpacity>
+      {onPress && (
+        <TouchableOpacity activeOpacity={0.7} onPress={onPressHandler}>
+          <Center p="1">
+            <Icon
+              as={<MaterialCommunityIcons name="close" />}
+              size={scale(24)}
+              color={Colors.BLACK_1}
+            />
+          </Center>
+        </TouchableOpacity>
+      )}
     </HStack>
   );
 };

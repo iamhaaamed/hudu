@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {HStack, Text, VStack, Center, Icon} from 'native-base';
 import {scale, fontFamily} from '~/utils/style';
@@ -7,6 +7,7 @@ import {
   SectionProjectLabel,
   CustomImage,
   SectionLeaveReview,
+  EditModal,
 } from '~/components';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
@@ -15,9 +16,21 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const SectionHudurProjectRow = ({item}: {item: any}) => {
   const swipeable = useRef<Swipeable>(null);
 
+  const [editModalVisible, setEditModalVisible] = useState(false);
+
   const deleteOnPress = () => {};
 
-  const editOnPress = () => {};
+  const editOnPress = () => {
+    setEditModalVisible(true);
+  };
+
+  const closeEditModal = () => {
+    setEditModalVisible(false);
+  };
+
+  const submitEditModal = (formData: any) => {
+    setEditModalVisible(false);
+  };
 
   const renderRightActions = () => {
     return (
@@ -60,64 +73,74 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   };
 
   return (
-    <Swipeable
-      ref={swipeable}
-      renderRightActions={renderRightActions}
-      renderLeftActions={renderLeftActions}>
-      <HStack
-        px="2"
-        py="2"
-        space="2"
-        mx="1"
-        my="1"
-        flex={1}
-        borderRadius="lg"
-        bg={Colors.WHITE}
-        shadow="2">
-        <CustomImage
-          local
-          imageSource={item?.image}
-          style={styles.image}
-          resizeMode="stretch"
-        />
-        <VStack flex={1} space="1">
-          <HStack alignItems="center">
+    <>
+      <Swipeable
+        ref={swipeable}
+        renderRightActions={renderRightActions}
+        renderLeftActions={renderLeftActions}>
+        <HStack
+          px="2"
+          py="2"
+          space="2"
+          mx="1"
+          my="1"
+          flex={1}
+          borderRadius="lg"
+          bg={Colors.WHITE}
+          shadow="2">
+          <CustomImage
+            local
+            imageSource={item?.image}
+            style={styles.image}
+            resizeMode="stretch"
+          />
+          <VStack flex={1} space="1">
+            <HStack alignItems="center">
+              <Text
+                flex={1}
+                numberOfLines={1}
+                fontSize={scale(16)}
+                fontFamily={fontFamily.medium}
+                color={Colors.BLACK_1}>
+                {item?.title}
+              </Text>
+              <SectionProjectLabel {...{item}} />
+            </HStack>
             <Text
               flex={1}
-              numberOfLines={1}
-              fontSize={scale(16)}
-              fontFamily={fontFamily.medium}
-              color={Colors.BLACK_1}>
-              {item?.title}
-            </Text>
-            <SectionProjectLabel {...{item}} />
-          </HStack>
-          <Text
-            flex={1}
-            numberOfLines={3}
-            fontSize={scale(14)}
-            fontFamily={fontFamily.regular}
-            color={Colors.PLACEHOLDER}>
-            {item?.description}
-          </Text>
-          <HStack alignItems="center" justifyContent="space-between">
-            <Text
+              numberOfLines={3}
               fontSize={scale(14)}
               fontFamily={fontFamily.regular}
-              color={Colors.BLACK_1}>
-              Your bid
+              color={Colors.PLACEHOLDER}>
+              {item?.description}
             </Text>
-            <Text
-              fontSize={scale(16)}
-              fontFamily={fontFamily.regular}
-              color={Colors.INFO}>
-              ${item?.lowBid}
-            </Text>
-          </HStack>
-          {item?.id === 1 && <SectionLeaveReview {...{item, type: 'hudur'}} />}
-        </VStack>
-      </HStack>
-    </Swipeable>
+            <HStack alignItems="center" justifyContent="space-between">
+              <Text
+                fontSize={scale(14)}
+                fontFamily={fontFamily.regular}
+                color={Colors.BLACK_1}>
+                Your bid
+              </Text>
+              <Text
+                fontSize={scale(16)}
+                fontFamily={fontFamily.regular}
+                color={Colors.INFO}>
+                ${item?.lowBid}
+              </Text>
+            </HStack>
+            {item?.id === 1 && (
+              <SectionLeaveReview {...{item, type: 'hudur'}} />
+            )}
+          </VStack>
+        </HStack>
+      </Swipeable>
+      <EditModal
+        visible={editModalVisible}
+        onClose={closeEditModal}
+        onSubmit={submitEditModal}
+        title="Bid details"
+      />
+    </>
   );
 };
 

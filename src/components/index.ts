@@ -23,7 +23,10 @@ export {default as SectionSort} from './molecules/SectionSort';
 export {default as SectionListerProjectRow} from './molecules/SectionListerProjectRow';
 export {default as SectionHudurProjectRow} from './molecules/SectionHudurProjectRow';
 export {default as SectionLeaveReview} from './molecules/SectionLeaveReview';
+export {default as SectionChooseHudur} from './molecules/SectionChooseHudur';
 export {default as ReviewModal} from './molecules/ReviewModal';
+export {default as EditModal} from './molecules/EditModal';
+export {default as ChooseHudurModal} from './molecules/ChooseHudurModal';
 
 //organisms
 export {default as CustomTabBar} from './organisms/CustomTabBar';
