@@ -3,19 +3,13 @@ import {HStack, VStack, Box, Center, View} from 'native-base';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {CustomPicker, ProjectItem} from '~/components';
+import {SectionSort, ProjectItem} from '~/components';
 import images from '~/assets/images';
 import {scale} from '~/utils/style';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
-
-const sortData = [
-  {id: 0, title: 'Option1', value: 'Option1'},
-  {id: 1, title: 'Option2', value: 'Option2'},
-  {id: 2, title: 'Option3', value: 'Option3'},
-];
 
 const projects = [
   {
@@ -61,12 +55,8 @@ const SectionProjects = () => {
       <VStack space="3" px="4" flex={1}>
         <HStack justifyContent="flex-end">
           <Box flex={1} />
-          <Center w={scale(90)}>
-            <CustomPicker
-              {...register('sort')}
-              data={sortData}
-              placeholder="Sort"
-            />
+          <Center w={scale(120)}>
+            <SectionSort {...register('sort')} />
           </Center>
         </HStack>
         <View

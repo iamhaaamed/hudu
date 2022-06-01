@@ -1,7 +1,12 @@
 import React from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {Text, VStack, HStack, Center} from 'native-base';
-import {CustomContainer, FavoriteItem, CustomPicker} from '~/components';
+import {
+  CustomContainer,
+  FavoriteItem,
+  SectionSort,
+  EmptyData,
+} from '~/components';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -12,12 +17,6 @@ import {Colors} from '~/styles';
 const schema = yup.object().shape({
   sort: yup.string(),
 });
-
-const sortData = [
-  {id: 0, title: 'Option1', value: 'Option1'},
-  {id: 1, title: 'Option2', value: 'Option2'},
-  {id: 2, title: 'Option3', value: 'Option3'},
-];
 
 const favorites = [
   {
@@ -74,17 +73,15 @@ const FavoriteScreen = () => {
               color={Colors.BLACK_1}>
               Favorites
             </Text>
-            <Center w={scale(90)}>
-              <CustomPicker
-                {...register('sort')}
-                data={sortData}
-                placeholder="Sort"
-              />
+            <Center w={scale(120)}>
+              <SectionSort {...register('sort')} />
             </Center>
           </HStack>
           <FlatList
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={styles.columnWrapperStyle}
+            contentContainerStyle={styles.contentContainerStyle}
+            ListEmptyComponent={EmptyData}
             numColumns={2}
             data={favorites}
             renderItem={renderItem}
@@ -107,5 +104,8 @@ const styles = StyleSheet.create({
   columnWrapperStyle: {
     justifyContent: 'space-between',
     paddingHorizontal: scale(16),
+  },
+  contentContainerStyle: {
+    flexGrow: 1,
   },
 });

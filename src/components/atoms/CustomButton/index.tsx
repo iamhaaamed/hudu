@@ -49,7 +49,7 @@ export default function CustomButton({
           ) : (
             <Text
               fontSize={scale(14)}
-              fontFamily={fontFamily.bold}
+              fontFamily={outline ? fontFamily.regular : fontFamily.bold}
               color={outline ? color : Colors.WHITE}>
               {title}
             </Text>
