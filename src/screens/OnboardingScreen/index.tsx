@@ -1,12 +1,13 @@
 import React, {useRef, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {Box, Center, Text, VStack, HStack} from 'native-base';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Box, Center, Text, VStack, HStack, IconButton} from 'native-base';
 import PagerView from 'react-native-pager-view';
 import {Colors} from '~/styles';
 import images from '~/assets/images';
 import {CustomButton, CustomImage} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {userDataStore} from '~/stores';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const data = [
   {
@@ -40,7 +41,15 @@ export default function OnboardingScreen() {
     viewPager.current.setPage(page + delta);
   };
 
+  const moveBack = (viewPager: any, page: number, delta: any) => {
+    viewPager.current.setPage(page - delta);
+  };
+
   const onPressDone = async () => {
+    setIsOnboardingViewed(true);
+  };
+
+  const skipOnPress = () => {
     setIsOnboardingViewed(true);
   };
 
@@ -52,7 +61,37 @@ export default function OnboardingScreen() {
         initialPage={0}
         onPageSelected={e => setPage(e.nativeEvent.position)}>
         {data.map(({title, description, imageUrl}, index: number) => (
-          <Box key={index + 1} flex={1} px="4" pt="8">
+          <Box key={index + 1} flex={1} px="4">
+            <HStack
+              h={verticalScale(45)}
+              my="4"
+              alignItems="center"
+              justifyContent="space-between">
+              {index > 0 ? (
+                <IconButton
+                  onPress={() => moveBack(viewPager, page, 1)}
+                  icon={
+                    <Ionicons
+                      name="chevron-back"
+                      color={Colors.BLACK}
+                      size={24}
+                    />
+                  }
+                />
+              ) : (
+                <Box size="2" />
+              )}
+              {index < data?.length - 1 && (
+                <TouchableOpacity activeOpacity={0.7} onPress={skipOnPress}>
+                  <Text
+                    fontSize={scale(16)}
+                    fontFamily={fontFamily.medium}
+                    color={Colors.BLACK_3}>
+                    Skip
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </HStack>
             <Text
               textAlign="center"
               fontSize={scale(40)}
