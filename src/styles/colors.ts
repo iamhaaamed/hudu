@@ -21,6 +21,9 @@ export const BORDER_COLOR = '#393939';
 export const INPUT = '#213950';
 export const RIGHT_TEXT = '#7E7E7E';
 export const RED_RIPPLE_COLOR = 'rgba(220,38,95,0.5)';
+export const IMAGE_UPLOADER_BACKGROUND = '#E7EBEF';
+export const WHITE_RIPPLE_COLOR = 'rgba(252,252,253,0.75)';
+export const CANCEL_BUTTON = '#E6ACAD';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';
