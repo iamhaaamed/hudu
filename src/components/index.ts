@@ -14,6 +14,7 @@ export {default as FavoriteItem} from './atoms/FavoriteItem';
 export {default as SectionProjectLabel} from './atoms/SectionProjectLabel';
 export {default as CustomInput} from './atoms/CustomInput';
 export {default as ModalHeader} from './atoms/ModalHeader';
+export {default as ProfilePicker} from './atoms/ProfilePicker';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';
