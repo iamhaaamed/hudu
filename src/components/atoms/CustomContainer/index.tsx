@@ -23,7 +23,7 @@ export default function CustomContainer({
   return (
     <View style={[styles.safeArea, style, {backgroundColor: backgroundColor}]}>
       {isLoading && <Loading />}
-      {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
+      {/* {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />} */}
       {children}
     </View>
   );

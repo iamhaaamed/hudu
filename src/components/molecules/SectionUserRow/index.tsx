@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Text, HStack, VStack, Icon, IconButton} from 'native-base';
+import {StyleSheet} from 'react-native';
+import {Text, HStack, VStack, IconButton} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {fontFamily, scale} from '~/utils/style';
 import {Colors} from '~/styles';

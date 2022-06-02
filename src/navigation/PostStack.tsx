@@ -1,12 +1,13 @@
 import React from 'react';
 import {CommonActions} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {PostScreen} from '~/screens';
+import {PostScreen, PreviewPostScreen} from '~/screens';
 
 const Stack = createNativeStackNavigator();
 
 export type PostStackParamList = {
   Post: undefined;
+  PreviewPost: undefined;
 };
 
 const navigatorOptions = {
@@ -18,6 +19,10 @@ const screens = [
   {
     name: 'Post',
     component: PostScreen,
+  },
+  {
+    name: 'PreviewPost',
+    component: PreviewPostScreen,
   },
 ];
 

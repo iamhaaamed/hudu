@@ -6,6 +6,7 @@ export {default as HomeScreen} from './Home/HomeScreen';
 
 // Post
 export {default as PostScreen} from './Post/PostScreen';
+export {default as PreviewPostScreen} from './Post/PreviewPostScreen';
 
 // Profile
 export {default as ProfileScreen} from './Profile/ProfileScreen';
