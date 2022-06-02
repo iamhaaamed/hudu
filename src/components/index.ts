@@ -27,6 +27,7 @@ export {default as SectionChooseHudur} from './molecules/SectionChooseHudur';
 export {default as ReviewModal} from './molecules/ReviewModal';
 export {default as EditModal} from './molecules/EditModal';
 export {default as ChooseHudurModal} from './molecules/ChooseHudurModal';
+export {default as SectionProfile} from './molecules/SectionProfile';
 
 //organisms
 export {default as CustomTabBar} from './organisms/CustomTabBar';

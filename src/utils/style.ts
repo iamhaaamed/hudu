@@ -34,11 +34,11 @@ const fontWeight = {
 };
 
 const fontFamily = {
-  light: 'HelveticaNeue-Light',
+  light: 'HelveticaNeueLight',
   regular: 'HelveticaNeue',
-  medium: 'HelveticaNeue-Medium',
-  bold: 'HelveticaNeu-Bold',
-  thin: 'HelveticaNeue-Thin',
+  medium: 'HelveticaNeueMedium',
+  bold: 'HelveticaNeueBold',
+  thin: 'HelveticaNeueThin',
 };
 
 export {

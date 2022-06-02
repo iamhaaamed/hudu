@@ -1,19 +1,21 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Text, HStack, VStack, Icon} from 'native-base';
+import {Text, HStack, VStack, Icon, IconButton} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {fontFamily, scale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {CustomImage, RatingStar} from '~/components';
+import {useNavigation} from '@react-navigation/native';
 
 const SectionUserRow = () => {
+  const {navigate} = useNavigation();
   const data = {
     name: 'Amarjith',
     image: '',
     rating: 4,
   };
 
-  const notificationOnPress = () => {};
+  const notificationOnPress = () => navigate('Notification');
 
   return (
     <HStack alignItems="center" px="4" py="2" space="4">
@@ -39,13 +41,16 @@ const SectionUserRow = () => {
           <RatingStar disabled rate={data?.rating} />
         </HStack>
       </VStack>
-      <TouchableOpacity activeOpacity={0.7} onPress={notificationOnPress}>
-        <Icon
-          as={<MaterialCommunityIcons name="bell-outline" />}
-          size={scale(24)}
-          color={Colors.BLACK_1}
-        />
-      </TouchableOpacity>
+      <IconButton
+        onPress={notificationOnPress}
+        icon={
+          <MaterialCommunityIcons
+            name="bell-outline"
+            color={Colors.BLACK_1}
+            size={24}
+          />
+        }
+      />
     </HStack>
   );
 };

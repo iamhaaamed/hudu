@@ -20,6 +20,7 @@ export const WAITING_BACKGROUND = '#E1ECFC';
 export const BORDER_COLOR = '#393939';
 export const INPUT = '#213950';
 export const RIGHT_TEXT = '#7E7E7E';
+export const RED_RIPPLE_COLOR = 'rgba(220,38,95,0.5)';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';
