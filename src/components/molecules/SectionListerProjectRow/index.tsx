@@ -1,13 +1,13 @@
-import React, {useRef, useState} from 'react';
-import {StyleSheet, Animated, TouchableOpacity} from 'react-native';
-import {HStack, Text, VStack, Center, Box, Flex, Icon} from 'native-base';
-import {scale, fontFamily, verticalScale} from '~/utils/style';
+import React, {useRef} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {HStack, Text, VStack, Center, Icon} from 'native-base';
+import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
-import {FormProvider, useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import {SectionProjectLabel, CustomImage, CustomButton} from '~/components';
-import images from '~/assets/images';
+import {
+  SectionProjectLabel,
+  CustomImage,
+  SectionChooseHudur,
+} from '~/components';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,8 +18,6 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
   const deleteOnPress = () => {};
 
   const editOnPress = () => {};
-
-  const reviewOnPress = () => {};
 
   const renderRightActions = () => {
     return (
@@ -116,15 +114,7 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
               ${item?.lowBid}
             </Text>
           </HStack>
-          {item?.id === 1 && (
-            <CustomButton
-              outline
-              title="Choose a HUDUr"
-              onPress={reviewOnPress}
-              color={Colors.BLACK_3}
-              height={verticalScale(35)}
-            />
-          )}
+          {item?.id === 1 && <SectionChooseHudur {...{item}} />}
         </VStack>
       </HStack>
     </Swipeable>

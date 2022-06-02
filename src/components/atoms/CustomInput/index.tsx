@@ -1,9 +1,10 @@
 import React from 'react';
-import {FormControl, Text, HStack} from 'native-base';
+import {FormControl, Text, HStack, Box, Icon} from 'native-base';
 import {Colors} from '~/styles';
 import {TextInput, Platform, StyleSheet} from 'react-native';
 import {useController} from 'react-hook-form';
 import {fontFamily, scale} from '~/utils/style';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default React.forwardRef(
   (
@@ -15,6 +16,9 @@ export default React.forwardRef(
       label,
       color = Colors.INPUT,
       textArea = false,
+      inputStyle = styles.input,
+      icon,
+      rightText,
     }: {
       name: any;
       placeholder?: string;
@@ -37,6 +41,9 @@ export default React.forwardRef(
       label?: string;
       color?: string;
       textArea?: boolean;
+      inputStyle?: any;
+      icon?: any;
+      rightText?: string;
     },
     ref: any,
   ) => {
@@ -44,45 +51,67 @@ export default React.forwardRef(
 
     return (
       <FormControl isInvalid={fieldState.error} w={{base: '100%'}}>
-        {label && (
-          <Text
-            mb="3"
-            color={Colors.BLACK_3}
-            fontSize={scale(14)}
-            fontFamily={fontFamily.medium}>
-            {label}
-          </Text>
-        )}
-        <HStack
-          bg={backgroundColor}
-          borderRadius="md"
-          borderColor={Colors.BORDER_COLOR}
-          borderWidth="0.5"
-          alignItems="center"
-          justifyContent="center"
-          px="2">
-          <TextInput
-            ref={ref}
-            numberOfLines={textArea ? 4 : 1}
-            textAlignVertical={textArea ? 'top' : 'center'}
-            placeholder={placeholder}
-            placeholderTextColor={Colors.PLACEHOLDER2}
-            autoCapitalize="none"
-            keyboardType={keyboardType}
-            multiline={textArea ? true : false}
-            value={field.value}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            style={[
-              styles.input,
-              {
-                textAlignVertical: textArea ? 'top' : 'center',
-                color: color,
-              },
-              Platform.OS === 'ios' && {height: 45},
-            ]}
-          />
-        </HStack>
+        <Box mt={label ? '3' : '0'}>
+          {label && (
+            <Text
+              position="absolute"
+              zIndex={60}
+              top="-12"
+              left="6"
+              px="2"
+              bg={Colors.WHITE}
+              color={Colors.BLACK_3}
+              fontSize={scale(14)}
+              fontFamily={fontFamily.medium}>
+              {label}
+            </Text>
+          )}
+          <HStack
+            bg={backgroundColor}
+            borderRadius="md"
+            borderColor={Colors.BORDER_COLOR}
+            borderWidth="0.5"
+            alignItems="center"
+            justifyContent="center"
+            px="2">
+            <TextInput
+              ref={ref}
+              numberOfLines={textArea ? 4 : 1}
+              textAlignVertical={textArea ? 'top' : 'center'}
+              placeholder={placeholder}
+              placeholderTextColor={Colors.PLACEHOLDER2}
+              autoCapitalize="none"
+              keyboardType={keyboardType}
+              multiline={textArea ? true : false}
+              value={field.value}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              style={[
+                inputStyle,
+                {
+                  textAlignVertical: textArea ? 'top' : 'center',
+                  color: color,
+                },
+                Platform.OS === 'ios' && {height: 45},
+              ]}
+            />
+            {icon && (
+              <Icon
+                as={<Ionicons name={icon} />}
+                size={scale(16)}
+                color={Colors.BLACK_3}
+              />
+            )}
+            {rightText && (
+              <Text
+                color={Colors.RIGHT_TEXT}
+                fontSize={scale(14)}
+                fontFamily={fontFamily.regular}>
+                {rightText}
+              </Text>
+            )}
+          </HStack>
+        </Box>
         <FormControl.ErrorMessage fontFamily={fontFamily.medium}>
           {fieldState.error?.message}
         </FormControl.ErrorMessage>

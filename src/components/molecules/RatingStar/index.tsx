@@ -1,10 +1,9 @@
 import React from 'react';
-import {View} from 'react-native';
+import {HStack, Icon, Text} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Stars from 'react-native-stars';
 import {Colors} from '~/styles';
-import {Icon} from 'native-base';
-import {scale} from '~/utils/style';
+import {fontFamily, scale} from '~/utils/style';
 
 export default function StarRating({
   rate = 0,
@@ -12,19 +11,29 @@ export default function StarRating({
   size = scale(16),
   spacing = 1,
   onChange,
+  showRating,
 }: {
   rate: number;
   disabled?: boolean;
   size?: number;
   spacing?: number;
   onChange?: any;
+  showRating?: boolean;
 }) {
   const onChangeHandler = (value: number) => {
     onChange?.(value);
   };
 
   return (
-    <View>
+    <HStack space="1">
+      {showRating && (
+        <Text
+          fontSize={size - 2}
+          fontFamily={fontFamily.regular}
+          color={Colors.BLACK_1}>
+          {Math.round(rate).toFixed(1)}
+        </Text>
+      )}
       <Stars
         disabled={disabled}
         default={Math.round(rate)}
@@ -47,6 +56,6 @@ export default function StarRating({
           />
         }
       />
-    </View>
+    </HStack>
   );
 }

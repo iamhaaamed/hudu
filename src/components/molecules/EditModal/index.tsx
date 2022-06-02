@@ -1,24 +1,24 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
-import {VStack, Center} from 'native-base';
+import {VStack} from 'native-base';
 import {
   ModalContainer,
   CustomButton,
-  RatingStar,
   CustomInput,
   ModalHeader,
 } from '~/components';
-import {scale} from '~/utils/style';
+import {fontFamily, scale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  review: yup.string(),
+  amount: yup.number().required('required'),
+  describe: yup.string().required('required'),
 });
 
-const ReviewModal = ({
+const EditModal = ({
   visible,
   onClose,
   onSubmit,
@@ -29,8 +29,6 @@ const ReviewModal = ({
   onSubmit: any;
   title: string;
 }) => {
-  const [rate, setRate] = useState(1);
-
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
@@ -43,11 +41,7 @@ const ReviewModal = ({
   };
 
   const onSubmitHandler = (formData: any) => {
-    const input = {
-      ...formData,
-      rate,
-    };
-    onSubmit?.(input);
+    onSubmit?.(formData);
   };
 
   return (
@@ -57,29 +51,44 @@ const ReviewModal = ({
       style={styles.modal}>
       <FormProvider {...methods}>
         <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
-          <ModalHeader text={title} onPress={onCloseHandler} />
-          <Center>
-            <RatingStar size={scale(32)} rate={rate} onChange={setRate} />
-          </Center>
+          <ModalHeader text={title} />
           <CustomInput
-            {...register('review')}
-            placeholder="Your feedback"
+            {...register('amount')}
+            label="Bid amount"
+            placeholder="0"
+            backgroundColor={Colors.WHITE}
+            keyboardType="numeric"
+            rightText="$"
+          />
+          <CustomInput
+            {...register('describe')}
+            label="Describe your proposal"
+            placeholder="Enter Describe your proposal"
             backgroundColor={Colors.WHITE}
             textArea
+            inputStyle={styles.input}
           />
-          <CustomButton title="Done" onPress={handleSubmit(onSubmitHandler)} />
+          <CustomButton
+            title="Submit bid"
+            onPress={handleSubmit(onSubmitHandler)}
+          />
         </VStack>
       </FormProvider>
     </ModalContainer>
   );
 };
 
-export default ReviewModal;
+export default React.memo(EditModal);
 
 const styles = StyleSheet.create({
   modal: {
     borderRadius: 8,
     margin: scale(16),
     overflow: 'hidden',
+  },
+  input: {
+    fontSize: scale(12),
+    fontFamily: fontFamily.regular,
+    flex: 1,
   },
 });
