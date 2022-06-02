@@ -1,13 +1,24 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
-import {CustomContainer} from '~/components';
+import {ScrollView, StyleSheet} from 'react-native';
+import {CustomContainer, ProfilePicker} from '~/components';
 
 export default function EditProfileScreen() {
   return (
     <CustomContainer>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 32}}></ScrollView>
+        contentContainerStyle={styles.container}>
+        <ProfilePicker />
+      </ScrollView>
     </CustomContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '90%',
+    paddingBottom: 32,
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+});
