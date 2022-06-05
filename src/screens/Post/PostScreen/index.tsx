@@ -62,7 +62,7 @@ const schema = yup.object().shape({
   zipCode: yup.number().required('required'),
 });
 
-const PostScreen = ({navigation}: any) => {
+const PostScreen = ({navigation}: NavigationProp) => {
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',

@@ -1,13 +1,23 @@
 import React from 'react';
 import {CommonActions} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {ProfileScreen, EditProfileScreen, NotificationScreen} from '~/screens';
 import {CustomHeader} from '~/components/atoms/CustomHeader';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  ProfileScreen,
+  ReviewsScreen,
+  EditProfileScreen,
+  NotificationScreen,
+  SupportScreen,
+  AuthScreen,
+} from '~/screens';
 
 const Stack = createNativeStackNavigator();
 
 export type ProfileStackParamList = {
+  Auth: undefined;
   Profile: undefined;
+  Reviews: undefined;
+  Support: undefined;
   EditProfile: undefined;
   Notification: undefined;
 };
@@ -25,6 +35,18 @@ const screens = [
   {
     name: 'EditProfile',
     component: EditProfileScreen,
+  },
+  {
+    name: 'Reviews',
+    component: ReviewsScreen,
+  },
+  {
+    name: 'Support',
+    component: SupportScreen,
+  },
+  {
+    name: 'Auth',
+    component: AuthScreen,
   },
   {
     name: 'Notification',

@@ -5,7 +5,7 @@ import {Colors} from '~/styles';
 
 interface RatingProps {
   count: number;
-  total: number;
+  total?: number;
 }
 export function ProfileRating(props: RatingProps) {
   return (
@@ -17,6 +17,7 @@ export function ProfileRating(props: RatingProps) {
           return (
             <Icon
               size={14}
+              key={index}
               name={filled ? 'star' : 'star-o'}
               color={filled ? Colors.WARNING : Colors.BLACK}
             />

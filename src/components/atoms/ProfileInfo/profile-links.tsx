@@ -63,7 +63,7 @@ export default function ProfileLinks() {
     item.url ? Linking.openURL(item.url) : navigate(item.navLink);
   };
 
-  const onLogOutPressHandler = () => {};
+  const onLogOutPressHandler = () => navigate('Auth');
 
   return (
     <VStack mt={5}>

@@ -1,10 +1,16 @@
 import React from 'react';
-import {FormControl, Text, HStack, Box, Icon} from 'native-base';
 import {Colors} from '~/styles';
-import {TextInput, Platform, StyleSheet} from 'react-native';
 import {useController} from 'react-hook-form';
 import {fontFamily, scale} from '~/utils/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {
+  TextInput,
+  Platform,
+  StyleSheet,
+  TextInputProps,
+  TextStyle,
+} from 'react-native';
+import {FormControl, Text, HStack, Box, Icon} from 'native-base';
 
 export default React.forwardRef(
   (
@@ -19,6 +25,7 @@ export default React.forwardRef(
       inputStyle = styles.input,
       icon,
       rightText,
+      disabled,
     }: {
       name: any;
       placeholder?: string;
@@ -41,9 +48,10 @@ export default React.forwardRef(
       label?: string;
       color?: string;
       textArea?: boolean;
-      inputStyle?: any;
+      inputStyle?: TextStyle;
       icon?: any;
       rightText?: string;
+      disabled?: boolean;
     },
     ref: any,
   ) => {
@@ -54,59 +62,62 @@ export default React.forwardRef(
         <Box mt={label ? '3' : '0'}>
           {label && (
             <Text
-              position="absolute"
-              zIndex={60}
-              top="-12"
-              left="6"
               px="2"
+              left="6"
+              top="-12"
+              zIndex={60}
               bg={Colors.WHITE}
-              color={Colors.BLACK_3}
+              position="absolute"
               fontSize={scale(14)}
-              fontFamily={fontFamily.medium}>
+              fontFamily={fontFamily.medium}
+              color={disabled ? Colors.DISABLE_COLOR : Colors.BLACK_3}>
               {label}
             </Text>
           )}
           <HStack
-            bg={backgroundColor}
-            borderRadius="md"
-            borderColor={Colors.BORDER_COLOR}
+            px="2"
             borderWidth="0.5"
+            borderRadius="md"
             alignItems="center"
+            bg={backgroundColor}
             justifyContent="center"
-            px="2">
+            borderColor={disabled ? Colors.DISABLE_COLOR : Colors.BORDER_COLOR}>
             <TextInput
               ref={ref}
-              numberOfLines={textArea ? 4 : 1}
-              textAlignVertical={textArea ? 'top' : 'center'}
-              placeholder={placeholder}
-              placeholderTextColor={Colors.PLACEHOLDER2}
-              autoCapitalize="none"
-              keyboardType={keyboardType}
-              multiline={textArea ? true : false}
               value={field.value}
-              onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={!disabled}
+              autoCapitalize="none"
+              placeholder={placeholder}
+              keyboardType={keyboardType}
+              onChangeText={field.onChange}
+              numberOfLines={textArea ? 4 : 1}
+              multiline={textArea ? true : false}
+              textAlignVertical={textArea ? 'top' : 'center'}
+              placeholderTextColor={
+                disabled ? Colors.DISABLE_COLOR : Colors.PLACEHOLDER2
+              }
               style={[
                 inputStyle,
                 {
                   textAlignVertical: textArea ? 'top' : 'center',
                   color: color,
                 },
-                Platform.OS === 'ios' && {height: 45},
+                Platform.OS === 'ios' && {minHeight: 45},
               ]}
             />
             {icon && (
               <Icon
-                as={<Ionicons name={icon} />}
                 size={scale(16)}
-                color={Colors.BLACK_3}
+                as={<Ionicons name={icon} />}
+                color={disabled ? Colors.DISABLE_COLOR : Colors.BLACK_3}
               />
             )}
             {rightText && (
               <Text
-                color={Colors.RIGHT_TEXT}
                 fontSize={scale(14)}
-                fontFamily={fontFamily.regular}>
+                fontFamily={fontFamily.regular}
+                color={disabled ? Colors.DISABLE_COLOR : Colors.RIGHT_TEXT}>
                 {rightText}
               </Text>
             )}
