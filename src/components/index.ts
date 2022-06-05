@@ -16,7 +16,6 @@ export {default as CustomInput} from './atoms/CustomInput';
 export {default as ModalHeader} from './atoms/ModalHeader';
 export {default as CustomImageUploader} from './atoms/CustomImageUploader';
 export {default as ImageBoxViewer} from './atoms/ImageBoxViewer';
-export {default as CustomPickerV2} from './atoms/CustomPickerV2';
 export {default as ProfilePicker} from './atoms/ProfilePicker';
 
 //molecules

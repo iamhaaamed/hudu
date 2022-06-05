@@ -9,7 +9,6 @@ import {
   CustomInput,
   CustomPicker,
   CustomButton,
-  CustomPickerV2,
 } from '~/components';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -35,6 +34,18 @@ const stateData = [
   {id: 5, title: 'State 6', value: 'state6'},
   {id: 6, title: 'State 7', value: 'state7'},
   {id: 7, title: 'State 8', value: 'state8'},
+  {id: 8, title: 'State 9', value: 'state9'},
+  {id: 9, title: 'State 10', value: 'state10'},
+  {id: 10, title: 'State 11', value: 'state11'},
+  {id: 11, title: 'State 12', value: 'state12'},
+  {id: 12, title: 'State 13', value: 'state13'},
+  {id: 13, title: 'State 14', value: 'state14'},
+  {id: 14, title: 'State 15', value: 'state15'},
+  {id: 15, title: 'State 16', value: 'state16'},
+  {id: 16, title: 'State 17', value: 'state17'},
+  {id: 17, title: 'State 18', value: 'state18'},
+  {id: 18, title: 'State 19', value: 'state19'},
+  {id: 19, title: 'State 20', value: 'state20'},
 ];
 
 const schema = yup.object().shape({
@@ -148,7 +159,7 @@ const PostScreen = ({navigation}: any) => {
               />
               <HStack alignItems="center" space="2">
                 <VStack flex={1} h="100%">
-                  <CustomPickerV2
+                  <CustomPicker
                     {...register('city')}
                     data={cityData}
                     placeholder="City"
@@ -157,7 +168,7 @@ const PostScreen = ({navigation}: any) => {
                   />
                 </VStack>
                 <VStack flex={1} h="100%">
-                  <CustomPickerV2
+                  <CustomPicker
                     {...register('state')}
                     data={stateData}
                     placeholder="State"

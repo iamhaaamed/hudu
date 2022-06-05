@@ -1,5 +1,6 @@
 import React from 'react';
 import {CustomPicker} from '~/components';
+import {scale} from '~/utils/style';
 
 const sortData = [
   {id: 0, title: 'Low to high bids', value: 'lth'},
@@ -11,5 +12,14 @@ const sortData = [
 ];
 
 export default React.forwardRef(({name}: {name: any}, ref: any) => {
-  return <CustomPicker name={name} data={sortData} placeholder="Sort" />;
+  return (
+    <CustomPicker
+      name={name}
+      data={sortData}
+      placeholder="Sort"
+      width={scale(120)}
+      right={0}
+      position="absolute"
+    />
+  );
 });
