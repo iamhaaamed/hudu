@@ -1,6 +1,6 @@
 import React from 'react';
 import {Colors} from '~/styles';
-import {VStack} from 'native-base';
+import {Flex, VStack} from 'native-base';
 import images from '~/assets/images';
 import {StyleSheet} from 'react-native';
 import {verticalScale} from '~/utils/style';
@@ -27,8 +27,14 @@ export default function AuthScreen({navigation}: NavigationProp) {
           imageSource={images.huduLogo}
         />
         <VStack width="full" px="4" space="6">
-          <CustomButton title="Create account" onPress={() => {}} />
-          <CustomButton title="Login" onPress={() => {}} />
+          <CustomButton
+            title="Create account"
+            onPress={() => navigation.navigate('SignUp')}
+          />
+          <CustomButton
+            title="Login"
+            onPress={() => navigation.navigate('Login')}
+          />
         </VStack>
       </VStack>
     </CustomContainer>
