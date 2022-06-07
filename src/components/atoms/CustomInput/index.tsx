@@ -26,6 +26,7 @@ export default React.forwardRef(
       icon,
       rightText,
       disabled,
+      rightComponent,
     }: {
       name: any;
       placeholder?: string;
@@ -52,6 +53,7 @@ export default React.forwardRef(
       icon?: any;
       rightText?: string;
       disabled?: boolean;
+      rightComponent?: any;
     },
     ref: any,
   ) => {
@@ -121,6 +123,7 @@ export default React.forwardRef(
                 {rightText}
               </Text>
             )}
+            {rightComponent && rightComponent()}
           </HStack>
         </Box>
         <FormControl.ErrorMessage fontFamily={fontFamily.medium}>

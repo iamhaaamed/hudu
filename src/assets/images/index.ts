@@ -4,6 +4,7 @@ import intro2 from './intro2.png';
 import intro3 from './intro3.png';
 import huduLogo2 from './huduLogo2.png';
 import testImage1 from './testImage1.png';
+import mapImage from './mapImage.png';
 
 export default {
   huduLogo,
@@ -12,4 +13,5 @@ export default {
   intro3,
   huduLogo2,
   testImage1,
+  mapImage,
 };
