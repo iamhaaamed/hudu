@@ -5,11 +5,14 @@ import {
   Platform,
   UIManager,
   StatusBar,
+  LogBox,
 } from 'react-native';
 import {NativeBaseProvider} from 'native-base';
 import AppNavigator from '~/navigation/AppNavigator';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Colors} from '~/styles';
+
+//LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
 
 if (
   Platform.OS === 'android' &&

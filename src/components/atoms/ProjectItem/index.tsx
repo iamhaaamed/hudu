@@ -4,9 +4,12 @@ import {Text, Box, VStack, HStack} from 'native-base';
 import {Colors} from '~/styles';
 import {CustomImage, ProjectFavoriteIcon} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
+import {navigate} from '~/navigation/Methods';
 
 const ProjectItem = ({item}: {item?: any}) => {
-  const onPressHandler = () => {};
+  const onPressHandler = () => {
+    navigate('ProjectDetailsHudur');
+  };
 
   return (
     <Box

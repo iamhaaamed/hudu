@@ -18,15 +18,15 @@ export default function StarRating({
   size?: number;
   spacing?: number;
   onChange?: any;
-  showRating?: boolean;
+  showRating?: 'right' | 'left';
 }) {
   const onChangeHandler = (value: number) => {
     onChange?.(value);
   };
 
   return (
-    <HStack space="1">
-      {showRating && (
+    <HStack space="1" alignItems="center">
+      {showRating === 'left' && (
         <Text
           fontSize={size - 2}
           fontFamily={fontFamily.regular}
@@ -56,6 +56,14 @@ export default function StarRating({
           />
         }
       />
+      {showRating === 'right' && (
+        <Text
+          fontSize={size - 2}
+          fontFamily={fontFamily.regular}
+          color={Colors.BLACK_1}>
+          {Math.round(rate).toFixed(1)}
+        </Text>
+      )}
     </HStack>
   );
 }

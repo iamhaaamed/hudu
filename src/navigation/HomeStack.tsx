@@ -1,7 +1,13 @@
 import React from 'react';
 import {CommonActions} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {HomeScreen, NotificationScreen} from '~/screens';
+import {
+  HomeScreen,
+  NotificationScreen,
+  ProjectDetailsHudurScreen,
+  ListerProfileScreen,
+  HudurProfileScreen,
+} from '~/screens';
 import {CustomHeader} from '~/components/atoms/CustomHeader';
 
 const Stack = createNativeStackNavigator();
@@ -9,9 +15,12 @@ const Stack = createNativeStackNavigator();
 export type HomeStackParamList = {
   Home: undefined;
   Notification: undefined;
+  ProjectDetailsHudur: undefined;
+  ListerProfile: undefined;
+  HudurProfile: undefined;
 };
 
-const navigatorOptions = {
+const publicScreenOption = {
   headerShown: false,
   ...CommonActions,
 };
@@ -20,27 +29,48 @@ const screens = [
   {
     name: 'Home',
     component: HomeScreen,
+    options: publicScreenOption,
   },
   {
     name: 'Notification',
     component: NotificationScreen,
+    options: {
+      headerTitle: 'Notification',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
+  },
+  {
+    name: 'ProjectDetailsHudur',
+    component: ProjectDetailsHudurScreen,
+    options: publicScreenOption,
+  },
+  {
+    name: 'ListerProfile',
+    component: ListerProfileScreen,
+    options: {
+      headerTitle: 'Profile',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
+  },
+  {
+    name: 'HudurProfile',
+    component: HudurProfileScreen,
+    options: {
+      headerTitle: 'Profile',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
 ];
 
 export default function HomeStack() {
   return (
-    <Stack.Navigator screenOptions={navigatorOptions}>
+    <Stack.Navigator>
       {screens.map(screen => (
         //@ts-ignore
-        <Stack.Screen
-          key={screen.name}
-          options={{
-            headerTitle: screen.name,
-            headerShown: screen.name != 'Home',
-            header: (props: any) => <CustomHeader {...props} />,
-          }}
-          {...screen}
-        />
+        <Stack.Screen key={screen.name} {...screen} />
       ))}
     </Stack.Navigator>
   );

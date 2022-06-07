@@ -74,7 +74,7 @@ const ChooseHudurModal = ({
                     </HStack>
                     <VStack alignItems="center">
                       <RatingStar
-                        showRating
+                        showRating="left"
                         size={scale(10)}
                         rate={item?.rate}
                         disabled

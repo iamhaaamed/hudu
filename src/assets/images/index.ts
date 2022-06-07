@@ -7,6 +7,7 @@ import register from './register.png';
 import huduLogo from './huduLogo.png';
 import huduLogo2 from './huduLogo2.png';
 import testImage1 from './testImage1.png';
+import mapImage from './mapImage.png';
 
 export default {
   login,
@@ -18,4 +19,5 @@ export default {
   huduLogo,
   huduLogo2,
   testImage1,
+  mapImage,
 };
