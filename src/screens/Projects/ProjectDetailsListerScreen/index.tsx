@@ -1,5 +1,11 @@
 import React, {useState, useRef} from 'react';
-import {StyleSheet, Dimensions, Animated, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  Animated,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Center, VStack, Text, HStack, IconButton} from 'native-base';
 import {TabView, TabBar} from 'react-native-tab-view';
 import images from '~/assets/images';
@@ -14,6 +20,7 @@ import {Colors} from '~/styles';
 import {scale, fontFamily} from '~/utils/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {HEADER_HEIGHT, OTHER_TOP, TABS_HEIGHT} from '~/styles/spacing';
+import CollapsibleTabs from '../CollapsibleTabBar';
 
 const data = {
   title: 'Duct need cleaned out',
@@ -156,7 +163,7 @@ const ProjectDetailsListerScreen = ({route: inRoute, navigation}: any) => {
     }
   };
 
-  const renderTabBarItem = ({route}: any) => {
+  const RenderTabBarItem = ({route}: any) => {
     const focused = route.key === routes[index].key;
     return (
       <Center
@@ -192,14 +199,9 @@ const ProjectDetailsListerScreen = ({route: inRoute, navigation}: any) => {
     );
   };
 
-  function renderTabBar(props: any) {
-    const translateY = position.interpolate({
-      inputRange: [0, HEADER_HEIGHT],
-      outputRange: [0, -HEADER_HEIGHT + OTHER_TOP],
-      extrapolate: 'clamp',
-    });
+  function RenderTabBar() {
     return (
-      <Animated.View style={[styles.header, {transform: [{translateY}]}]}>
+      <View style={[styles.header]}>
         <CustomImage
           local
           style={[styles.image, {height: HEADER_HEIGHT}]}
@@ -248,26 +250,73 @@ const ProjectDetailsListerScreen = ({route: inRoute, navigation}: any) => {
             color={Colors.BLACK}>
             {data?.title}
           </Text>
-          <TabBar
+          {/* <TabBar
             {...props}
             renderTabBarItem={renderTabBarItem}
             renderIndicator={() => <></>}
             style={styles.tabBar}
-          />
+          /> */}
         </VStack>
-      </Animated.View>
+      </View>
     );
   }
 
   return (
     <CustomContainer>
-      <TabView
+      <CollapsibleTabs
+        collapsibleContent={<RenderTabBar />}
+        tabElement={<RenderTabBarItem />}
+        tabs={[
+          {
+            label: 'description',
+            component: <></>,
+            // component: (
+            //   <SectionDescriptionRouteLister
+            //     position={position}
+            //     syncOffset={syncOffset}
+            //     descriptionRef={descriptionRef}
+            //     onMomentumScrollBegin={onMomentumScrollBegin}
+            //     data={data?.description}
+            //   />
+            // ),
+          },
+          {
+            label: 'question',
+            component: <></>,
+            // component: (
+            //   <SectionQuestionRouteLister
+            //     key={route.key}
+            //     position={position}
+            //     syncOffset={syncOffset}
+            //     questionRef={questionRef}
+            //     onMomentumScrollBegin={onMomentumScrollBegin}
+            //     data={data?.questions}
+            //   />
+            // ),
+          },
+          {
+            label: 'active-bids',
+            component: <></>,
+            // component: (
+            //   <SectionActiveBidsRouteLister
+            //     key={route.key}
+            //     position={position}
+            //     syncOffset={syncOffset}
+            //     activeBidsRef={activeBidsRef}
+            //     onMomentumScrollBegin={onMomentumScrollBegin}
+            //     data={data?.activeBids}
+            //   />
+            // ),
+          },
+        ]}
+      />
+      {/* <TabView
         navigationState={{index, routes}}
         renderScene={renderScene}
         renderTabBar={renderTabBar}
         onIndexChange={setIndex}
         initialLayout={initialLayout}
-      />
+      /> */}
     </CustomContainer>
   );
 };
