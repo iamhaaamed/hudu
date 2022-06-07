@@ -1,6 +1,12 @@
 export {default as SplashScreen} from './SplashScreen';
 export {default as OnboardingScreen} from './OnboardingScreen';
 
+// Auth
+export {default as LoginScreen} from './Auth/Login';
+export {default as SignUpScreen} from './Auth/Signup';
+export {default as AuthScreen} from './Auth/AuthScreen';
+export {default as ForgotPasswordScreen} from './Auth/ForgotPassword';
+
 // Home
 export {default as HomeScreen} from './Home/HomeScreen';
 export {default as ProjectDetailsHudurScreen} from './Home/ProjectDetailsHudurScreen';
@@ -12,7 +18,6 @@ export {default as PostScreen} from './Post/PostScreen';
 export {default as PreviewPostScreen} from './Post/PreviewPostScreen';
 
 // Profile
-export {default as AuthScreen} from './Profile/Auth';
 export {default as ProfileScreen} from './Profile/Profile';
 export {default as ReviewsScreen} from './Profile/Reviews';
 export {default as SupportScreen} from './Profile/Support';

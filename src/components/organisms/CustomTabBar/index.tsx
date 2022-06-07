@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
 import {Colors} from '~/styles';
 import {TabBarButton} from '~/components';
+import {View, StyleSheet} from 'react-native';
 import {
   PlusIcon,
   PlusIconFill,
@@ -14,10 +14,19 @@ import {
   HuduIcon,
   HuduIconFill,
 } from '~/assets/icons';
+import {useTabBar} from '~/context/TabBarContext';
 
 const CustomTabBar = ({state, navigation}: {state?: any; navigation?: any}) => {
+  const {hideTabBar} = useTabBar();
+
   return (
-    <View style={styles.main}>
+    <View
+      style={[
+        styles.main,
+        {
+          display: hideTabBar ? 'none' : 'flex',
+        },
+      ]}>
       <View style={styles.container}>
         {state.routes.map((route: any, index: number) => {
           const isFocused = state.index === index;

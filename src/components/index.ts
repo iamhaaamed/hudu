@@ -37,6 +37,7 @@ export {default as AttachmentPickerModal} from './molecules/AttachmentPickerModa
 export {default as ConfirmationActionSheet} from './molecules/ConfirmationActionSheet';
 export {default as QuestionModal} from './molecules/QuestionModal';
 export {default as SectionReviewContainer} from './molecules/SectionReviewContainer';
+export {default as SectionRowSocial} from './molecules/SectionRowSocial';
 
 //organisms
 export {default as CustomTabBar} from './organisms/CustomTabBar';

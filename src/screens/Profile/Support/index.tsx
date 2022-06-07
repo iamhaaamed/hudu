@@ -13,13 +13,14 @@ import {
   CustomContainer,
   CustomKeyboardAwareScrollView,
 } from '~/components';
+import images from '~/assets/images';
 
 const schema = yup.object().shape({
   title: yup.string().required('required'),
   message: yup.string().required('required'),
 });
 
-export default function Support() {
+export default function SupportScreen() {
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
@@ -39,8 +40,8 @@ export default function Support() {
             <CustomImage
               local
               style={styles.image}
+              imageSource={images.support}
               backgroundColor={Colors.WHITE}
-              imageSource={require('~/assets/images/intro1.png')}
             />
           </VStack>
           <VStack flex={1} py="4" px="4" space="6">
