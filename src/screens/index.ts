@@ -26,6 +26,8 @@ export {default as NotificationScreen} from './Profile/Notification';
 
 // Projects
 export {default as ProjectsScreen} from './Projects/ProjectsScreen';
+export {default as ProjectDetailsListerScreen} from './Projects/ProjectDetailsListerScreen';
+export {default as HudurProfileListerScreen} from './Projects/HudurProfileListerScreen';
 
 // Favorite
 export {default as FavoriteScreen} from './Favorite/FavoriteScreen';
