@@ -47,6 +47,7 @@
     "react-native": "0.68.2",
     "react-native-config": "^1.4.5",
     "react-native-fast-image": "^8.5.11",
+    "react-native-flash-message": "^0.2.1",
     "react-native-gesture-handler": "^2.4.2",
     "react-native-image-crop-picker": "^0.37.3",
     "react-native-image-zoom-viewer": "^3.0.1",

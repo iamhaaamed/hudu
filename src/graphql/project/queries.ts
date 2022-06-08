@@ -38,6 +38,23 @@ export const PROJECT_GET_PROJECTS = gql`
     project_getProjects {
       result(skip: $skip, take: $take, where: $where, order: $order) {
         items {
+          project {
+            projectStatus
+            title
+            description
+            duration
+            availability
+            streetAddress
+            city
+            state
+            longitude
+            latitude
+            zipCode
+            userId
+            id
+            isDeleted
+            createdDate
+          }
           isLiked
         }
         pageInfo {
