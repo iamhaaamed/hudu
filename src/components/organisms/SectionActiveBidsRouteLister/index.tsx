@@ -1,26 +1,12 @@
 import React from 'react';
-import {
-  Animated,
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-} from 'react-native';
-import {HStack, Text, VStack, Box, Center} from 'native-base';
-import {HEADER_HEIGHT, TAB_BAR_HEIGHT, OTHER_PADDING} from '~/styles/spacing';
 import {Colors} from '~/styles';
-import {CustomImage, RatingStar, CustomButton} from '~/components';
-import {scale, fontFamily, verticalScale} from '~/utils/style';
 import {navigate} from '~/navigation/Methods';
+import {Box, Center, HStack, Text, VStack} from 'native-base';
+import {fontFamily, scale, verticalScale} from '~/utils/style';
+import {CustomButton, CustomImage, RatingStar} from '~/components';
+import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 
-const SectionActiveBidsRouteLister = ({
-  position,
-  syncOffset,
-  activeBidsRef,
-  onMomentumScrollBegin,
-  data,
-}: any) => {
-  const {height} = useWindowDimensions();
-
+const SectionActiveBidsRouteLister = ({data}: any) => {
   const awardOnPress = () => {};
 
   const rejectOnPress = () => {};
@@ -128,30 +114,14 @@ const SectionActiveBidsRouteLister = ({
   };
 
   return (
-    <Animated.FlatList
-      ref={activeBidsRef}
-      scrollEventThrottle={1}
-      showsVerticalScrollIndicator={false}
-      onMomentumScrollBegin={onMomentumScrollBegin}
-      onScroll={Animated.event(
-        [{nativeEvent: {contentOffset: {y: position}}}],
-        {
-          useNativeDriver: true,
-        },
-      )}
-      onMomentumScrollEnd={e => {
-        syncOffset('active-bids', e.nativeEvent.contentOffset.y);
-      }}
+    <FlatList
       data={data}
-      keyExtractor={(_, i) => `key${i}`}
       renderItem={renderItem}
+      scrollEventThrottle={1}
+      keyExtractor={(_, i) => `key${i}`}
+      showsVerticalScrollIndicator={false}
       ItemSeparatorComponent={ItemSeparatorComponent}
-      contentContainerStyle={[
-        styles.contentContainerStyle,
-        {
-          minHeight: height,
-        },
-      ]}
+      contentContainerStyle={styles.contentContainerStyle}
     />
   );
 };
@@ -160,7 +130,8 @@ export default SectionActiveBidsRouteLister;
 
 const styles = StyleSheet.create({
   contentContainerStyle: {
-    paddingTop: HEADER_HEIGHT + TAB_BAR_HEIGHT + OTHER_PADDING,
+    paddingTop: 24,
+    paddingBottom: 32,
   },
   avatar: {
     height: scale(33),

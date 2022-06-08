@@ -1,20 +1,15 @@
-import React, {useState} from 'react';
-import {Animated, StyleSheet, useWindowDimensions} from 'react-native';
-import {HStack, Text, VStack, Icon} from 'native-base';
-import {Colors} from '~/styles';
-import {
-  HEADER_HEIGHT,
-  TAB_BAR_HEIGHT,
-  DESCRIPTION_PADDING,
-  TABS_TOP,
-} from '~/styles/spacing';
-import {fontFamily, scale, verticalScale} from '~/utils/style';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import dayjs from 'dayjs';
+import {Colors} from '~/styles';
+import images from '~/assets/images';
+import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import {CustomImage, CustomButton, EditModal} from '~/components';
-import images from '~/assets/images';
+import {HStack, Icon, Text, VStack} from 'native-base';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {fontFamily, scale, verticalScale} from '~/utils/style';
+import {CustomButton, CustomImage, EditModal} from '~/components';
+
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -35,22 +30,14 @@ dayjs.updateLocale('en', {
   },
 });
 
-const SectionDescriptionRoute = ({
-  position,
-  syncOffset,
-  descriptionRef,
-  onMomentumScrollBegin,
-  data,
-}: any) => {
-  const {height} = useWindowDimensions();
-
+const SectionDescriptionRoute = ({data}: any) => {
   const [editModalVisible, setEditModalVisible] = useState(false);
 
   const closeEditModal = () => {
     setEditModalVisible(false);
   };
 
-  const submitEditModal = (formData: any) => {
+  const submitEditModal = () => {
     setEditModalVisible(false);
   };
 
@@ -58,9 +45,9 @@ const SectionDescriptionRoute = ({
     setEditModalVisible(true);
   };
 
-  const renderItem = () => {
-    return (
-      <VStack top={-TABS_TOP} px="4" space="3">
+  return (
+    <>
+      <VStack px="4" pt={4} pb={6} space="3">
         <Text
           fontSize={scale(16)}
           fontFamily={fontFamily.regular}
@@ -123,35 +110,11 @@ const SectionDescriptionRoute = ({
           style={styles.image}
         />
         <CustomButton
-          onPress={submitBidOnPress}
           title="Submit bid"
+          onPress={submitBidOnPress}
           height={verticalScale(45)}
         />
       </VStack>
-    );
-  };
-
-  return (
-    <>
-      <Animated.FlatList
-        showsVerticalScrollIndicator={false}
-        ref={descriptionRef}
-        scrollEventThrottle={1}
-        onMomentumScrollBegin={onMomentumScrollBegin}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: position}}}],
-          {useNativeDriver: true},
-        )}
-        onMomentumScrollEnd={e => {
-          syncOffset('description', e.nativeEvent.contentOffset.y);
-        }}
-        contentContainerStyle={[
-          styles.contentContainerStyle,
-          {minHeight: height},
-        ]}
-        data={['']}
-        renderItem={renderItem}
-      />
       <EditModal
         visible={editModalVisible}
         onClose={closeEditModal}
@@ -165,12 +128,9 @@ const SectionDescriptionRoute = ({
 export default SectionDescriptionRoute;
 
 const styles = StyleSheet.create({
-  contentContainerStyle: {
-    paddingTop: HEADER_HEIGHT + TAB_BAR_HEIGHT + DESCRIPTION_PADDING,
-  },
   image: {
-    height: verticalScale(130),
     width: '100%',
     borderRadius: 12,
+    height: verticalScale(130),
   },
 });

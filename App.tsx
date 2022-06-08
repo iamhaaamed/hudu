@@ -5,14 +5,13 @@ import {
   Platform,
   UIManager,
   StatusBar,
-  LogBox,
 } from 'react-native';
 import {NativeBaseProvider} from 'native-base';
 import AppNavigator from '~/navigation/AppNavigator';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Colors} from '~/styles';
-
-//LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+import {QueryClient, QueryClientProvider} from 'react-query';
+import FlashMessage from 'react-native-flash-message';
 
 if (
   Platform.OS === 'android' &&
@@ -22,12 +21,24 @@ if (
 }
 
 const App = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        cacheTime: 20000,
+      },
+    },
+  });
+
   return (
     <SafeAreaView style={styles.flex1}>
       <GestureHandlerRootView style={styles.flex1}>
         <NativeBaseProvider>
-          <AppNavigator />
-          <StatusBar backgroundColor={Colors.WHITE} barStyle="dark-content" />
+          <QueryClientProvider client={queryClient}>
+            <AppNavigator />
+            <StatusBar backgroundColor={Colors.WHITE} barStyle="dark-content" />
+            <FlashMessage duration={5000} />
+          </QueryClientProvider>
         </NativeBaseProvider>
       </GestureHandlerRootView>
     </SafeAreaView>
