@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Hudu</string>
+    <string name="facebook_app_id">1284604992070625</string>
+    <string name="facebook_client_token">396f5045e4ad76047e00f95e46b39c4f</string>
 </resources>

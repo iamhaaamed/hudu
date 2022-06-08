@@ -1,18 +1,11 @@
 import React from 'react';
-import {
-  Platform,
-  StatusBar,
-  ViewStyle,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
 import {Colors} from '~/styles';
+import {ActivityIndicator, StyleSheet, View, ViewStyle} from 'react-native';
 
 export default function CustomContainer({
+  style,
   children,
   isLoading = false,
-  style,
   backgroundColor = Colors.WHITE,
 }: {
   children: any;
@@ -23,7 +16,6 @@ export default function CustomContainer({
   return (
     <View style={[styles.safeArea, style, {backgroundColor: backgroundColor}]}>
       {isLoading && <Loading />}
-      {/* {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />} */}
       {children}
     </View>
   );
@@ -32,7 +24,7 @@ export default function CustomContainer({
 const Loading = () => {
   return (
     <View style={styles.loading}>
-      <ActivityIndicator size={'large'} color={Colors.PRIMARY} />
+      <ActivityIndicator size={28} color={Colors.PRIMARY} />
     </View>
   );
 };
@@ -41,12 +33,12 @@ const styles = StyleSheet.create({
   safeArea: {flex: 1},
   loading: {
     flex: 1,
+    zIndex: 100,
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(255,255,255,0.4)',
-    zIndex: 100,
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.4)',
   },
 });

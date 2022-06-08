@@ -1,12 +1,13 @@
-import React from 'react';
 import * as yup from 'yup';
 import {Colors} from '~/styles';
 import images from '~/assets/images';
+import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {verticalScale} from '~/utils/style';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Box, Button, Flex, HStack, Text, VStack} from 'native-base';
+import {useFacebookAuth, useGoogleAuth, useSignUp} from '~/hooks/user';
 import {
   CustomImage,
   CustomInput,
@@ -28,12 +29,52 @@ export default function SignUpScreen({navigation}: NavigationProp) {
     mode: 'onChange',
   });
 
+  const {mutate: signUpMutate} = useSignUp();
+  const {signInWithGoogle} = useGoogleAuth();
+  const {signInWithFacebook} = useFacebookAuth();
+
+  const [loading, setLoading] = useState<boolean>(false);
+
   const {handleSubmit, register} = methods;
 
   const onSend = () => {};
 
+  const googleOnPress = async () => {
+    setLoading(true);
+    const res = await signInWithGoogle();
+    if (res?.data) {
+      completeSignUp();
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const facebookOnPress = async () => {
+    setLoading(true);
+    const res = await signInWithFacebook();
+    if (res?.data) {
+      completeSignUp();
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const completeSignUp = async () => {
+    signUpMutate(
+      {},
+      {
+        onSuccess: () => {
+          setLoading(false);
+        },
+        onError: () => {
+          setLoading(false);
+        },
+      },
+    );
+  };
+
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <FormProvider {...methods}>
         <CustomKeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
@@ -62,7 +103,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
                 onPress={() => handleSubmit(onSend)}
               />
             </Box>
-            <SectionRowSocial />
+            <SectionRowSocial {...{googleOnPress, facebookOnPress}} />
             <HStack alignItems="center" justifyContent="center">
               <Text fontSize="md">Already have an account?</Text>
               <Button
