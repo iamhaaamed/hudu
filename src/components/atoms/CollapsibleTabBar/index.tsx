@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-import {map, min} from 'lodash';
+import {min} from 'lodash';
 import React, {Component} from 'react';
 import Carousel from 'react-native-snap-carousel';
-import {View, Dimensions, Animated, ScrollView} from 'react-native';
+import {Animated, Dimensions, ScrollView, View} from 'react-native';
 
 const headerCollapsedHeight = 46;
 const {width: screenWidth} = Dimensions.get('screen');
@@ -52,8 +52,9 @@ class CollapsibleTabs extends Component {
     });
 
     const scrollProps = index => ({
-      contentContainerStyle: {paddingTop: headerExpandedHeight},
       scrollEventThrottle: 16,
+      showsVerticalScrollIndicator: false,
+      contentContainerStyle: {paddingTop: headerExpandedHeight},
       onScroll: Animated.event(
         [
           {
@@ -92,10 +93,7 @@ class CollapsibleTabs extends Component {
         {/* HEADER */}
         <Animated.View
           style={{
-            top: 0,
-            left: 0,
-            right: 0,
-            position: 'absolute',
+            ...styles.headerContainer,
             transform: [{translateY: headerHeight}],
           }}
           onLayout={({nativeEvent}) => {
@@ -115,6 +113,12 @@ class CollapsibleTabs extends Component {
 
 const styles = {
   flex: {flex: 1},
+  headerContainer: {
+    top: 0,
+    left: 0,
+    right: 0,
+    position: 'absolute',
+  },
   tabsContainer: {
     left: 0,
     right: 0,
