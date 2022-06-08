@@ -1,0 +1,1390 @@
+"""
+The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`.
+"""
+directive @defer(
+  """
+  If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to.
+  """
+  label: String
+
+  """
+  Deferred when true.
+  """
+  if: Boolean
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+The `@stream` directive may be provided for a field of `List` type so that the backend can leverage technology such as asynchronous iterators to provide a partial list in the initial response, and additional list items in subsequent responses. `@include` and `@skip` take precedence over `@stream`.
+"""
+directive @stream(
+  """
+  If this argument label has a value other than null, it will be passed on to the result of this stream directive. This label is intended to give client applications a way to identify to which fragment a streamed result belongs to.
+  """
+  label: String
+
+  """
+  The initial elements that shall be send down to the consumer.
+  """
+  initialCount: Int! = 0
+
+  """
+  Streamed when true.
+  """
+  if: Boolean
+) on FIELD
+
+directive @authorize(
+  """
+  The name of the authorization policy that determines access to the annotated resource.
+  """
+  policy: String
+
+  """
+  Roles that are allowed to access the annotated resource.
+  """
+  roles: [String!]
+
+  """
+  Defines when when the resolver shall be executed.By default the resolver is executed after the policy has determined that the current user is allowed to access the field.
+  """
+  apply: ApplyPolicy! = BEFORE_RESOLVER
+) repeatable on SCHEMA | OBJECT | FIELD_DEFINITION
+
+"""
+A position is an array of numbers. There MUST be two or more elements. The first two elements are longitude and latitude, or easting and northing, precisely in that order and using decimal numbers. Altitude or elevation MAY be included as an optional third element.
+"""
+scalar Position
+
+interface GeoJSONInterface {
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType!
+
+  """
+  The minimum bounding box around the geometry object
+  """
+  bbox: [Float]
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int
+}
+
+input GeoJSONPointInput {
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType
+
+  """
+  The "coordinates" field is a single position.
+  """
+  coordinates: Position
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int
+}
+
+input GeoJSONMultiPointInput {
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType
+
+  """
+  The "coordinates" field is an array of positions.
+  """
+  coordinates: [Position]
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int
+}
+
+input GeoJSONLineStringInput {
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType
+
+  """
+  The "coordinates" field is an array of two or more positions.
+  """
+  coordinates: [Position]
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int
+}
+
+input GeoJSONMultiLineStringInput {
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType
+
+  """
+  The "coordinates" field is an array of LineString coordinate arrays.
+  """
+  coordinates: [[Position]]
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int
+}
+
+input GeoJSONPolygonInput {
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType
+
+  """
+  The "coordinates" field MUST be an array of linear ring coordinate arrays. For Polygons with more than one of these rings, the first MUST be the exterior ring, and any others MUST be interior rings. The exterior ring bounds the surface, and the interior rings (if present) bound holes within the surface.
+  """
+  coordinates: [[Position]]
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int
+}
+
+input GeoJSONMultiPolygonInput {
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType
+
+  """
+  The "coordinates" field is an array of Polygon coordinate arrays.
+  """
+  coordinates: Coordinates
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int
+}
+
+type GeoJSONPointType implements GeoJSONInterface {
+  """
+  The "coordinates" field is a single position.
+  """
+  coordinates: Position
+
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType!
+
+  """
+  The minimum bounding box around the geometry object
+  """
+  bbox: [Float!]!
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int!
+}
+
+type GeoJSONMultiPointType implements GeoJSONInterface {
+  """
+  The "coordinates" field is an array of positions.
+  """
+  coordinates: [Position]
+
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType!
+
+  """
+  The minimum bounding box around the geometry object
+  """
+  bbox: [Float!]!
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int!
+}
+
+type GeoJSONLineStringType implements GeoJSONInterface {
+  """
+  The "coordinates" field is an array of two or more positions.
+  """
+  coordinates: [Position]
+
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType!
+
+  """
+  The minimum bounding box around the geometry object
+  """
+  bbox: [Float!]!
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int!
+}
+
+type GeoJSONMultiLineStringType implements GeoJSONInterface {
+  """
+  The "coordinates" field is an array of LineString coordinate arrays.
+  """
+  coordinates: [Position]
+
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType!
+
+  """
+  The minimum bounding box around the geometry object
+  """
+  bbox: [Float!]!
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int!
+}
+
+type GeoJSONPolygonType implements GeoJSONInterface {
+  """
+  The "coordinates" field MUST be an array of linear ring coordinate arrays. For Polygons with more than one of these rings, the first MUST be the exterior ring, and any others MUST be interior rings. The exterior ring bounds the surface, and the interior rings (if present) bound holes within the surface.
+  """
+  coordinates: [[Position]]
+
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType!
+
+  """
+  The minimum bounding box around the geometry object
+  """
+  bbox: [Float!]!
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int!
+}
+
+type GeoJSONMultiPolygonType implements GeoJSONInterface {
+  """
+  The "coordinates" field is an array of Polygon coordinate arrays.
+  """
+  coordinates: Coordinates
+
+  """
+  The geometry type of the GeoJson object
+  """
+  type: GeoJSONGeometryType!
+
+  """
+  The minimum bounding box around the geometry object
+  """
+  bbox: [Float!]!
+
+  """
+  The coordinate reference system integer identifier
+  """
+  crs: Int!
+}
+
+enum GeoJSONGeometryType {
+  Point
+  MultiPoint
+  LineString
+  MultiLineString
+  Polygon
+  MultiPolygon
+  GeometryCollection
+}
+
+scalar Geometry
+
+type Query {
+  user_login: ResponseBaseOfUsers
+  user_getProfile(userId: Int): ResponseBaseOfUsers
+  message_getConversation(conversationId: Int!): ListResponseBaseOfMessages
+  message_getUserMessages: ListResponseBaseOfConversationDto
+  notification_getNotifications: ListResponseBaseOfNotification
+  project_getProject(projectId: Int!): ResponseBaseOfProjectDto
+  project_getProjects: ListResponseBaseOfProjectDto
+  project_getUserLikeProject(projectId: Int!): ResponseBaseOfProjectDto
+  project_getUserLikeProjects: ListResponseBaseOfProjectDto
+  project_getQuestions: ListResponseBaseOfQuestion
+  bid_getBids: ListResponseBaseOfBid
+}
+
+type Mutation {
+  user_signUp: ResponseBaseOfUsers
+  user_updateProfile(userInput: UserInput): ResponseBaseOfUsers
+  user_UpdateLastSeen: ResponseBaseOfUsers
+  message_createMessage(messageInput: MessageInput): ResponseBaseOfMessages
+  message_removeConversation(conversationId: Int!): ResponseBase
+  message_deleteMessage(messageId: Int!): ResponseBaseOfMessages
+  notification_addNotification(
+    notifications: [NotificationInputsInput]
+  ): ListResponseBaseOfNotification
+  notification_readNotification(
+    notificationId: Int!
+  ): ResponseBaseOfNotification
+  project_addProject(addProjectInput: AddProjectInput): ResponseBaseOfProject
+  project_editProject(editProjectInput: EditProjectInput): ResponseBaseOfProject
+  project_finisheProject(projectId: Int!): ResponseBaseOfProject
+  project_faileProject(projectId: Int!): ResponseBaseOfProject
+  project_reopenProject(projectId: Int!): ResponseBaseOfProject
+  project_like(projectId: Int!): ResponseBaseOfUserLikeProject
+  project_unlike(projectId: Int!, userId: Int): ResponseBaseOfUserLikeProject
+  project_addQuestion(questionInput: QuestionInput): ResponseBaseOfQuestion
+  bid_addBid(bidInput: BidInput): ResponseBaseOfBid
+  bid_editBid(editBidInput: EditBidInput): ResponseBaseOfBid
+  bid_deleteBid(bidId: Int!): ResponseBaseOfBid
+  project_addFeedBack(feedbackInput: FeedbackInput): ResponseBaseOfBid
+  bid_acceptBid(bidId: Int!): ResponseBaseOfBid
+  bid_rejectBid(bidId: Int!): ResponseBaseOfBid
+  bid_cancellBid(bidId: Int!): ResponseBaseOfBid
+}
+
+type Subscription {
+  messageAdded(userId: Int!): Messages
+}
+
+type Bid {
+  bidStatus: BidStatus!
+  amount: Float!
+  description: String
+  hudusComment: String
+  hudusRate: String
+  isHuduCommented: Boolean!
+  listersComment: String
+  listersRate: String
+  isListerCommented: Boolean!
+  hudu: Users
+  huduId: Int!
+  lister: Users
+  listerId: Int!
+  project: Project
+  projectId: Int!
+  payments: [Payment]
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type Conversations {
+  subject: String
+  firstUserId: Int!
+  firstUser: Users
+  secondUserId: Int!
+  secondUser: Users
+  firstUnreadCount: Int!
+  secondUnreadCount: Int!
+  latestMessageDate: DateTime!
+  messages: [Messages]
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type Messages {
+  createdAt: DateTime!
+  conversationId: Int!
+  conversation: Conversations
+  senderId: Int!
+  sender: Users
+  text: String
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type Notification {
+  title: String
+  description: String
+  isReaded: Boolean!
+  notificationType: NotificationType!
+  userId: Int!
+  user: Users
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type Payment {
+  amount: Float!
+  intentId: String
+  intentStatus: String
+  clientSecret: String
+  bid: Bid
+  bidId: Int!
+  userId: Int!
+  user: Users
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type Project {
+  projectStatus: ProjectStatus!
+  title: String
+  description: String
+  duration: Int!
+  availability: Availability!
+  streetAddress: String
+  city: String
+  state: String
+  longitude: Float!
+  latitude: Float!
+  zipCode: String
+  bids: [Bid]
+  questions: [Question]
+  projectImages: [ProjectImages]
+  userLikeProjects: [UserLikeProject]
+  userId: Int!
+  user: Users
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type ProjectImages {
+  imageAddress: String
+  project: Project
+  projectId: Int!
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type Question {
+  text: String
+  parentQuestion: Question
+  parentId: Int
+  childrenQuestions: [Question]
+  project: Project
+  projectId: Int!
+  userId: Int!
+  user: Users
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type UserLikeProject {
+  projectId: Int!
+  project: Project
+  userId: Int!
+  user: Users
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type Users {
+  email: String
+  userName: String
+  lastSeen: DateTime!
+  userTypes: UserTypes!
+  imageAddress: String
+  firstName: String
+  lastName: String
+  bio: String
+  streetAddress: String
+  city: String
+  state: String
+  longitude: Float!
+  latitude: Float!
+  zipCode: String
+  rate: Int!
+  payments: [Payment]
+  userLikeProjects: [UserLikeProject]
+  projects: [Project]
+  notifications: [Notification]
+  questions: [Question]
+  hudus: [Bid]
+  listers: [Bid]
+  externalId: String
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
+}
+
+type ConversationDto {
+  subject: String
+  conversationId: Int!
+  user: Users
+  unreadCount: Int!
+  latestMessageDate: DateTime!
+}
+
+type ProjectDto {
+  project: Project
+  isLiked: Boolean!
+}
+
+"""
+A coordinate is an array of positions.
+"""
+scalar Coordinates
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+}
+
+enum BidStatus {
+  WAITING
+  IN_PROGRESS
+  NOT_LUCKY
+  CANCELL
+  FAILED
+  FINISHED
+}
+
+"""
+The `DateTime` scalar represents an ISO-8601 compliant date time type.
+"""
+scalar DateTime
+
+enum NotificationType {
+  NEW_BID_GIVEN
+  BID_WAS_EDITED
+  BID_WAS_DELETED
+  BID_APPROVED_BY_LISTER
+  BID_REJECTED_BY_LISTER
+  BID_CANCELLED_BY_HUDU
+  PROJECT_FINISHED_BY_LISTER
+  PROJECT_FAILED_BY_LISTER
+  CREATE_CHAT
+  OTHER
+}
+
+enum ProjectStatus {
+  BIDDING
+  IN_PROGRESS
+  FAILED
+  FINISHED
+}
+
+enum Availability {
+  FLEXIBLE
+  SOME_FLEXIBILITY
+  SPECIFIC_TIME
+}
+
+enum UserTypes {
+  ADMIN
+  USER
+}
+
+type ResponseBaseOfUserLikeProject {
+  result: UserLikeProject
+  status: ResponseStatus!
+}
+
+input EditProjectInput {
+  id: Int!
+  title: String
+  description: String
+  duration: Int
+  availability: Availability
+  streetAddress: String
+  city: String
+  state: String
+  point: Position
+  zipCode: String
+  projectImages: [ProjectImagesInput]
+}
+
+input AddProjectInput {
+  title: String!
+  description: String!
+  duration: Int
+  availability: Availability!
+  streetAddress: String!
+  city: String!
+  state: String!
+  point: Position!
+  zipCode: String!
+  projectImages: [ProjectImagesInput]
+}
+
+type ResponseBaseOfProject {
+  result: Project
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfNotification {
+  result: Notification
+  status: ResponseStatus!
+}
+
+input NotificationInputsInput {
+  title: String!
+  description: String!
+  userId: Int!
+}
+
+type ResponseBase {
+  status: ResponseStatus!
+}
+
+input MessageInput {
+  subject: String
+  programId: Int
+  careerId: Int
+  isChatWithCareer: Boolean!
+  conversationId: Int
+  receiverId: Int
+  text: String
+}
+
+type ResponseBaseOfMessages {
+  result: Messages
+  status: ResponseStatus!
+}
+
+input UserInput {
+  id: Int
+  userName: String
+  imageAddress: String
+  firstName: String
+  lastName: String
+  bio: String
+  streetAddress: String
+  city: String
+  state: String
+  point: Position!
+  zipCode: String
+}
+
+type ListResponseBaseOfBid {
+  result(
+    skip: Int
+    take: Int
+    where: BidFilterInput
+    order: [BidSortInput!]
+  ): BidCollectionSegment
+  status: ResponseStatus!
+}
+
+type ListResponseBaseOfQuestion {
+  result(
+    skip: Int
+    take: Int
+    where: QuestionFilterInput
+    order: [QuestionSortInput!]
+  ): QuestionCollectionSegment
+  status: ResponseStatus!
+}
+
+type ListResponseBaseOfProjectDto {
+  result(
+    skip: Int
+    take: Int
+    where: ProjectDtoFilterInput
+    order: [ProjectDtoSortInput!]
+  ): ProjectDtoCollectionSegment
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfProjectDto {
+  result: ProjectDto
+  status: ResponseStatus!
+}
+
+type ListResponseBaseOfNotification {
+  result(
+    skip: Int
+    take: Int
+    where: NotificationFilterInput
+    order: [NotificationSortInput!]
+  ): NotificationCollectionSegment
+  status: ResponseStatus!
+}
+
+type ListResponseBaseOfConversationDto {
+  result(
+    skip: Int
+    take: Int
+    where: ConversationDtoFilterInput
+    order: [ConversationDtoSortInput!]
+  ): ConversationDtoCollectionSegment
+  status: ResponseStatus!
+}
+
+type ListResponseBaseOfMessages {
+  result(
+    skip: Int
+    take: Int
+    where: MessagesFilterInput
+    order: [MessagesSortInput!]
+  ): MessagesCollectionSegment
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfUsers {
+  result: Users
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfQuestion {
+  result: Question
+  status: ResponseStatus!
+}
+
+input QuestionInput {
+  text: String!
+  projectId: Int!
+  parentId: Int
+}
+
+type ResponseBaseOfBid {
+  result: Bid
+  status: ResponseStatus!
+}
+
+input BidInput {
+  amount: Float!
+  description: String!
+  projectId: Int!
+}
+
+input EditBidInput {
+  bidId: Int!
+  amount: Float
+  description: String
+}
+
+input FeedbackInput {
+  bidId: Int!
+  hudusComment: String
+  hudusRate: Int!
+  listersComment: String
+  listersRate: Int!
+}
+
+input BidFilterInput {
+  and: [BidFilterInput!]
+  or: [BidFilterInput!]
+  bidStatus: BidStatusOperationFilterInput
+  amount: ComparableDoubleOperationFilterInput
+  description: StringOperationFilterInput
+  hudusComment: StringOperationFilterInput
+  hudusRate: StringOperationFilterInput
+  isHuduCommented: BooleanOperationFilterInput
+  listersComment: StringOperationFilterInput
+  listersRate: StringOperationFilterInput
+  isListerCommented: BooleanOperationFilterInput
+  hudu: UsersFilterInput
+  huduId: ComparableInt32OperationFilterInput
+  lister: UsersFilterInput
+  listerId: ComparableInt32OperationFilterInput
+  project: ProjectFilterInput
+  projectId: ComparableInt32OperationFilterInput
+  payments: ListFilterInputTypeOfPaymentFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input BidSortInput {
+  bidStatus: SortEnumType
+  amount: SortEnumType
+  description: SortEnumType
+  hudusComment: SortEnumType
+  hudusRate: SortEnumType
+  isHuduCommented: SortEnumType
+  listersComment: SortEnumType
+  listersRate: SortEnumType
+  isListerCommented: SortEnumType
+  hudu: UsersSortInput
+  huduId: SortEnumType
+  lister: UsersSortInput
+  listerId: SortEnumType
+  project: ProjectSortInput
+  projectId: SortEnumType
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+type BidCollectionSegment {
+  items: [Bid]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input QuestionFilterInput {
+  and: [QuestionFilterInput!]
+  or: [QuestionFilterInput!]
+  text: StringOperationFilterInput
+  parentQuestion: QuestionFilterInput
+  parentId: ComparableNullableOfInt32OperationFilterInput
+  childrenQuestions: ListFilterInputTypeOfQuestionFilterInput
+  project: ProjectFilterInput
+  projectId: ComparableInt32OperationFilterInput
+  userId: ComparableInt32OperationFilterInput
+  user: UsersFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input QuestionSortInput {
+  text: SortEnumType
+  parentQuestion: QuestionSortInput
+  parentId: SortEnumType
+  project: ProjectSortInput
+  projectId: SortEnumType
+  userId: SortEnumType
+  user: UsersSortInput
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+type QuestionCollectionSegment {
+  items: [Question]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input ProjectDtoFilterInput {
+  and: [ProjectDtoFilterInput!]
+  or: [ProjectDtoFilterInput!]
+  project: ProjectFilterInput
+  isLiked: BooleanOperationFilterInput
+}
+
+input ProjectDtoSortInput {
+  project: ProjectSortInput
+  isLiked: SortEnumType
+}
+
+type ProjectDtoCollectionSegment {
+  items: [ProjectDto]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input NotificationFilterInput {
+  and: [NotificationFilterInput!]
+  or: [NotificationFilterInput!]
+  title: StringOperationFilterInput
+  description: StringOperationFilterInput
+  isReaded: BooleanOperationFilterInput
+  notificationType: NotificationTypeOperationFilterInput
+  userId: ComparableInt32OperationFilterInput
+  user: UsersFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input NotificationSortInput {
+  title: SortEnumType
+  description: SortEnumType
+  isReaded: SortEnumType
+  notificationType: SortEnumType
+  userId: SortEnumType
+  user: UsersSortInput
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+type NotificationCollectionSegment {
+  items: [Notification]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input ConversationDtoFilterInput {
+  and: [ConversationDtoFilterInput!]
+  or: [ConversationDtoFilterInput!]
+  subject: StringOperationFilterInput
+  conversationId: ComparableInt32OperationFilterInput
+  user: UsersFilterInput
+  unreadCount: ComparableInt32OperationFilterInput
+  latestMessageDate: ComparableDateTimeOperationFilterInput
+}
+
+input ConversationDtoSortInput {
+  subject: SortEnumType
+  conversationId: SortEnumType
+  user: UsersSortInput
+  unreadCount: SortEnumType
+  latestMessageDate: SortEnumType
+}
+
+type ConversationDtoCollectionSegment {
+  items: [ConversationDto]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input MessagesFilterInput {
+  and: [MessagesFilterInput!]
+  or: [MessagesFilterInput!]
+  createdAt: ComparableDateTimeOperationFilterInput
+  conversationId: ComparableInt32OperationFilterInput
+  conversation: ConversationsFilterInput
+  senderId: ComparableInt32OperationFilterInput
+  sender: UsersFilterInput
+  text: StringOperationFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input MessagesSortInput {
+  createdAt: SortEnumType
+  conversationId: SortEnumType
+  conversation: ConversationsSortInput
+  senderId: SortEnumType
+  sender: UsersSortInput
+  text: SortEnumType
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+type MessagesCollectionSegment {
+  items: [Messages]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input BidStatusOperationFilterInput {
+  eq: BidStatus
+  neq: BidStatus
+  in: [BidStatus!]
+  nin: [BidStatus!]
+}
+
+input ComparableDoubleOperationFilterInput {
+  eq: Float
+  neq: Float
+  in: [Float!]
+  nin: [Float!]
+  gt: Float
+  ngt: Float
+  gte: Float
+  ngte: Float
+  lt: Float
+  nlt: Float
+  lte: Float
+  nlte: Float
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input UsersFilterInput {
+  and: [UsersFilterInput!]
+  or: [UsersFilterInput!]
+  email: StringOperationFilterInput
+  userName: StringOperationFilterInput
+  lastSeen: ComparableDateTimeOperationFilterInput
+  userTypes: UserTypesOperationFilterInput
+  imageAddress: StringOperationFilterInput
+  firstName: StringOperationFilterInput
+  lastName: StringOperationFilterInput
+  bio: StringOperationFilterInput
+  streetAddress: StringOperationFilterInput
+  city: StringOperationFilterInput
+  state: StringOperationFilterInput
+  longitude: ComparableDoubleOperationFilterInput
+  latitude: ComparableDoubleOperationFilterInput
+  zipCode: StringOperationFilterInput
+  rate: ComparableInt32OperationFilterInput
+  payments: ListFilterInputTypeOfPaymentFilterInput
+  userLikeProjects: ListFilterInputTypeOfUserLikeProjectFilterInput
+  projects: ListFilterInputTypeOfProjectFilterInput
+  notifications: ListFilterInputTypeOfNotificationFilterInput
+  questions: ListFilterInputTypeOfQuestionFilterInput
+  hudus: ListFilterInputTypeOfBidFilterInput
+  listers: ListFilterInputTypeOfBidFilterInput
+  externalId: StringOperationFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input ComparableInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int!]
+  nin: [Int!]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ProjectFilterInput {
+  and: [ProjectFilterInput!]
+  or: [ProjectFilterInput!]
+  projectStatus: ProjectStatusOperationFilterInput
+  title: StringOperationFilterInput
+  description: StringOperationFilterInput
+  duration: ComparableInt32OperationFilterInput
+  availability: AvailabilityOperationFilterInput
+  streetAddress: StringOperationFilterInput
+  city: StringOperationFilterInput
+  state: StringOperationFilterInput
+  longitude: ComparableDoubleOperationFilterInput
+  latitude: ComparableDoubleOperationFilterInput
+  zipCode: StringOperationFilterInput
+  bids: ListFilterInputTypeOfBidFilterInput
+  questions: ListFilterInputTypeOfQuestionFilterInput
+  projectImages: ListFilterInputTypeOfProjectImagesFilterInput
+  userLikeProjects: ListFilterInputTypeOfUserLikeProjectFilterInput
+  userId: ComparableInt32OperationFilterInput
+  user: UsersFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input ListFilterInputTypeOfPaymentFilterInput {
+  all: PaymentFilterInput
+  none: PaymentFilterInput
+  some: PaymentFilterInput
+  any: Boolean
+}
+
+input ComparableDateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime!]
+  nin: [DateTime!]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+input UsersSortInput {
+  email: SortEnumType
+  userName: SortEnumType
+  lastSeen: SortEnumType
+  userTypes: SortEnumType
+  imageAddress: SortEnumType
+  firstName: SortEnumType
+  lastName: SortEnumType
+  bio: SortEnumType
+  streetAddress: SortEnumType
+  city: SortEnumType
+  state: SortEnumType
+  longitude: SortEnumType
+  latitude: SortEnumType
+  zipCode: SortEnumType
+  rate: SortEnumType
+  externalId: SortEnumType
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+input ProjectSortInput {
+  projectStatus: SortEnumType
+  title: SortEnumType
+  description: SortEnumType
+  duration: SortEnumType
+  availability: SortEnumType
+  streetAddress: SortEnumType
+  city: SortEnumType
+  state: SortEnumType
+  longitude: SortEnumType
+  latitude: SortEnumType
+  zipCode: SortEnumType
+  userId: SortEnumType
+  user: UsersSortInput
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+"""
+Information about the offset pagination.
+"""
+type CollectionSegmentInfo {
+  """
+  Indicates whether more items exist following the set defined by the clients arguments.
+  """
+  hasNextPage: Boolean!
+
+  """
+  Indicates whether more items exist prior the set defined by the clients arguments.
+  """
+  hasPreviousPage: Boolean!
+}
+
+input ComparableNullableOfInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int]
+  nin: [Int]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ListFilterInputTypeOfQuestionFilterInput {
+  all: QuestionFilterInput
+  none: QuestionFilterInput
+  some: QuestionFilterInput
+  any: Boolean
+}
+
+input NotificationTypeOperationFilterInput {
+  eq: NotificationType
+  neq: NotificationType
+  in: [NotificationType!]
+  nin: [NotificationType!]
+}
+
+input ConversationsFilterInput {
+  and: [ConversationsFilterInput!]
+  or: [ConversationsFilterInput!]
+  subject: StringOperationFilterInput
+  firstUserId: ComparableInt32OperationFilterInput
+  firstUser: UsersFilterInput
+  secondUserId: ComparableInt32OperationFilterInput
+  secondUser: UsersFilterInput
+  firstUnreadCount: ComparableInt32OperationFilterInput
+  secondUnreadCount: ComparableInt32OperationFilterInput
+  latestMessageDate: ComparableDateTimeOperationFilterInput
+  messages: ListFilterInputTypeOfMessagesFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input ConversationsSortInput {
+  subject: SortEnumType
+  firstUserId: SortEnumType
+  firstUser: UsersSortInput
+  secondUserId: SortEnumType
+  secondUser: UsersSortInput
+  firstUnreadCount: SortEnumType
+  secondUnreadCount: SortEnumType
+  latestMessageDate: SortEnumType
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+input UserTypesOperationFilterInput {
+  eq: UserTypes
+  neq: UserTypes
+  in: [UserTypes!]
+  nin: [UserTypes!]
+}
+
+input ListFilterInputTypeOfUserLikeProjectFilterInput {
+  all: UserLikeProjectFilterInput
+  none: UserLikeProjectFilterInput
+  some: UserLikeProjectFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfProjectFilterInput {
+  all: ProjectFilterInput
+  none: ProjectFilterInput
+  some: ProjectFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfNotificationFilterInput {
+  all: NotificationFilterInput
+  none: NotificationFilterInput
+  some: NotificationFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfBidFilterInput {
+  all: BidFilterInput
+  none: BidFilterInput
+  some: BidFilterInput
+  any: Boolean
+}
+
+input ProjectStatusOperationFilterInput {
+  eq: ProjectStatus
+  neq: ProjectStatus
+  in: [ProjectStatus!]
+  nin: [ProjectStatus!]
+}
+
+input AvailabilityOperationFilterInput {
+  eq: Availability
+  neq: Availability
+  in: [Availability!]
+  nin: [Availability!]
+}
+
+input ListFilterInputTypeOfProjectImagesFilterInput {
+  all: ProjectImagesFilterInput
+  none: ProjectImagesFilterInput
+  some: ProjectImagesFilterInput
+  any: Boolean
+}
+
+input PaymentFilterInput {
+  and: [PaymentFilterInput!]
+  or: [PaymentFilterInput!]
+  amount: ComparableDoubleOperationFilterInput
+  intentId: StringOperationFilterInput
+  intentStatus: StringOperationFilterInput
+  clientSecret: StringOperationFilterInput
+  bid: BidFilterInput
+  bidId: ComparableInt32OperationFilterInput
+  userId: ComparableInt32OperationFilterInput
+  user: UsersFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input ListFilterInputTypeOfMessagesFilterInput {
+  all: MessagesFilterInput
+  none: MessagesFilterInput
+  some: MessagesFilterInput
+  any: Boolean
+}
+
+input UserLikeProjectFilterInput {
+  and: [UserLikeProjectFilterInput!]
+  or: [UserLikeProjectFilterInput!]
+  projectId: ComparableInt32OperationFilterInput
+  project: ProjectFilterInput
+  userId: ComparableInt32OperationFilterInput
+  user: UsersFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input ProjectImagesFilterInput {
+  and: [ProjectImagesFilterInput!]
+  or: [ProjectImagesFilterInput!]
+  imageAddress: StringOperationFilterInput
+  project: ProjectFilterInput
+  projectId: ComparableInt32OperationFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input ProjectImagesInput {
+  id: Int
+  imageAddress: String
+}
+
+enum ResponseStatus {
+  SUCCESS
+  NOT_FOUND
+  UNKNOWN_ERROR
+  NOT_ENOUGH_DATA
+  AUTHENTICATION_FAILED
+  USER_NOT_FOUND
+  ALREADY_EXIST
+  SELF_MESSAGE_NOT_ALLOWED
+  ALREADY_REMOVED
+  NOT_ALLOWED
+  ALREADY_FOLLOWED
+  SAME_ID
+  POST_NOT_FOUND
+  COMMENT_NOT_FOUND
+  INVALID_TIME_RANGE
+  TIME_CONFLICT
+  INVALID_TIME_SYNTAX
+  DIFFRENET_IDS
+  HOST_NOT_FOUND
+  ACCESS_DENIED
+  FAILED
+  USERNAME_ALREADY_EXIST
+  DURATION_IS_REQUIRED
+  ACTIVE_BIDS_EXIST
+  IN_PROGRESS_BID_EXIST
+  SELF_BID_NOT_ALLOWED
+}

@@ -27,12 +27,17 @@
     "generate:ts": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/typescript": "^2.5.0",
+    "@graphql-codegen/typescript-operations": "^2.4.1",
     "@hookform/resolvers": "2.8.8",
     "@react-native-async-storage/async-storage": "^1.17.5",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
     "dayjs": "^1.11.3",
+    "graphql": "^16.5.0",
+    "graphql-request": "^4.3.0",
     "husky": "^8.0.1",
     "lint-staged": "^12.4.2",
     "lodash.debounce": "^4.0.8",
@@ -54,6 +59,7 @@
     "react-native-svg": "^12.3.0",
     "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^9.1.0",
+    "react-query": "^3.39.1",
     "yup": "^0.32.11",
     "zustand": "^4.0.0-rc.1"
   },
