@@ -2,7 +2,6 @@ import {Colors} from '~/styles';
 import images from '~/assets/images';
 import React, {useState} from 'react';
 import {fontFamily, scale} from '~/utils/style';
-import CollapsibleTabs from '../CollapsibleTabBar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {HEADER_HEIGHT, TABS_HEIGHT} from '~/styles/spacing';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -11,6 +10,7 @@ import {
   RatingStar,
   CustomImage,
   CustomContainer,
+  CollapsibleTabBar,
   SectionQuestionRouteLister,
   SectionActiveBidsRouteLister,
   SectionDescriptionRouteLister,
@@ -191,51 +191,44 @@ const ProjectDetailsListerScreen = ({navigation}: any) => {
             color={Colors.BLACK}>
             {data?.title}
           </Text>
-          {/* {index === 0 && (
-            <Center
-              bg={Colors.WHITE}
-              shadow="4"
-              borderRadius="lg"
-              py="2"
-              px="2">
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={listerProfileOnPress}
-                style={styles.profileRow}>
-                <HStack space="4">
-                  <CustomImage
-                    local
-                    imageSource={data?.hudur?.image}
-                    style={styles.avatar}
-                    resizeMode="stretch"
-                  />
-                  <VStack space="0.5" flex={1}>
-                    <Text
-                      fontSize={scale(16)}
-                      color={Colors.BLACK_1}
-                      fontFamily={fontFamily.medium}>
-                      {data?.hudur?.name}
-                    </Text>
-                    <Text
-                      fontSize={scale(12)}
-                      color={Colors.PLACEHOLDER}
-                      fontFamily={fontFamily.regular}>
-                      {data?.hudur?.email}
-                    </Text>
-                  </VStack>
-                  <VStack space="0.5" alignItems="center">
-                    <RatingStar rate={data?.hudur?.rating} showRating="right" />
-                    <Text
-                      fontSize={scale(10)}
-                      color={Colors.PLACEHOLDER}
-                      fontFamily={fontFamily.regular}>
-                      {`(${data?.hudur?.totalReviews} review)`}
-                    </Text>
-                  </VStack>
-                </HStack>
-              </TouchableOpacity>
-            </Center>
-          )} */}
+          {/* <Center bg={Colors.WHITE} shadow="4" borderRadius="lg" py="2" px="2">
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={listerProfileOnPress}
+              style={styles.profileRow}>
+              <HStack space="4">
+                <CustomImage
+                  local
+                  imageSource={data?.hudur?.image}
+                  style={styles.avatar}
+                  resizeMode="stretch"
+                />
+                <VStack space="0.5" flex={1}>
+                  <Text
+                    fontSize={scale(16)}
+                    color={Colors.BLACK_1}
+                    fontFamily={fontFamily.medium}>
+                    {data?.hudur?.name}
+                  </Text>
+                  <Text
+                    fontSize={scale(12)}
+                    color={Colors.PLACEHOLDER}
+                    fontFamily={fontFamily.regular}>
+                    {data?.hudur?.email}
+                  </Text>
+                </VStack>
+                <VStack space="0.5" alignItems="center">
+                  <RatingStar rate={data?.hudur?.rating} showRating="right" />
+                  <Text
+                    fontSize={scale(10)}
+                    color={Colors.PLACEHOLDER}
+                    fontFamily={fontFamily.regular}>
+                    {`(${data?.hudur?.totalReviews} review)`}
+                  </Text>
+                </VStack>
+              </HStack>
+            </TouchableOpacity>
+          </Center> */}
         </VStack>
       </View>
     );
@@ -285,7 +278,8 @@ const ProjectDetailsListerScreen = ({navigation}: any) => {
 
   return (
     <CustomContainer>
-      <CollapsibleTabs
+      <CollapsibleTabBar
+        // @ts-ignore
         selectedIndex={index}
         setSelected={setIndex}
         renderTabBar={<RenderTabBar />}

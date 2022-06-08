@@ -1,4 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
+// @ts-nocheck
+
 import {map, min} from 'lodash';
 import React, {Component} from 'react';
 import Carousel from 'react-native-snap-carousel';
@@ -71,10 +72,10 @@ class CollapsibleTabs extends Component {
     });
 
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.flex}>
         <Carousel
           data={tabs}
-          style={{flex: 1}}
+          style={styles.flex}
           inactiveSlideScale={1}
           itemWidth={screenWidth}
           sliderWidth={screenWidth}
@@ -113,6 +114,7 @@ class CollapsibleTabs extends Component {
 }
 
 const styles = {
+  flex: {flex: 1},
   tabsContainer: {
     left: 0,
     right: 0,
