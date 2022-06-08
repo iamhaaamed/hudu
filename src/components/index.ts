@@ -19,6 +19,7 @@ export {default as ImageBoxViewer} from './atoms/ImageBoxViewer';
 export {default as ProfilePicker} from './atoms/ProfilePicker';
 export {default as ReviewItem} from './atoms/ReviewItem';
 export {default as CustomCollapseText} from './atoms/CustomCollapseText';
+export {default as CollapsibleTabBar} from './atoms/CollapsibleTabBar';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';
