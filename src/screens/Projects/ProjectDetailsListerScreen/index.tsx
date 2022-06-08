@@ -1,26 +1,20 @@
-import React, {useState, useRef} from 'react';
-import {
-  StyleSheet,
-  Dimensions,
-  Animated,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {Center, VStack, Text, HStack, IconButton} from 'native-base';
-import {TabView, TabBar} from 'react-native-tab-view';
+import {Colors} from '~/styles';
 import images from '~/assets/images';
+import React, {useState} from 'react';
+import {fontFamily, scale} from '~/utils/style';
+import CollapsibleTabs from '../CollapsibleTabBar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {HEADER_HEIGHT, TABS_HEIGHT} from '~/styles/spacing';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Center, HStack, IconButton, Text, VStack} from 'native-base';
 import {
-  CustomContainer,
+  RatingStar,
   CustomImage,
-  SectionDescriptionRouteLister,
+  CustomContainer,
   SectionQuestionRouteLister,
   SectionActiveBidsRouteLister,
+  SectionDescriptionRouteLister,
 } from '~/components';
-import {Colors} from '~/styles';
-import {scale, fontFamily} from '~/utils/style';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {HEADER_HEIGHT, OTHER_TOP, TABS_HEIGHT} from '~/styles/spacing';
-import CollapsibleTabs from '../CollapsibleTabBar';
 
 const data = {
   title: 'Duct need cleaned out',
@@ -41,6 +35,62 @@ const data = {
     howLong: '12 Minutes',
   },
   questions: [
+    {
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      user: {
+        id: 1,
+        name: 'Mr.Jack',
+      },
+    },
+    {
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      user: {
+        id: 1,
+        name: 'Mr.Jack',
+      },
+    },
+    {
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      user: {
+        id: 1,
+        name: 'Mr.Jack',
+      },
+    },
+    {
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      user: {
+        id: 1,
+        name: 'Mr.Jack',
+      },
+    },
+    {
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      user: {
+        id: 1,
+        name: 'Mr.Jack',
+      },
+    },
+    {
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      user: {
+        id: 1,
+        name: 'Mr.Jack',
+      },
+    },
+    {
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      user: {
+        id: 1,
+        name: 'Mr.Jack',
+      },
+    },
     {
       message:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -72,12 +122,7 @@ const data = {
   ],
 };
 
-const initialLayout = {
-  height: 0,
-  width: Dimensions.get('window').width,
-};
-
-const ProjectDetailsListerScreen = ({route: inRoute, navigation}: any) => {
+const ProjectDetailsListerScreen = ({navigation}: any) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'description', title: 'Description'},
@@ -85,238 +130,183 @@ const ProjectDetailsListerScreen = ({route: inRoute, navigation}: any) => {
     {key: 'active-bids', title: 'Active bids'},
   ]);
 
-  const position: any = useRef(new Animated.Value(0)).current;
-  const isValidTabPress: any = useRef(false);
-  const descriptionRef: any = useRef();
-  const questionRef: any = useRef();
-  const activeBidsRef: any = useRef();
-
-  const onMomentumScrollBegin = () => {
-    isValidTabPress.current = true;
-  };
-
   const favoriteOnPress = () => {};
 
   const backOnPress = () => {
     navigation.goBack();
   };
 
-  const syncOffset = (scene: any, y: any) => {
-    if (scene === 'description') {
-      descriptionRef?.current?.scrollToOffset({
-        offset: y,
-        animated: false,
-      });
-    }
-    if (scene === 'question') {
-      questionRef?.current?.scrollToOffset({
-        offset: y,
-        animated: false,
-      });
-    }
-    if (scene === 'active-bids') {
-      activeBidsRef?.current?.scrollToOffset({
-        offset: y,
-        animated: false,
-      });
-    }
-    isValidTabPress.current = false;
+  const listerProfileOnPress = () => {
+    navigation.navigate('ListerProfile');
   };
 
-  const renderScene = ({route}: any) => {
-    switch (route.key) {
-      case 'description':
-        return (
-          <SectionDescriptionRouteLister
-            key={route.key}
-            position={position}
-            syncOffset={syncOffset}
-            descriptionRef={descriptionRef}
-            onMomentumScrollBegin={onMomentumScrollBegin}
-            data={data?.description}
-          />
-        );
-      case 'question':
-        return (
-          <SectionQuestionRouteLister
-            key={route.key}
-            position={position}
-            syncOffset={syncOffset}
-            questionRef={questionRef}
-            onMomentumScrollBegin={onMomentumScrollBegin}
-            data={data?.questions}
-          />
-        );
-      case 'active-bids':
-        return (
-          <SectionActiveBidsRouteLister
-            key={route.key}
-            position={position}
-            syncOffset={syncOffset}
-            activeBidsRef={activeBidsRef}
-            onMomentumScrollBegin={onMomentumScrollBegin}
-            data={data?.activeBids}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
-  const RenderTabBarItem = ({route}: any) => {
-    const focused = route.key === routes[index].key;
+  function CollapsibleContent() {
     return (
-      <Center
-        h={35}
-        flex={1}
-        bg={focused ? Colors.PRIMARY : Colors.TRANSPARENT}
-        borderRadius={10}>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            if (!focused) {
-              switch (route.key) {
-                case 'description':
-                  setIndex(0);
-                  break;
-                case 'question':
-                  setIndex(1);
-                  break;
-                case 'active-bids':
-                  setIndex(2);
-                  break;
-              }
-            }
-          }}
-          style={styles.tabBarButton}>
-          <Center flex={1}>
-            <Text color={focused ? Colors.WHITE : Colors.BLACK_3}>
-              {route.title}
-            </Text>
-          </Center>
-        </TouchableOpacity>
-      </Center>
-    );
-  };
-
-  function RenderTabBar() {
-    return (
-      <View style={[styles.header]}>
+      <View>
         <CustomImage
           local
-          style={[styles.image, {height: HEADER_HEIGHT}]}
           resizeMode="stretch"
-          imageSource={data?.image}>
+          imageSource={data?.image}
+          style={[styles.image, {height: HEADER_HEIGHT}]}>
           <HStack p="4" alignItems="center" justifyContent="space-between">
             <IconButton
+              borderRadius="full"
               onPress={backOnPress}
               bg={Colors.WHITE_RIPPLE_COLOR}
               colorScheme={Colors.WHITE_RIPPLE_COLOR}
-              borderRadius="full"
               icon={
                 <Ionicons
+                  size={24}
                   name="chevron-back"
                   color={Colors.BLACK_3}
-                  size={24}
                 />
               }
             />
             <IconButton
+              borderRadius="full"
               onPress={favoriteOnPress}
               bg={Colors.WHITE_RIPPLE_COLOR}
               colorScheme={Colors.WHITE_RIPPLE_COLOR}
-              borderRadius="full"
               icon={
                 <Ionicons
+                  size={24}
                   name="heart-outline"
                   color={Colors.BLACK_3}
-                  size={24}
                 />
               }
             />
           </HStack>
         </CustomImage>
         <VStack
-          bg={Colors.WHITE}
-          borderTopRadius="2xl"
           px="4"
           py="2"
           space="4"
-          justifyContent="center"
-          top={-OTHER_TOP}>
+          top={-10}
+          bg={Colors.WHITE}
+          borderTopRadius="2xl"
+          justifyContent="center">
           <Text
             fontSize={scale(20)}
             fontFamily={fontFamily.medium}
             color={Colors.BLACK}>
             {data?.title}
           </Text>
-          {/* <TabBar
-            {...props}
-            renderTabBarItem={renderTabBarItem}
-            renderIndicator={() => <></>}
-            style={styles.tabBar}
-          /> */}
+          {/* {index === 0 && (
+            <Center
+              bg={Colors.WHITE}
+              shadow="4"
+              borderRadius="lg"
+              py="2"
+              px="2">
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={listerProfileOnPress}
+                style={styles.profileRow}>
+                <HStack space="4">
+                  <CustomImage
+                    local
+                    imageSource={data?.hudur?.image}
+                    style={styles.avatar}
+                    resizeMode="stretch"
+                  />
+                  <VStack space="0.5" flex={1}>
+                    <Text
+                      fontSize={scale(16)}
+                      color={Colors.BLACK_1}
+                      fontFamily={fontFamily.medium}>
+                      {data?.hudur?.name}
+                    </Text>
+                    <Text
+                      fontSize={scale(12)}
+                      color={Colors.PLACEHOLDER}
+                      fontFamily={fontFamily.regular}>
+                      {data?.hudur?.email}
+                    </Text>
+                  </VStack>
+                  <VStack space="0.5" alignItems="center">
+                    <RatingStar rate={data?.hudur?.rating} showRating="right" />
+                    <Text
+                      fontSize={scale(10)}
+                      color={Colors.PLACEHOLDER}
+                      fontFamily={fontFamily.regular}>
+                      {`(${data?.hudur?.totalReviews} review)`}
+                    </Text>
+                  </VStack>
+                </HStack>
+              </TouchableOpacity>
+            </Center>
+          )} */}
         </VStack>
       </View>
+    );
+  }
+
+  function RenderTabBar() {
+    return (
+      <HStack mx="4" style={styles.tabBar}>
+        {routes.map(route => {
+          const focused = route.key === routes[index].key;
+          return (
+            <Center
+              h={35}
+              flex={1}
+              bg={focused ? Colors.PRIMARY : Colors.TRANSPARENT}
+              borderRadius={10}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => {
+                  if (!focused) {
+                    switch (route.key) {
+                      case 'description':
+                        setIndex(0);
+                        break;
+                      case 'question':
+                        setIndex(1);
+                        break;
+                      case 'active-bids':
+                        setIndex(2);
+                        break;
+                    }
+                  }
+                }}
+                style={styles.tabBarButton}>
+                <Center flex={1}>
+                  <Text color={focused ? Colors.WHITE : Colors.BLACK_3}>
+                    {route.title}
+                  </Text>
+                </Center>
+              </TouchableOpacity>
+            </Center>
+          );
+        })}
+      </HStack>
     );
   }
 
   return (
     <CustomContainer>
       <CollapsibleTabs
-        collapsibleContent={<RenderTabBar />}
-        tabElement={<RenderTabBarItem />}
+        selectedIndex={index}
+        setSelected={setIndex}
+        renderTabBar={<RenderTabBar />}
+        collapsibleContent={<CollapsibleContent />}
         tabs={[
           {
             label: 'description',
-            component: <></>,
-            // component: (
-            //   <SectionDescriptionRouteLister
-            //     position={position}
-            //     syncOffset={syncOffset}
-            //     descriptionRef={descriptionRef}
-            //     onMomentumScrollBegin={onMomentumScrollBegin}
-            //     data={data?.description}
-            //   />
-            // ),
+            component: (
+              <SectionDescriptionRouteLister data={data?.description} />
+            ),
           },
           {
             label: 'question',
-            component: <></>,
-            // component: (
-            //   <SectionQuestionRouteLister
-            //     key={route.key}
-            //     position={position}
-            //     syncOffset={syncOffset}
-            //     questionRef={questionRef}
-            //     onMomentumScrollBegin={onMomentumScrollBegin}
-            //     data={data?.questions}
-            //   />
-            // ),
+            component: <SectionQuestionRouteLister data={data?.questions} />,
           },
           {
             label: 'active-bids',
-            component: <></>,
-            // component: (
-            //   <SectionActiveBidsRouteLister
-            //     key={route.key}
-            //     position={position}
-            //     syncOffset={syncOffset}
-            //     activeBidsRef={activeBidsRef}
-            //     onMomentumScrollBegin={onMomentumScrollBegin}
-            //     data={data?.activeBids}
-            //   />
-            // ),
+            component: <SectionActiveBidsRouteLister data={data?.activeBids} />,
           },
         ]}
       />
-      {/* <TabView
-        navigationState={{index, routes}}
-        renderScene={renderScene}
-        renderTabBar={renderTabBar}
-        onIndexChange={setIndex}
-        initialLayout={initialLayout}
-      /> */}
     </CustomContainer>
   );
 };
@@ -331,7 +321,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  header: {position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1},
+  header: {zIndex: 1},
   image: {
     width: '100%',
   },

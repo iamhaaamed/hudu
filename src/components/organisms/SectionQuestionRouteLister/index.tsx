@@ -1,34 +1,25 @@
 import React from 'react';
-import {Animated, StyleSheet, useWindowDimensions} from 'react-native';
-import {HStack, Text, VStack, IconButton, Box} from 'native-base';
-import {HEADER_HEIGHT, TAB_BAR_HEIGHT, OTHER_PADDING} from '~/styles/spacing';
-import {fontFamily, scale} from '~/utils/style';
-import {Colors} from '~/styles';
-import {FormProvider, useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import {Colors} from '~/styles';
 import {CustomInput} from '~/components';
+import {fontFamily, scale} from '~/utils/style';
+import {FlatList, StyleSheet} from 'react-native';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {FormProvider, useForm} from 'react-hook-form';
 import Feather from 'react-native-vector-icons/Feather';
+import {Box, HStack, IconButton, Text, VStack} from 'native-base';
 
 const schema = yup.object().shape({
   message: yup.string().required('required'),
 });
 
-const SectionQuestionRouteLister = ({
-  position,
-  syncOffset,
-  questionRef,
-  onMomentumScrollBegin,
-  data,
-}: any) => {
-  const {height} = useWindowDimensions();
-
+const SectionQuestionRouteLister = ({data}: any) => {
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, watch} = methods;
+  const {register, watch} = methods;
 
   const sendOnPress = () => {};
 
@@ -57,29 +48,15 @@ const SectionQuestionRouteLister = ({
   const messageText = watch('message');
 
   return (
-    <>
-      <Animated.FlatList
-        ref={questionRef}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={1}
-        onMomentumScrollBegin={onMomentumScrollBegin}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: position}}}],
-          {useNativeDriver: true},
-        )}
-        onMomentumScrollEnd={e => {
-          syncOffset('question', e.nativeEvent.contentOffset.y);
-        }}
+    <VStack pt={4} pb={6}>
+      <FlatList
         data={data}
-        keyExtractor={(item, i) => String(i)}
         renderItem={renderItem}
+        scrollEventThrottle={1}
+        keyExtractor={(_, i) => String(i)}
+        showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        contentContainerStyle={[
-          styles.contentContainerStyle,
-          {
-            minHeight: height,
-          },
-        ]}
+        contentContainerStyle={styles.contentContainerStyle}
       />
       <VStack px="4" py="4">
         <FormProvider {...methods}>
@@ -101,7 +78,7 @@ const SectionQuestionRouteLister = ({
           />
         </FormProvider>
       </VStack>
-    </>
+    </VStack>
   );
 };
 
@@ -109,6 +86,7 @@ export default SectionQuestionRouteLister;
 
 const styles = StyleSheet.create({
   contentContainerStyle: {
-    paddingTop: HEADER_HEIGHT + TAB_BAR_HEIGHT + OTHER_PADDING,
+    flex: 1,
+    minHeight: 100,
   },
 });

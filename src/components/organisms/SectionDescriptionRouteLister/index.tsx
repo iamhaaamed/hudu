@@ -1,20 +1,16 @@
-import React from 'react';
-import {Animated, StyleSheet, useWindowDimensions} from 'react-native';
-import {HStack, Text, VStack, Icon} from 'native-base';
-import {Colors} from '~/styles';
-import {
-  HEADER_HEIGHT,
-  TAB_BAR_HEIGHT,
-  OTHER_PADDING,
-  TABS_TOP,
-} from '~/styles/spacing';
-import {fontFamily, scale, verticalScale} from '~/utils/style';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import dayjs from 'dayjs';
+import React from 'react';
+import {Colors} from '~/styles';
+import images from '~/assets/images';
+import {StyleSheet} from 'react-native';
+import {CustomImage} from '~/components';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import {CustomImage} from '~/components';
-import images from '~/assets/images';
+import {HStack, Text, VStack, Icon} from 'native-base';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {fontFamily, scale, verticalScale} from '~/utils/style';
+import CustomButton from '~/components/atoms/CustomButton';
+
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -35,112 +31,78 @@ dayjs.updateLocale('en', {
   },
 });
 
-const SectionDescriptionRouteLister = ({
-  position,
-  syncOffset,
-  descriptionRef,
-  onMomentumScrollBegin,
-  data,
-}: any) => {
-  const {height} = useWindowDimensions();
-
-  const renderItem = () => {
-    return (
-      <VStack top={-TABS_TOP} px="4" space="3">
+const SectionDescriptionRouteLister = ({data}: any) => {
+  return (
+    <VStack px="4" pt={4} pb={6} space="3">
+      <Text
+        fontSize={scale(16)}
+        fontFamily={fontFamily.regular}
+        color={Colors.PLACEHOLDER}>
+        {data?.description}
+      </Text>
+      <HStack alignItems="center" justifyContent="space-between">
         <Text
           fontSize={scale(16)}
           fontFamily={fontFamily.regular}
-          color={Colors.PLACEHOLDER}>
-          {data?.description}
+          color={Colors.BLACK_1}>
+          Current low bid
         </Text>
-        <HStack alignItems="center" justifyContent="space-between">
-          <Text
-            fontSize={scale(16)}
-            fontFamily={fontFamily.regular}
-            color={Colors.BLACK_1}>
-            Current low bid
-          </Text>
-          <Text
-            fontSize={scale(16)}
-            fontFamily={fontFamily.regular}
-            color={Colors.PRIMARY}>
-            ${data?.lowBid}
-          </Text>
-        </HStack>
-        <HStack alignItems="center" justifyContent="space-between">
-          <Text
-            fontSize={scale(16)}
-            fontFamily={fontFamily.regular}
-            color={Colors.BLACK_1}>
-            Time left
-          </Text>
-          <Text
-            fontSize={scale(16)}
-            fontFamily={fontFamily.regular}
-            color={Colors.PRIMARY}>
-            {dayjs('2022-01-01').toNow(true)}
-          </Text>
-        </HStack>
-        <HStack alignItems="center" justifyContent="space-between">
-          <HStack alignItems="center" space="1">
-            <Icon
-              as={<Ionicons name="location-outline" />}
-              color={Colors.PRIMARY}
-              size={scale(16)}
-            />
-            <Text
-              fontSize={scale(16)}
-              fontFamily={fontFamily.regular}
-              color={Colors.PRIMARY}>
-              {data?.location}
-            </Text>
-          </HStack>
+        <Text
+          fontSize={scale(16)}
+          fontFamily={fontFamily.regular}
+          color={Colors.PRIMARY}>
+          ${data?.lowBid}
+        </Text>
+      </HStack>
+      <HStack alignItems="center" justifyContent="space-between">
+        <Text
+          fontSize={scale(16)}
+          fontFamily={fontFamily.regular}
+          color={Colors.BLACK_1}>
+          Time left
+        </Text>
+        <Text
+          fontSize={scale(16)}
+          fontFamily={fontFamily.regular}
+          color={Colors.PRIMARY}>
+          {dayjs('2022-01-01').toNow(true)}
+        </Text>
+      </HStack>
+      <HStack alignItems="center" justifyContent="space-between">
+        <HStack alignItems="center" space="1">
+          <Icon
+            as={<Ionicons name="location-outline" />}
+            color={Colors.PRIMARY}
+            size={scale(16)}
+          />
           <Text
             fontSize={scale(16)}
             fontFamily={fontFamily.regular}
             color={Colors.PRIMARY}>
-            {dayjs('2022-06-07 11:25').toNow(true)}
+            {data?.location}
           </Text>
         </HStack>
-        <CustomImage
-          local
-          imageSource={images.mapImage}
-          resizeMode="stretch"
-          style={styles.image}
-        />
-      </VStack>
-    );
-  };
-
-  return (
-    <Animated.FlatList
-      showsVerticalScrollIndicator={false}
-      ref={descriptionRef}
-      scrollEventThrottle={1}
-      onMomentumScrollBegin={onMomentumScrollBegin}
-      onScroll={Animated.event(
-        [{nativeEvent: {contentOffset: {y: position}}}],
-        {useNativeDriver: true},
-      )}
-      onMomentumScrollEnd={e => {
-        syncOffset('description', e.nativeEvent.contentOffset.y);
-      }}
-      contentContainerStyle={[
-        styles.contentContainerStyle,
-        {minHeight: height},
-      ]}
-      data={['']}
-      renderItem={renderItem}
-    />
+        <Text
+          fontSize={scale(16)}
+          color={Colors.PRIMARY}
+          fontFamily={fontFamily.regular}>
+          {dayjs('2022-06-07 11:25').toNow(true)}
+        </Text>
+      </HStack>
+      <CustomImage
+        local
+        resizeMode="stretch"
+        style={styles.image}
+        imageSource={images.mapImage}
+      />
+      <CustomButton title="Submit Bid" onPress={() => {}} />
+    </VStack>
   );
 };
 
 export default SectionDescriptionRouteLister;
 
 const styles = StyleSheet.create({
-  contentContainerStyle: {
-    paddingTop: HEADER_HEIGHT + TAB_BAR_HEIGHT + OTHER_PADDING,
-  },
   image: {
     height: verticalScale(130),
     width: '100%',

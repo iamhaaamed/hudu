@@ -7,16 +7,6 @@ import {View, Dimensions, Animated, ScrollView} from 'react-native';
 const headerCollapsedHeight = 46;
 const {width: screenWidth} = Dimensions.get('screen');
 
-const styles = {
-  tabsContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    alignItems: 'stretch',
-  },
-};
-
 class CollapsibleTabs extends Component {
   scrolls = [];
 
@@ -29,6 +19,13 @@ class CollapsibleTabs extends Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    //Typical usage, don't forget to compare the props
+    if (this.props.selectedIndex !== prevProps.selectedIndex) {
+      this.onChangePage(this.props.selectedIndex);
+    }
+  }
+
   onChangePage(index) {
     const {scrollY} = this.state;
     Animated.timing(scrollY, {
@@ -37,14 +34,15 @@ class CollapsibleTabs extends Component {
       useNativeDriver: true,
     }).start();
 
+    this.props.setSelected(index);
     this.carousel.snapToItem(index);
     this.setState({selectedTab: index});
   }
 
   render() {
-    const {selectedTab, scrollY} = this.state;
-    const {collapsibleContent, tabs, tabElement} = this.props;
+    const {scrollY} = this.state;
     const {headerExpandedHeight} = this;
+    const {collapsibleContent, tabs, renderTabBar} = this.props;
 
     const headerHeight = scrollY.interpolate({
       inputRange: [0, headerExpandedHeight - headerCollapsedHeight],
@@ -107,19 +105,21 @@ class CollapsibleTabs extends Component {
           }}>
           {collapsibleContent}
           <View style={{height: headerCollapsedHeight}} />
-          <View style={styles.tabsContainer}>
-            {tabElement}
-            {/* <MaterialTabs
-                            {...this.props}
-                            items={map(tabs, ({label}) => label)}
-                            selectedIndex={selectedTab}
-                            onChange={index => this.onChangePage(index)}
-                        /> */}
-          </View>
+          <View style={styles.tabsContainer}>{renderTabBar}</View>
         </Animated.View>
       </View>
     );
   }
 }
+
+const styles = {
+  tabsContainer: {
+    left: 0,
+    right: 0,
+    bottom: 0,
+    position: 'absolute',
+    alignItems: 'stretch',
+  },
+};
 
 export default CollapsibleTabs;
