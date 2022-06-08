@@ -104,8 +104,8 @@ export default SectionDescriptionRouteLister;
 
 const styles = StyleSheet.create({
   image: {
-    height: verticalScale(130),
     width: '100%',
     borderRadius: 12,
+    height: verticalScale(130),
   },
 });

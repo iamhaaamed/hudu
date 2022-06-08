@@ -103,7 +103,10 @@ class CollapsibleTabs extends Component {
             this.headerExpandedHeight = nativeEvent.layout.height + 0.1;
           }}>
           {collapsibleContent}
-          <View style={{height: headerCollapsedHeight}} />
+          <View
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{height: headerCollapsedHeight, backgroundColor: 'white'}}
+          />
           <View style={styles.tabsContainer}>{renderTabBar}</View>
         </Animated.View>
       </View>

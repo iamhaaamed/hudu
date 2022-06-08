@@ -191,7 +191,7 @@ const ProjectDetailsListerScreen = ({navigation}: any) => {
             color={Colors.BLACK}>
             {data?.title}
           </Text>
-          {/* <Center bg={Colors.WHITE} shadow="4" borderRadius="lg" py="2" px="2">
+          <Center bg={Colors.WHITE} shadow="4" borderRadius="lg" py="2" px="2">
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={listerProfileOnPress}
@@ -228,7 +228,7 @@ const ProjectDetailsListerScreen = ({navigation}: any) => {
                 </VStack>
               </HStack>
             </TouchableOpacity>
-          </Center> */}
+          </Center>
         </VStack>
       </View>
     );
@@ -236,43 +236,45 @@ const ProjectDetailsListerScreen = ({navigation}: any) => {
 
   function RenderTabBar() {
     return (
-      <HStack mx="4" style={styles.tabBar}>
-        {routes.map(route => {
-          const focused = route.key === routes[index].key;
-          return (
-            <Center
-              h={35}
-              flex={1}
-              bg={focused ? Colors.PRIMARY : Colors.TRANSPARENT}
-              borderRadius={10}>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => {
-                  if (!focused) {
-                    switch (route.key) {
-                      case 'description':
-                        setIndex(0);
-                        break;
-                      case 'question':
-                        setIndex(1);
-                        break;
-                      case 'active-bids':
-                        setIndex(2);
-                        break;
+      <VStack bgColor={Colors.WHITE}>
+        <HStack mx="4" style={styles.tabBar}>
+          {routes.map(route => {
+            const focused = route.key === routes[index].key;
+            return (
+              <Center
+                h={35}
+                flex={1}
+                bg={focused ? Colors.PRIMARY : Colors.TRANSPARENT}
+                borderRadius={10}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    if (!focused) {
+                      switch (route.key) {
+                        case 'description':
+                          setIndex(0);
+                          break;
+                        case 'question':
+                          setIndex(1);
+                          break;
+                        case 'active-bids':
+                          setIndex(2);
+                          break;
+                      }
                     }
-                  }
-                }}
-                style={styles.tabBarButton}>
-                <Center flex={1}>
-                  <Text color={focused ? Colors.WHITE : Colors.BLACK_3}>
-                    {route.title}
-                  </Text>
-                </Center>
-              </TouchableOpacity>
-            </Center>
-          );
-        })}
-      </HStack>
+                  }}
+                  style={styles.tabBarButton}>
+                  <Center flex={1}>
+                    <Text color={focused ? Colors.WHITE : Colors.BLACK_3}>
+                      {route.title}
+                    </Text>
+                  </Center>
+                </TouchableOpacity>
+              </Center>
+            );
+          })}
+        </HStack>
+      </VStack>
     );
   }
 

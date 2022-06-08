@@ -19,7 +19,7 @@ const SectionQuestionRouteLister = ({data}: any) => {
     mode: 'onChange',
   });
 
-  const {register, watch} = methods;
+  const {handleSubmit, register, watch} = methods;
 
   const sendOnPress = () => {};
 
