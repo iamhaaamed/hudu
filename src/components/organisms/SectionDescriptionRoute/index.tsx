@@ -1,15 +1,15 @@
+import React, {useState, forwardRef, useCallback, memo} from 'react';
+import {StyleSheet, FlatList} from 'react-native';
+import {HStack, Icon, Text, VStack} from 'native-base';
+import Animated from 'react-native-reanimated';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import dayjs from 'dayjs';
 import {Colors} from '~/styles';
 import images from '~/assets/images';
-import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import {HStack, Icon, Text, VStack} from 'native-base';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {CustomButton, CustomImage, EditModal} from '~/components';
-
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -30,102 +30,145 @@ dayjs.updateLocale('en', {
   },
 });
 
-const SectionDescriptionRoute = ({data}: any) => {
-  const [editModalVisible, setEditModalVisible] = useState(false);
+export const AnimatedFlatList: typeof FlatList =
+  Animated.createAnimatedComponent(FlatList);
 
-  const closeEditModal = () => {
-    setEditModalVisible(false);
-  };
+const SectionDescriptionRoute = forwardRef(
+  (
+    {
+      data,
+      contentContainerStyle,
+      onMomentumScrollEnd,
+      onScrollEndDrag,
+      scrollEventThrottle,
+      scrollIndicatorInsets,
+      onScroll,
+    }: any,
+    ref,
+  ) => {
+    const [editModalVisible, setEditModalVisible] = useState(false);
 
-  const submitEditModal = () => {
-    setEditModalVisible(false);
-  };
+    const closeEditModal = () => {
+      setEditModalVisible(false);
+    };
 
-  const submitBidOnPress = () => {
-    setEditModalVisible(true);
-  };
+    const submitEditModal = () => {
+      setEditModalVisible(false);
+    };
 
-  return (
-    <>
-      <VStack px="4" pt={4} pb={6} space="3">
-        <Text
-          fontSize={scale(16)}
-          fontFamily={fontFamily.regular}
-          color={Colors.PLACEHOLDER}>
-          {data?.description}
-        </Text>
-        <HStack alignItems="center" justifyContent="space-between">
+    const submitBidOnPress = () => {
+      setEditModalVisible(true);
+    };
+
+    const keyExtractor = useCallback((_, index: number) => `key${index}`, []);
+
+    const ListHeaderComponent = useCallback(
+      () => (
+        <VStack pt="6" px="4" space="3">
           <Text
             fontSize={scale(16)}
             fontFamily={fontFamily.regular}
-            color={Colors.BLACK_1}>
-            Current low bid
+            color={Colors.PLACEHOLDER}>
+            {data?.description}
           </Text>
-          <Text
-            fontSize={scale(16)}
-            fontFamily={fontFamily.regular}
-            color={Colors.PRIMARY}>
-            ${data?.lowBid}
-          </Text>
-        </HStack>
-        <HStack alignItems="center" justifyContent="space-between">
-          <Text
-            fontSize={scale(16)}
-            fontFamily={fontFamily.regular}
-            color={Colors.BLACK_1}>
-            Time left
-          </Text>
-          <Text
-            fontSize={scale(16)}
-            fontFamily={fontFamily.regular}
-            color={Colors.PRIMARY}>
-            {dayjs('2022-01-01').toNow(true)}
-          </Text>
-        </HStack>
-        <HStack alignItems="center" justifyContent="space-between">
-          <HStack alignItems="center" space="1">
-            <Icon
-              as={<Ionicons name="location-outline" />}
-              color={Colors.PRIMARY}
-              size={scale(16)}
-            />
+          <HStack alignItems="center" justifyContent="space-between">
+            <Text
+              fontSize={scale(16)}
+              fontFamily={fontFamily.regular}
+              color={Colors.BLACK_1}>
+              Current low bid
+            </Text>
             <Text
               fontSize={scale(16)}
               fontFamily={fontFamily.regular}
               color={Colors.PRIMARY}>
-              {data?.location}
+              ${data?.lowBid}
             </Text>
           </HStack>
-          <Text
-            fontSize={scale(16)}
-            fontFamily={fontFamily.regular}
-            color={Colors.PRIMARY}>
-            {dayjs('2022-06-07 11:25').toNow(true)}
-          </Text>
-        </HStack>
-        <CustomImage
-          local
-          imageSource={images.mapImage}
-          resizeMode="stretch"
-          style={styles.image}
-        />
-        <CustomButton
-          title="Submit bid"
-          onPress={submitBidOnPress}
-          height={verticalScale(45)}
-        />
-      </VStack>
-      <EditModal
-        visible={editModalVisible}
-        onClose={closeEditModal}
-        onSubmit={submitEditModal}
-        title="Bid details"
-      />
-    </>
-  );
-};
+          <HStack alignItems="center" justifyContent="space-between">
+            <Text
+              fontSize={scale(16)}
+              fontFamily={fontFamily.regular}
+              color={Colors.BLACK_1}>
+              Time left
+            </Text>
+            <Text
+              fontSize={scale(16)}
+              fontFamily={fontFamily.regular}
+              color={Colors.PRIMARY}>
+              {dayjs('2022-01-01').toNow(true)}
+            </Text>
+          </HStack>
+          <HStack alignItems="center" justifyContent="space-between">
+            <HStack alignItems="center" space="1">
+              <Icon
+                as={<Ionicons name="location-outline" />}
+                color={Colors.PRIMARY}
+                size={scale(16)}
+              />
+              <Text
+                fontSize={scale(16)}
+                fontFamily={fontFamily.regular}
+                color={Colors.PRIMARY}>
+                {data?.location}
+              </Text>
+            </HStack>
+            <Text
+              fontSize={scale(16)}
+              fontFamily={fontFamily.regular}
+              color={Colors.PRIMARY}>
+              {dayjs('2022-06-07 11:25').toNow(true)}
+            </Text>
+          </HStack>
+          <CustomImage
+            local
+            imageSource={images.mapImage}
+            resizeMode="stretch"
+            style={styles.image}
+          />
+          <CustomButton
+            onPress={submitBidOnPress}
+            title="Submit bid"
+            height={verticalScale(45)}
+          />
+        </VStack>
+      ),
+      [],
+    );
 
-export default SectionDescriptionRoute;
+    const renderItem = () => <></>;
+
+    return (
+      <>
+        <AnimatedFlatList
+          ref={ref}
+          style={styles.container}
+          ListHeaderComponent={ListHeaderComponent}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          data={[]}
+          {...{
+            onScroll,
+            contentContainerStyle,
+            onMomentumScrollEnd,
+            onScrollEndDrag,
+            scrollEventThrottle,
+            scrollIndicatorInsets,
+          }}
+          showsVerticalScrollIndicator={false}
+        />
+        <EditModal
+          visible={editModalVisible}
+          onClose={closeEditModal}
+          onSubmit={submitEditModal}
+          title="Bid details"
+        />
+      </>
+    );
+  },
+);
+
+export default memo(SectionDescriptionRoute);
 
 const styles = StyleSheet.create({
   image: {

@@ -19,7 +19,6 @@ export {default as ImageBoxViewer} from './atoms/ImageBoxViewer';
 export {default as ProfilePicker} from './atoms/ProfilePicker';
 export {default as ReviewItem} from './atoms/ReviewItem';
 export {default as CustomCollapseText} from './atoms/CustomCollapseText';
-export {default as CollapsibleTabBar} from './atoms/CollapsibleTabBar';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';
@@ -53,3 +52,5 @@ export {default as SectionActiveBidsRoute} from './organisms/SectionActiveBidsRo
 export {default as SectionDescriptionRouteLister} from './organisms/SectionDescriptionRouteLister';
 export {default as SectionQuestionRouteLister} from './organisms/SectionQuestionRouteLister';
 export {default as SectionActiveBidsRouteLister} from './organisms/SectionActiveBidsRouteLister';
+export {default as TabBar} from './organisms/TabBar';
+export {default as Header} from './organisms/Header';
