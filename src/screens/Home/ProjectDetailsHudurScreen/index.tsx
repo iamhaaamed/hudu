@@ -1,32 +1,40 @@
-import React, {useState, useRef} from 'react';
 import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabBarProps,
+} from '@react-navigation/material-top-tabs';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
+import {
+  FlatList,
+  FlatListProps,
+  StyleProp,
   StyleSheet,
-  Dimensions,
-  Animated,
-  TouchableOpacity,
-  View,
+  ViewProps,
+  ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
-import {Center, VStack, Text, HStack, IconButton} from 'native-base';
-import {TabView, TabBar} from 'react-native-tab-view';
-import images from '~/assets/images';
+import Animated, {
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated';
+import useScrollSync from '~/hooks/useScrollSync';
+import {Connection} from '~/types/Connection';
+import {ScrollPair} from '~/types/ScrollPair';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {HeaderConfig} from '~/types/HeaderConfig';
+import {Visibility} from '~/types/Visibility';
 import {
   CustomContainer,
-  CustomImage,
-  RatingStar,
+  SectionActiveBidsRoute,
   SectionDescriptionRoute,
   SectionQuestionRoute,
-  SectionActiveBidsRoute,
-  CollapsibleTabBar,
+  TabBar,
+  Header,
 } from '~/components';
-import {Colors} from '~/styles';
-import {scale, fontFamily} from '~/utils/style';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {
-  HEADER_HEIGHT,
-  DESCRIPTION_TOP,
-  OTHER_TOP,
-  TABS_HEIGHT,
-} from '~/styles/spacing';
+import {verticalScale} from '~/utils/style';
+import images from '~/assets/images';
 
 const data = {
   title: 'Duct need cleaned out',
@@ -47,62 +55,6 @@ const data = {
     howLong: '12 Minutes',
   },
   questions: [
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
     {
       message:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -134,217 +86,232 @@ const data = {
   ],
 };
 
-const initialLayout = {
-  height: 0,
-  width: Dimensions.get('window').width,
-};
+const TAB_BAR_HEIGHT = verticalScale(35);
+const HEADER_HEIGHT = 0;
 
-const ProjectDetailsHudurScreen = ({route: inRoute, navigation}: any) => {
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    {key: 'description', title: 'Description'},
-    {key: 'question', title: 'Question'},
-    {key: 'active-bids', title: 'Active bids'},
-  ]);
+const Tab = createMaterialTopTabNavigator();
 
-  const favoriteOnPress = () => {};
+const ProjectDetailsHudurScreen = () => {
+  const {top, bottom} = useSafeAreaInsets();
 
-  const backOnPress = () => {
-    navigation.goBack();
-  };
+  const {height: screenHeight} = useWindowDimensions();
 
-  const listerProfileOnPress = () => {
-    navigation.navigate('ListerProfile');
-  };
+  const descriptionRef = useRef<FlatList>(null);
+  const QuestionRef = useRef<FlatList>(null);
+  const ActiveBidsRef = useRef<FlatList>(null);
 
-  function CollapsibleContent() {
-    return (
-      <View>
-        <CustomImage
-          local
-          resizeMode="stretch"
-          imageSource={data?.image}
-          style={[styles.image, {height: HEADER_HEIGHT}]}>
-          <HStack p="4" alignItems="center" justifyContent="space-between">
-            <IconButton
-              borderRadius="full"
-              onPress={backOnPress}
-              bg={Colors.WHITE_RIPPLE_COLOR}
-              colorScheme={Colors.WHITE_RIPPLE_COLOR}
-              icon={
-                <Ionicons
-                  size={24}
-                  name="chevron-back"
-                  color={Colors.BLACK_3}
-                />
-              }
-            />
-            <IconButton
-              borderRadius="full"
-              onPress={favoriteOnPress}
-              bg={Colors.WHITE_RIPPLE_COLOR}
-              colorScheme={Colors.WHITE_RIPPLE_COLOR}
-              icon={
-                <Ionicons
-                  size={24}
-                  name="heart-outline"
-                  color={Colors.BLACK_3}
-                />
-              }
-            />
-          </HStack>
-        </CustomImage>
-        <VStack
-          px="4"
-          py="2"
-          space="4"
-          top={-10}
-          bg={Colors.WHITE}
-          borderTopRadius="2xl"
-          justifyContent="center">
-          <Text
-            fontSize={scale(20)}
-            fontFamily={fontFamily.medium}
-            color={Colors.BLACK}>
-            {data?.title}
-          </Text>
-          <Center bg={Colors.WHITE} shadow="4" borderRadius="lg" py="2" px="2">
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={listerProfileOnPress}
-              style={styles.profileRow}>
-              <HStack space="4">
-                <CustomImage
-                  local
-                  imageSource={data?.hudur?.image}
-                  style={styles.avatar}
-                  resizeMode="stretch"
-                />
-                <VStack space="0.5" flex={1}>
-                  <Text
-                    fontSize={scale(16)}
-                    color={Colors.BLACK_1}
-                    fontFamily={fontFamily.medium}>
-                    {data?.hudur?.name}
-                  </Text>
-                  <Text
-                    fontSize={scale(12)}
-                    color={Colors.PLACEHOLDER}
-                    fontFamily={fontFamily.regular}>
-                    {data?.hudur?.email}
-                  </Text>
-                </VStack>
-                <VStack space="0.5" alignItems="center">
-                  <RatingStar rate={data?.hudur?.rating} showRating="right" />
-                  <Text
-                    fontSize={scale(10)}
-                    color={Colors.PLACEHOLDER}
-                    fontFamily={fontFamily.regular}>
-                    {`(${data?.hudur?.totalReviews} review)`}
-                  </Text>
-                </VStack>
-              </HStack>
-            </TouchableOpacity>
-          </Center>
-        </VStack>
-      </View>
-    );
-  }
+  const [tabIndex, setTabIndex] = useState(0);
 
-  function RenderTabBar() {
-    return (
-      <VStack bgColor={Colors.WHITE}>
-        <HStack mx="4" style={styles.tabBar}>
-          {routes.map(route => {
-            const focused = route.key === routes[index].key;
-            return (
-              <Center
-                h={35}
-                flex={1}
-                bg={focused ? Colors.PRIMARY : Colors.TRANSPARENT}
-                borderRadius={10}>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    if (!focused) {
-                      switch (route.key) {
-                        case 'description':
-                          setIndex(0);
-                          break;
-                        case 'question':
-                          setIndex(1);
-                          break;
-                        case 'active-bids':
-                          setIndex(2);
-                          break;
-                      }
-                    }
-                  }}
-                  style={styles.tabBarButton}>
-                  <Center flex={1}>
-                    <Text color={focused ? Colors.WHITE : Colors.BLACK_3}>
-                      {route.title}
-                    </Text>
-                  </Center>
-                </TouchableOpacity>
-              </Center>
-            );
-          })}
-        </HStack>
-      </VStack>
-    );
-  }
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  const defaultHeaderHeight = top + HEADER_HEIGHT;
+
+  const headerConfig = useMemo<HeaderConfig>(
+    () => ({
+      heightCollapsed: defaultHeaderHeight,
+      heightExpanded: headerHeight,
+    }),
+    [defaultHeaderHeight, headerHeight],
+  );
+
+  const {heightCollapsed, heightExpanded} = headerConfig;
+
+  const headerDiff = heightExpanded - heightCollapsed;
+
+  const rendered = headerHeight > 0;
+
+  const handleHeaderLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
+    event => setHeaderHeight(event.nativeEvent.layout.height),
+    [],
+  );
+
+  const DescriptionScrollValue = useSharedValue(0);
+
+  const descriptionScrollHandler = useAnimatedScrollHandler(
+    event => (DescriptionScrollValue.value = event.contentOffset.y),
+  );
+
+  const QuestionScrollValue = useSharedValue(0);
+
+  const suggestionsScrollHandler = useAnimatedScrollHandler(
+    event => (QuestionScrollValue.value = event.contentOffset.y),
+  );
+
+  const ActiveBidsScrollValue = useSharedValue(0);
+
+  const activeBidsScrollHandler = useAnimatedScrollHandler(
+    event => (ActiveBidsScrollValue.value = event.contentOffset.y),
+  );
+
+  const scrollPairs = useMemo<ScrollPair[]>(
+    () => [
+      {list: descriptionRef, position: DescriptionScrollValue},
+      {list: QuestionRef, position: QuestionScrollValue},
+      {list: ActiveBidsRef, position: ActiveBidsScrollValue},
+    ],
+    [
+      descriptionRef,
+      DescriptionScrollValue,
+      QuestionRef,
+      QuestionScrollValue,
+      ActiveBidsRef,
+      ActiveBidsScrollValue,
+    ],
+  );
+
+  const {sync} = useScrollSync(scrollPairs, headerConfig);
+
+  const сurrentScrollValue = useDerivedValue(
+    () =>
+      tabIndex === 0
+        ? DescriptionScrollValue.value
+        : tabIndex === 1
+        ? QuestionScrollValue.value
+        : ActiveBidsScrollValue.value,
+    [
+      tabIndex,
+      DescriptionScrollValue,
+      QuestionScrollValue,
+      ActiveBidsScrollValue,
+    ],
+  );
+
+  const translateY = useDerivedValue(
+    () => -Math.min(сurrentScrollValue.value, headerDiff),
+  );
+
+  const tabBarAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: translateY.value}],
+  }));
+
+  const headerAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: translateY.value}],
+    opacity: interpolate(
+      translateY.value,
+      [-headerDiff, 0],
+      [Visibility.Hidden, Visibility.Visible],
+    ),
+  }));
+
+  const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => ({
+      paddingTop: rendered ? headerHeight + TAB_BAR_HEIGHT : 0,
+      paddingBottom: bottom,
+      minHeight: screenHeight + headerDiff,
+    }),
+    [rendered, headerHeight, bottom, screenHeight, headerDiff],
+  );
+
+  const sharedProps = useMemo<Partial<FlatListProps<Connection>>>(
+    () => ({
+      contentContainerStyle,
+      onMomentumScrollEnd: sync,
+      onScrollEndDrag: sync,
+      scrollEventThrottle: 16,
+      scrollIndicatorInsets: {top: heightExpanded},
+    }),
+    [contentContainerStyle, sync, heightExpanded],
+  );
+
+  const renderDescription = useCallback(
+    () => (
+      <SectionDescriptionRoute
+        ref={descriptionRef}
+        data={data?.description}
+        onScroll={descriptionScrollHandler}
+        {...sharedProps}
+      />
+    ),
+    [descriptionRef, descriptionScrollHandler, sharedProps],
+  );
+
+  const renderQuestion = useCallback(
+    () => (
+      <SectionQuestionRoute
+        ref={QuestionRef}
+        data={data?.questions}
+        onScroll={suggestionsScrollHandler}
+        {...sharedProps}
+      />
+    ),
+    [QuestionRef, suggestionsScrollHandler, sharedProps],
+  );
+
+  const renderActiveBids = useCallback(
+    () => (
+      <SectionActiveBidsRoute
+        ref={ActiveBidsRef}
+        data={data?.activeBids}
+        onScroll={activeBidsScrollHandler}
+        {...sharedProps}
+      />
+    ),
+    [ActiveBidsRef, activeBidsScrollHandler, sharedProps],
+  );
+
+  const tabBarStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [
+      rendered ? styles.tabBarContainer : undefined,
+      {top: rendered ? headerHeight : undefined},
+      tabBarAnimatedStyle,
+    ],
+    [rendered, headerHeight, tabBarAnimatedStyle],
+  );
+
+  const renderTabBar = useCallback<
+    (props: MaterialTopTabBarProps) => React.ReactElement
+  >(
+    props => (
+      <Animated.View style={tabBarStyle}>
+        <TabBar onIndexChange={setTabIndex} {...props} />
+      </Animated.View>
+    ),
+    [tabBarStyle],
+  );
+
+  const headerContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [
+      rendered ? styles.headerContainer : undefined,
+      {paddingTop: top},
+      headerAnimatedStyle,
+    ],
+
+    [rendered, top, headerAnimatedStyle],
+  );
 
   return (
     <CustomContainer>
-      <CollapsibleTabBar
-        // @ts-ignore
-        selectedIndex={index}
-        setSelected={setIndex}
-        renderTabBar={<RenderTabBar />}
-        collapsibleContent={<CollapsibleContent />}
-        tabs={[
-          {
-            label: 'description',
-            component: <SectionDescriptionRoute data={data?.description} />,
-          },
-          {
-            label: 'question',
-            component: <SectionQuestionRoute data={data?.questions} />,
-          },
-          {
-            label: 'active-bids',
-            component: <SectionActiveBidsRoute data={data?.activeBids} />,
-          },
-        ]}
-      />
+      <Animated.View onLayout={handleHeaderLayout} style={headerContainerStyle}>
+        <Header
+          title={data?.title}
+          image={data?.image}
+          user={tabIndex === 0 ? data?.hudur : null}
+        />
+      </Animated.View>
+      <Tab.Navigator tabBar={renderTabBar}>
+        <Tab.Screen name="Description">{renderDescription}</Tab.Screen>
+        <Tab.Screen name="Question">{renderQuestion}</Tab.Screen>
+        <Tab.Screen name="Active bids">{renderActiveBids}</Tab.Screen>
+      </Tab.Navigator>
     </CustomContainer>
   );
 };
 
+export default ProjectDetailsHudurScreen;
+
 const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: Colors.SECONDARY,
-    borderRadius: 10,
-    height: TABS_HEIGHT,
+  tabBarContainer: {
+    top: 0,
+    left: 0,
+    right: 0,
+    position: 'absolute',
+    zIndex: 1,
   },
-  tabBarButton: {
-    height: '100%',
-    width: '100%',
-  },
-  header: {zIndex: 1},
-  image: {
-    width: '100%',
-  },
-  avatar: {
-    height: scale(46),
-    width: scale(46),
-    borderRadius: 100,
-  },
-  profileRow: {
-    flex: 1,
-    width: '100%',
+  headerContainer: {
+    top: 0,
+    left: 0,
+    right: 0,
+    position: 'absolute',
+    zIndex: 1,
   },
 });
-
-export default ProjectDetailsHudurScreen;

@@ -37,6 +37,8 @@ import {
   LoginManager,
   GraphRequestManager,
 } from 'react-native-fbsdk-next';
+import {getResponseMessage} from '~/utils/helper';
+import {authStore, userDataStore} from '~/stores';
 
 GoogleSignin.configure({
   scopes: ['profile', 'email'], // what API you want to access on behalf of the user, default is email and profile
@@ -52,6 +54,71 @@ GoogleSignin.configure({
 });
 
 Settings.setAppID('1284604992070625');
+
+export const useSignUpAuth = () => {
+  const signUpWithEmailAndPass = async (email: string, password: string) => {
+    try {
+      const response = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      if (response?.additionalUserInfo?.isNewUser) {
+        const idToken = await auth().currentUser?.getIdToken();
+        console.log('idToken: ', idToken);
+        if (idToken) {
+          graphQLClient.setHeader('authorization', 'Bearer ' + idToken);
+          return {data: idToken, error: null, loading: false};
+        } else {
+          return {data: null, error: response, loading: false};
+        }
+      } else {
+        return {data: null, error: response, loading: false};
+      }
+    } catch (errorData: any) {
+      const errorMessage = errorData?.message;
+      if (errorMessage) {
+        showMessage({
+          message: errorMessage,
+          type: 'danger',
+        });
+      }
+      return {data: null, error: errorData, loading: false};
+    }
+  };
+
+  return {signUpWithEmailAndPass};
+};
+
+export const useLoginAuth = () => {
+  const loginWithEmailAndPass = async (email: string, password: string) => {
+    try {
+      const response = await auth().signInWithEmailAndPassword(email, password);
+      if (response?.user) {
+        const idToken = await auth().currentUser?.getIdToken();
+        console.log('idToken: ', idToken);
+        if (idToken) {
+          graphQLClient.setHeader('authorization', 'Bearer ' + idToken);
+          return {data: idToken, error: null, loading: false};
+        } else {
+          return {data: null, error: response, loading: false};
+        }
+      } else {
+        return {data: null, error: response, loading: false};
+      }
+    } catch (errorData: any) {
+      const errorMessage = errorData?.message;
+      if (errorMessage) {
+        showMessage({
+          message: errorMessage,
+          type: 'danger',
+        });
+      }
+      return {data: null, error: errorData, loading: false};
+    }
+  };
+
+  return {loginWithEmailAndPass};
+};
 
 export const useGetProfile = (options: any = {}) => {
   const res = useQuery<
@@ -75,12 +142,26 @@ export const useGetProfile = (options: any = {}) => {
 };
 
 export const useLogin = () => {
+  const {setIsUserLoggedIn} = authStore(state => state);
+  const {setUserData} = userDataStore(state => state);
+
   return useMutation<User_LoginQuery, any, User_LoginQueryVariables>(
     async () => {
       return graphQLClient.request(USER_LOGIN);
     },
     {
-      onSuccess: () => {},
+      onSuccess: (successData: any) => {
+        if (successData.user_login?.status === ResponseStatus.Success) {
+          setUserData(successData.user_login?.result);
+          setIsUserLoggedIn(true);
+          showMessage({
+            message: 'You are logged in successfully',
+            type: 'success',
+          });
+        } else {
+          showMessage(getResponseMessage(successData.user_login?.status));
+        }
+      },
       onError: (errorData: any) => {
         console.log('user_loginError=>', errorData);
         showMessage({type: 'danger', message: JSON.stringify(errorData)});
@@ -90,12 +171,26 @@ export const useLogin = () => {
 };
 
 export const useSignUp = () => {
+  const {setIsUserLoggedIn} = authStore(state => state);
+  const {setUserData} = userDataStore(state => state);
+
   return useMutation<User_SignUpMutation, any, User_SignUpMutationVariables>(
     async () => {
       return graphQLClient.request(USER_SIGN_UP);
     },
     {
-      onSuccess: () => {},
+      onSuccess: (successData: any) => {
+        if (successData.user_signUp?.status === ResponseStatus.Success) {
+          setIsUserLoggedIn(true);
+          setUserData(successData.user_signUp?.result);
+          showMessage({
+            message: 'You have successfully registered',
+            type: 'success',
+          });
+        } else {
+          showMessage(getResponseMessage(successData.user_signUp?.status));
+        }
+      },
       onError: (errorData: any) => {
         console.log('user_signUpError=>', errorData);
         showMessage({type: 'danger', message: JSON.stringify(errorData)});

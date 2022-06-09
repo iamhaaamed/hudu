@@ -1,126 +1,147 @@
-import React from 'react';
+import React, {forwardRef, useCallback, memo} from 'react';
+import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {Center, HStack, Text, VStack} from 'native-base';
+import Animated from 'react-native-reanimated';
 import {Colors} from '~/styles';
 import {navigate} from '~/navigation/Methods';
 import {fontFamily, scale} from '~/utils/style';
-import {Box, Center, HStack, Text, VStack} from 'native-base';
 import {CustomButton, CustomImage, RatingStar} from '~/components';
-import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 
-const SectionActiveBidsRoute = ({data}: any) => {
-  const cancelOnPress = () => {};
+export const AnimatedFlatList: typeof FlatList =
+  Animated.createAnimatedComponent(FlatList);
 
-  const itemOnPress = () => {
-    navigate('HudurProfile');
-  };
+const SectionActiveBidsRoute = forwardRef(
+  (
+    {
+      data,
+      contentContainerStyle,
+      onMomentumScrollEnd,
+      onScrollEndDrag,
+      scrollEventThrottle,
+      scrollIndicatorInsets,
+      onScroll,
+    }: any,
+    ref,
+  ) => {
+    const cancelOnPress = () => {};
 
-  const ItemSeparatorComponent = () => <Box h="4" />;
+    const itemOnPress = () => {
+      navigate('HudurProfile');
+    };
 
-  const renderItem = ({item}: {item: any}) => {
-    return (
-      <Center
-        mx="4"
-        px="4"
-        py="4"
-        borderRadius="lg"
-        bg={Colors.WHITE}
-        shadow="2">
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles.item}
-          onPress={itemOnPress}>
-          <VStack space="2">
-            <HStack space="2" alignItems="center">
-              <CustomImage
-                local
-                imageSource={item?.image}
-                resizeMode="stretch"
-                style={styles.avatar}
-              />
-              <Text
-                flex={1}
-                fontSize={scale(14)}
-                fontFamily={fontFamily.medium}
-                color={Colors.BLACK_1}>
-                {item?.name}
-              </Text>
-              <VStack alignItems="center">
-                <RatingStar
-                  size={14}
-                  rate={item?.rating}
-                  showRating="left"
-                  disabled
+    const keyExtractor = useCallback((_, index: number) => `key${index}`, []);
+
+    const renderItem = ({item, index}: {item: any; index: number}) => {
+      return (
+        <Center
+          mt={index === 0 ? '6' : '2'}
+          mb="2"
+          mx="4"
+          px="4"
+          py="4"
+          borderRadius="lg"
+          bg={Colors.WHITE}
+          shadow="2">
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.item}
+            onPress={itemOnPress}>
+            <VStack space="2">
+              <HStack space="2" alignItems="center">
+                <CustomImage
+                  local
+                  imageSource={item?.image}
+                  resizeMode="stretch"
+                  style={styles.avatar}
                 />
                 <Text
-                  fontSize={scale(10)}
+                  flex={1}
+                  fontSize={scale(14)}
+                  fontFamily={fontFamily.medium}
+                  color={Colors.BLACK_1}>
+                  {item?.name}
+                </Text>
+                <VStack alignItems="center">
+                  <RatingStar
+                    size={14}
+                    rate={item?.rating}
+                    showRating="left"
+                    disabled
+                  />
+                  <Text
+                    fontSize={scale(10)}
+                    fontFamily={fontFamily.regular}
+                    color={
+                      Colors.PLACEHOLDER
+                    }>{`(${item?.totalReviews} review)`}</Text>
+                </VStack>
+              </HStack>
+              <HStack space="2">
+                <Text
+                  fontSize={scale(14)}
                   fontFamily={fontFamily.regular}
-                  color={
-                    Colors.PLACEHOLDER
-                  }>{`(${item?.totalReviews} review)`}</Text>
-              </VStack>
-            </HStack>
-            <HStack space="2">
-              <Text
-                fontSize={scale(14)}
-                fontFamily={fontFamily.regular}
-                color={Colors.BLACK_1}>
-                {'Note: '}
-              </Text>
-              <Text
-                flex={1}
-                fontSize={scale(14)}
-                fontFamily={fontFamily.regular}
-                color={Colors.PLACEHOLDER}>
-                {item?.note}
-              </Text>
-            </HStack>
-            <HStack justifyContent="space-between">
-              <Text
-                fontSize={scale(14)}
-                fontFamily={fontFamily.regular}
-                color={Colors.BLACK_1}>
-                Your bid
-              </Text>
-              <Text
-                fontSize={scale(14)}
-                fontFamily={fontFamily.regular}
-                color={Colors.PRIMARY}>
-                $ {item?.bidAmount}
-              </Text>
-            </HStack>
-            {item?.id === 3 && (
-              <CustomButton
-                color={Colors.BLACK_3}
-                outline
-                title="Cancel"
-                onPress={cancelOnPress}
-              />
-            )}
-          </VStack>
-        </TouchableOpacity>
-      </Center>
+                  color={Colors.BLACK_1}>
+                  {'Note: '}
+                </Text>
+                <Text
+                  flex={1}
+                  fontSize={scale(14)}
+                  fontFamily={fontFamily.regular}
+                  color={Colors.PLACEHOLDER}>
+                  {item?.note}
+                </Text>
+              </HStack>
+              <HStack justifyContent="space-between">
+                <Text
+                  fontSize={scale(14)}
+                  fontFamily={fontFamily.regular}
+                  color={Colors.BLACK_1}>
+                  Your bid
+                </Text>
+                <Text
+                  fontSize={scale(14)}
+                  fontFamily={fontFamily.regular}
+                  color={Colors.PRIMARY}>
+                  $ {item?.bidAmount}
+                </Text>
+              </HStack>
+              {item?.id === 3 && (
+                <CustomButton
+                  color={Colors.BLACK_3}
+                  outline
+                  title="Cancel"
+                  onPress={cancelOnPress}
+                />
+              )}
+            </VStack>
+          </TouchableOpacity>
+        </Center>
+      );
+    };
+
+    return (
+      <AnimatedFlatList
+        ref={ref}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        {...{
+          data,
+          onScroll,
+          contentContainerStyle,
+          onMomentumScrollEnd,
+          onScrollEndDrag,
+          scrollEventThrottle,
+          scrollIndicatorInsets,
+        }}
+        showsVerticalScrollIndicator={false}
+      />
     );
-  };
+  },
+);
 
-  return (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      scrollEventThrottle={1}
-      keyExtractor={(_, i) => `key${i}`}
-      showsVerticalScrollIndicator={false}
-      ItemSeparatorComponent={ItemSeparatorComponent}
-      contentContainerStyle={styles.contentContainerStyle}
-    />
-  );
-};
-
-export default SectionActiveBidsRoute;
+export default memo(SectionActiveBidsRoute);
 
 const styles = StyleSheet.create({
-  contentContainerStyle: {
-    paddingTop: 24,
-    paddingBottom: 32,
-  },
   avatar: {
     height: scale(33),
     width: scale(33),

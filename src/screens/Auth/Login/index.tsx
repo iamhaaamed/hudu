@@ -7,7 +7,12 @@ import {verticalScale} from '~/utils/style';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Box, Button, Flex, HStack, Text, VStack} from 'native-base';
-import {useFacebookAuth, useGoogleAuth, useLogin} from '~/hooks/user';
+import {
+  useFacebookAuth,
+  useGoogleAuth,
+  useLogin,
+  useLoginAuth,
+} from '~/hooks/user';
 import {
   CustomImage,
   CustomInput,
@@ -28,6 +33,7 @@ export default function LoginScreen({navigation}: NavigationProp) {
     mode: 'onChange',
   });
 
+  const {loginWithEmailAndPass} = useLoginAuth();
   const {mutate: loginMutate} = useLogin();
   const {signInWithGoogle} = useGoogleAuth();
   const {signInWithFacebook} = useFacebookAuth();
@@ -36,7 +42,18 @@ export default function LoginScreen({navigation}: NavigationProp) {
 
   const {handleSubmit, register} = methods;
 
-  const onSend = () => {};
+  const loginOnPress = async (formData: any) => {
+    setLoading(true);
+    const response = await loginWithEmailAndPass(
+      formData?.email,
+      formData?.password,
+    );
+    if (response?.data) {
+      completeLogin();
+    } else {
+      setLoading(false);
+    }
+  };
 
   const googleOnPress = async () => {
     setLoading(true);
@@ -101,7 +118,7 @@ export default function LoginScreen({navigation}: NavigationProp) {
               <CustomButton
                 title="Login"
                 height={verticalScale(45)}
-                onPress={() => handleSubmit(onSend)}
+                onPress={handleSubmit(loginOnPress)}
               />
             </Box>
             <SectionRowSocial {...{googleOnPress, facebookOnPress}} />
@@ -110,7 +127,7 @@ export default function LoginScreen({navigation}: NavigationProp) {
               <Button
                 px={1}
                 variant="link"
-                onPress={() => navigation.navigate('SignUp')}>
+                onPress={() => navigation.replace('SignUp')}>
                 <Text underline color={Colors.PRIMARY} fontSize="md">
                   Create account
                 </Text>

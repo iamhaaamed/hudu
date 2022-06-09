@@ -7,7 +7,12 @@ import {verticalScale} from '~/utils/style';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Box, Button, Flex, HStack, Text, VStack} from 'native-base';
-import {useFacebookAuth, useGoogleAuth, useSignUp} from '~/hooks/user';
+import {
+  useFacebookAuth,
+  useGoogleAuth,
+  useSignUp,
+  useSignUpAuth,
+} from '~/hooks/user';
 import {
   CustomImage,
   CustomInput,
@@ -20,7 +25,10 @@ import {
 const schema = yup.object().shape({
   email: yup.string().email().required('required'),
   password: yup.string().required('required'),
-  confirm: yup.string().required('required'),
+  confirm: yup
+    .string()
+    .required('required')
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
 });
 
 export default function SignUpScreen({navigation}: NavigationProp) {
@@ -29,6 +37,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
     mode: 'onChange',
   });
 
+  const {signUpWithEmailAndPass} = useSignUpAuth();
   const {mutate: signUpMutate} = useSignUp();
   const {signInWithGoogle} = useGoogleAuth();
   const {signInWithFacebook} = useFacebookAuth();
@@ -37,7 +46,18 @@ export default function SignUpScreen({navigation}: NavigationProp) {
 
   const {handleSubmit, register} = methods;
 
-  const onSend = () => {};
+  const signUpOnPress = async (formData: any) => {
+    setLoading(true);
+    const signUpRes = await signUpWithEmailAndPass(
+      formData?.email,
+      formData.password,
+    );
+    if (signUpRes?.data) {
+      completeSignUp();
+    } else {
+      setLoading(false);
+    }
+  };
 
   const googleOnPress = async () => {
     setLoading(true);
@@ -98,9 +118,9 @@ export default function SignUpScreen({navigation}: NavigationProp) {
             </VStack>
             <Box px="4" py="4">
               <CustomButton
-                title="Login"
+                title="Create account"
                 height={verticalScale(45)}
-                onPress={() => handleSubmit(onSend)}
+                onPress={handleSubmit(signUpOnPress)}
               />
             </Box>
             <SectionRowSocial {...{googleOnPress, facebookOnPress}} />
@@ -109,7 +129,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
               <Button
                 px={1}
                 variant="link"
-                onPress={() => navigation.navigate('SignUp')}>
+                onPress={() => navigation.replace('SignUp')}>
                 <Text underline color={Colors.PRIMARY} fontSize="md">
                   Signin
                 </Text>
