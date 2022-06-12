@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {IconButton} from 'native-base';
-import Octicons from 'react-native-vector-icons/Octicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {ConfirmationActionSheet, CustomImage} from '~/components';
 import {Colors} from '~/styles';
 import {scale} from '~/utils/style';
@@ -39,7 +39,11 @@ const ImageBoxViewer = ({item, onDelete}: {item: any; onDelete?: any}) => {
             size={scale(36)}
             bg={Colors.WHITE_RIPPLE_COLOR}
             icon={
-              <Octicons name="trash" color={Colors.BLACK_1} size={scale(22)} />
+              <Ionicons
+                name="trash-outline"
+                color={Colors.BLACK_1}
+                size={scale(22)}
+              />
             }
           />
         )}

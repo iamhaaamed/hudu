@@ -14,6 +14,7 @@ export default function SplashScreen() {
         style={styles.image}
         resizeMode="stretch"
         local
+        backgroundColor={Colors.TRANSPARENT}
       />
     </Center>
   );

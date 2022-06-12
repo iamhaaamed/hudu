@@ -42,7 +42,7 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, watch} = methods;
+  const {handleSubmit, register, formState} = methods;
 
   const onEdit = () => {};
 
@@ -58,30 +58,40 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
               {...register('firstName')}
               label="First name"
               placeholder="Olive"
+              {...{formState}}
             />
             <CustomInput
               {...register('lastName')}
               label="Last name"
               placeholder="Anderson"
+              {...{formState}}
             />
             <CustomInput
               {...register('userName')}
               label="User name"
               placeholder="Olivia.anderson"
+              {...{formState}}
             />
             <CustomInput
               {...register('email')}
               disabled
               label="Email"
               placeholder="example@gmail.com"
+              {...{formState}}
             />
             <CustomInput
               {...register('bio')}
               textArea
               label="Bio"
               placeholder="type ..."
+              {...{formState}}
             />
-            <CustomInput {...register('address')} label="Street address" />
+            <CustomInput
+              {...register('address')}
+              label="Street address"
+              placeholder="Street address"
+              {...{formState}}
+            />
             <HStack alignItems="center" space="2">
               <VStack flex={1} h="100%">
                 <CustomPicker
@@ -89,7 +99,8 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
                   label="City"
                   data={cityData}
                   placeholder="Select"
-                  height={verticalScale(50)}
+                  height={verticalScale(45)}
+                  {...{formState}}
                 />
               </VStack>
               <VStack flex={1} h="100%">
@@ -98,11 +109,17 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
                   label="State"
                   data={stateData}
                   placeholder="Select"
-                  height={verticalScale(50)}
+                  height={verticalScale(45)}
+                  {...{formState}}
                 />
               </VStack>
             </HStack>
-            <CustomInput {...register('zipCode')} label="Zip code" />
+            <CustomInput
+              {...register('zipCode')}
+              label="Zip code"
+              placeholder="Zip code"
+              {...{formState}}
+            />
             <CustomButton
               title="Save"
               height={verticalScale(45)}

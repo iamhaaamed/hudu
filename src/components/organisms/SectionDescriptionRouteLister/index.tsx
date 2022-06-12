@@ -81,7 +81,7 @@ const SectionDescriptionRouteLister = forwardRef(
             <Text
               fontSize={scale(16)}
               fontFamily={fontFamily.regular}
-              color={Colors.PRIMARY}>
+              color={Colors.BLACK_3}>
               {dayjs('2022-01-01').toNow(true)}
             </Text>
           </HStack>
@@ -102,7 +102,7 @@ const SectionDescriptionRouteLister = forwardRef(
             <Text
               fontSize={scale(16)}
               fontFamily={fontFamily.regular}
-              color={Colors.PRIMARY}>
+              color={Colors.BLACK_3}>
               {dayjs('2022-06-07 11:25').toNow(true)}
             </Text>
           </HStack>

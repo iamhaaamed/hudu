@@ -44,7 +44,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const {handleSubmit, register} = methods;
+  const {handleSubmit, register, formState} = methods;
 
   const signUpOnPress = async (formData: any) => {
     setLoading(true);
@@ -109,11 +109,20 @@ export default function SignUpScreen({navigation}: NavigationProp) {
           </VStack>
           <Flex flex={1} justifyContent="flex-end" pb="6">
             <VStack py="4" px="4" space="6">
-              <CustomInput {...register('email')} placeholder="Email" />
-              <CustomInput {...register('password')} placeholder="Password" />
+              <CustomInput
+                {...register('email')}
+                placeholder="Email"
+                {...{formState}}
+              />
+              <CustomInput
+                {...register('password')}
+                placeholder="Password"
+                {...{formState}}
+              />
               <CustomInput
                 {...register('confirm')}
                 placeholder="Confirm Password"
+                {...{formState}}
               />
             </VStack>
             <Box px="4" py="4">

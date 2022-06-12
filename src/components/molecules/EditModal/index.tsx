@@ -34,7 +34,7 @@ const EditModal = ({
     mode: 'onChange',
   });
 
-  const {handleSubmit, register} = methods;
+  const {handleSubmit, register, formState} = methods;
 
   const onCloseHandler = () => {
     onClose?.();
@@ -59,6 +59,7 @@ const EditModal = ({
             backgroundColor={Colors.WHITE}
             keyboardType="numeric"
             rightText="$"
+            {...{formState}}
           />
           <CustomInput
             {...register('describe')}
@@ -67,6 +68,7 @@ const EditModal = ({
             backgroundColor={Colors.WHITE}
             textArea
             inputStyle={styles.input}
+            {...{formState}}
           />
           <CustomButton
             title="Submit bid"

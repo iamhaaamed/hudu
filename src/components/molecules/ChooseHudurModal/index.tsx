@@ -52,7 +52,7 @@ const ChooseHudurModal = ({
                 <VStack
                   key={index + 2}
                   borderRadius="md"
-                  shadow="1"
+                  shadow="3"
                   p="4"
                   mx="2"
                   mb="4"

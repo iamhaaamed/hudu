@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Text, HStack, VStack, IconButton} from 'native-base';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {fontFamily, scale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {CustomImage, RatingStar} from '~/components';
 import {useNavigation} from '@react-navigation/native';
+import {BellIcon} from '~/assets/icons';
 
 const SectionUserRow = () => {
   const {navigate} = useNavigation();
@@ -41,16 +41,7 @@ const SectionUserRow = () => {
           <RatingStar disabled rate={data?.rating} />
         </HStack>
       </VStack>
-      <IconButton
-        onPress={notificationOnPress}
-        icon={
-          <MaterialCommunityIcons
-            name="bell-outline"
-            color={Colors.BLACK_1}
-            size={24}
-          />
-        }
-      />
+      <IconButton onPress={notificationOnPress} icon={<BellIcon />} />
     </HStack>
   );
 };

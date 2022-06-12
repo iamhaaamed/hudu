@@ -13,7 +13,7 @@ const FavoriteItem = ({item}: {item?: any}) => {
       mb="4"
       w="48%"
       h={verticalScale(268)}
-      shadow="2"
+      shadow="4"
       borderRadius="md"
       bg={Colors.WHITE}>
       <TouchableOpacity

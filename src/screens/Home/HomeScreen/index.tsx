@@ -11,8 +11,10 @@ import {
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 
-const HomeScreen = () => {
-  const questionHandler = () => {};
+const HomeScreen = ({navigation}: {navigation: any}) => {
+  const questionHandler = () => {
+    navigation.navigate('ProfileStack', {screen: 'Support'});
+  };
 
   return (
     <CustomContainer>

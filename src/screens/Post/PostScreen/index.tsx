@@ -68,7 +68,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, watch} = methods;
+  const {handleSubmit, register, watch, formState} = methods;
 
   const expectation = watch('expectation');
 
@@ -125,6 +125,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 placeholder="Title"
                 backgroundColor={Colors.WHITE}
                 inputStyle={styles.input}
+                {...{formState}}
               />
               <CustomInput
                 {...register('description')}
@@ -132,13 +133,14 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 backgroundColor={Colors.WHITE}
                 inputStyle={styles.input}
                 textArea
+                {...{formState}}
               />
               <CustomPicker
                 {...register('expectation')}
                 label="Expectation for Project Completion"
                 data={expectationData}
                 placeholder="Select"
-                height={verticalScale(54)}
+                height={verticalScale(45)}
                 textStyle={styles.input}
               />
               {expectation && expectation === 'specific' && (
@@ -149,6 +151,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
                   rightText="Day"
                   backgroundColor={Colors.WHITE}
                   inputStyle={styles.input}
+                  {...{formState}}
                 />
               )}
               <CustomInput
@@ -156,26 +159,29 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 placeholder="Street Address"
                 backgroundColor={Colors.WHITE}
                 inputStyle={styles.input}
+                {...{formState}}
               />
               <HStack alignItems="center" space="2">
-                <VStack flex={1} h="100%">
+                <Center flex={1}>
                   <CustomPicker
                     {...register('city')}
                     data={cityData}
                     placeholder="City"
-                    height={verticalScale(54)}
+                    height={verticalScale(45)}
                     textStyle={styles.input}
+                    isHorizontal
                   />
-                </VStack>
-                <VStack flex={1} h="100%">
+                </Center>
+                <Center flex={1}>
                   <CustomPicker
                     {...register('state')}
                     data={stateData}
                     placeholder="State"
-                    height={verticalScale(54)}
+                    height={verticalScale(45)}
                     textStyle={styles.input}
+                    isHorizontal
                   />
-                </VStack>
+                </Center>
               </HStack>
               <CustomInput
                 {...register('zipCode')}
@@ -183,6 +189,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 keyboardType="numeric"
                 backgroundColor={Colors.WHITE}
                 inputStyle={styles.input}
+                {...{formState}}
               />
               <CustomButton
                 title="Preview"

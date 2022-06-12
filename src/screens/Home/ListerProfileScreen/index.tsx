@@ -11,10 +11,9 @@ import {
 import {
   CustomCollapseText,
   CustomContainer,
-  ProfilePicker,
+  CustomImage,
   RatingStar,
 } from '~/components';
-import images from '~/assets/images';
 import {StyleSheet} from 'react-native';
 import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
@@ -23,7 +22,8 @@ const ListerProfileScreen = ({navigation, route}: any) => {
   const data = {
     id: 1,
     name: 'BCcontracting',
-    image: images.testImage1,
+    image:
+      'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
     email: 'BCcontracting@gmail.com',
     rating: 4,
     totalReview: 150,
@@ -67,7 +67,11 @@ const ListerProfileScreen = ({navigation, route}: any) => {
         contentContainerStyle={styles.contentContainerStyle}>
         <Box mt="12">
           <Center position="absolute" alignSelf="center" zIndex={6} top="-32">
-            <ProfilePicker />
+            <CustomImage
+              style={styles.avatar}
+              imageSource={data?.image}
+              resizeMode="stretch"
+            />
           </Center>
           <VStack
             mx="4"
@@ -167,7 +171,9 @@ export default ListerProfileScreen;
 
 const styles = StyleSheet.create({
   avatar: {
-    height: scale(33),
+    height: scale(105),
+    width: scale(105),
+    borderRadius: 100,
   },
   contentContainerStyle: {
     flexGrow: 1,

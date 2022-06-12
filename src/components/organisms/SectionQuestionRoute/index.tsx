@@ -35,7 +35,7 @@ const SectionQuestionRoute = forwardRef(
       mode: 'onChange',
     });
 
-    const {handleSubmit, register, watch} = methods;
+    const {handleSubmit, register, watch, formState} = methods;
 
     const sendOnPress = () => {};
 
@@ -66,7 +66,7 @@ const SectionQuestionRoute = forwardRef(
     const messageText = watch('message');
 
     return (
-      <VStack flex={1} pt={4} pb={6}>
+      <VStack flex={1} pt={4} pb={6} bg={Colors.WHITE}>
         <AnimatedFlatList
           ref={ref}
           renderItem={renderItem}
@@ -89,6 +89,7 @@ const SectionQuestionRoute = forwardRef(
               {...register('message')}
               placeholder="Cannot find your question? Type it here"
               backgroundColor={Colors.WHITE}
+              {...{formState}}
               rightComponent={() => (
                 <IconButton
                   onPress={sendOnPress}

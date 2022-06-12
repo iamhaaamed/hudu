@@ -26,7 +26,7 @@ export default function SupportScreen() {
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, watch} = methods;
+  const {handleSubmit, register, formState} = methods;
 
   const onSend = () => {};
 
@@ -49,11 +49,16 @@ export default function SupportScreen() {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </Text>
-            <CustomInput {...register('title')} placeholder="Title" />
+            <CustomInput
+              {...register('title')}
+              placeholder="Title"
+              {...{formState}}
+            />
             <CustomInput
               {...register('message')}
               textArea
               placeholder="Your message"
+              {...{formState}}
             />
           </VStack>
           <Box px="4" pb="4" pt="2">
