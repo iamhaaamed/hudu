@@ -36,7 +36,7 @@ const ReviewModal = ({
     mode: 'onChange',
   });
 
-  const {handleSubmit, register} = methods;
+  const {handleSubmit, register, formState} = methods;
 
   const onCloseHandler = () => {
     onClose?.();
@@ -66,6 +66,7 @@ const ReviewModal = ({
             placeholder="Your feedback"
             backgroundColor={Colors.WHITE}
             textArea
+            {...{formState}}
           />
           <CustomButton title="Done" onPress={handleSubmit(onSubmitHandler)} />
         </VStack>

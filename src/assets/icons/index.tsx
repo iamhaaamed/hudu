@@ -8,3 +8,5 @@ export {default as ProjectsIcon} from './ProjectsIcon';
 export {default as ProjectsIconFill} from './ProjectsIconFill';
 export {default as HuduIcon} from './HuduIcon';
 export {default as HuduIconFill} from './HuduIconFill';
+export {default as BellIcon} from './BellIcon';
+export {default as SearchIcon} from './SearchIcon';

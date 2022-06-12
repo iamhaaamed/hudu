@@ -86,7 +86,7 @@ interface LinkItemProps {
 }
 function LinkItem(props: LinkItemProps) {
   return (
-    <Box mt={2}>
+    <Box mt={props.last ? '6' : '2'}>
       <TouchableOpacity activeOpacity={0.5} onPress={props.onPress}>
         <HStack alignItems="center" p={2}>
           {props.last && (

@@ -1,6 +1,5 @@
 import React from 'react';
-import {Box} from 'native-base';
-import {Colors} from '~/styles';
+import {Divider} from 'native-base';
 import {FlatList, StyleSheet} from 'react-native';
 import ReviewItem from '~/components/atoms/ReviewItem';
 import SectionReviewContainer from '../../molecules/SectionReviewContainer';
@@ -12,9 +11,7 @@ export default function SectionHudurReviews() {
     <ReviewItem title={item.title} content={item.content} rate={item.rate} />
   );
 
-  const ItemSeparatorComponent = () => (
-    <Box h="0.4" mx="3" bgColor={Colors.DISABLE_COLOR} />
-  );
+  const ItemSeparatorComponent = () => <Divider mx="3" />;
 
   return (
     <SectionReviewContainer>

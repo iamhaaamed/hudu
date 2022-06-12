@@ -120,6 +120,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: verticalScale(302),
   },
+  avatar: {
+    height: scale(46),
+    width: scale(46),
+    borderRadius: 100,
+  },
   profileRow: {
     flex: 1,
     width: '100%',

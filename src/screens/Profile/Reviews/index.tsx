@@ -53,7 +53,6 @@ export default function ReviewsScreen(props: NavigationProp) {
         ref={viewPager}
         initialPage={0}
         style={styles.flex1}
-        scrollEnabled={false}
         onPageSelected={e => setPage(e.nativeEvent.position)}>
         {tabData.map((item: any, index: number) => {
           switch (item) {

@@ -12,6 +12,7 @@ export {default as HomeScreen} from './Home/HomeScreen';
 export {default as ProjectDetailsHudurScreen} from './Home/ProjectDetailsHudurScreen';
 export {default as ListerProfileScreen} from './Home/ListerProfileScreen';
 export {default as HudurProfileScreen} from './Home/HudurProfileScreen';
+export {default as SearchScreen} from './Home/SearchScreen';
 
 // Post
 export {default as PostScreen} from './Post/PostScreen';

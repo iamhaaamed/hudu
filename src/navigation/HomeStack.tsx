@@ -7,6 +7,7 @@ import {
   ProjectDetailsHudurScreen,
   ListerProfileScreen,
   HudurProfileScreen,
+  SearchScreen,
 } from '~/screens';
 import {CustomHeader} from '~/components/atoms/CustomHeader';
 
@@ -14,6 +15,7 @@ const Stack = createNativeStackNavigator();
 
 export type HomeStackParamList = {
   Home: undefined;
+  Search: undefined;
   Notification: undefined;
   ProjectDetailsHudur: undefined;
   ListerProfile: undefined;
@@ -62,6 +64,11 @@ const screens = [
       headerShown: true,
       header: (props: any) => <CustomHeader {...props} />,
     },
+  },
+  {
+    name: 'Search',
+    component: SearchScreen,
+    options: publicScreenOption,
   },
 ];
 

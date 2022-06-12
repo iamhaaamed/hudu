@@ -35,7 +35,7 @@ const SectionQuestionRouteLister = forwardRef(
       mode: 'onChange',
     });
 
-    const {handleSubmit, register, watch} = methods;
+    const {handleSubmit, register, watch, formState} = methods;
 
     const sendOnPress = () => {};
 
@@ -89,6 +89,7 @@ const SectionQuestionRouteLister = forwardRef(
               {...register('message')}
               placeholder="Cannot find your question? Type it here"
               backgroundColor={Colors.WHITE}
+              {...{formState}}
               rightComponent={() => (
                 <IconButton
                   onPress={sendOnPress}

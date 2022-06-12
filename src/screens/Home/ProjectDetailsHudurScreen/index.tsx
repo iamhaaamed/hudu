@@ -35,6 +35,7 @@ import {
 } from '~/components';
 import {verticalScale} from '~/utils/style';
 import images from '~/assets/images';
+import {Colors} from '~/styles';
 
 const data = {
   title: 'Duct need cleaned out',
@@ -198,6 +199,7 @@ const ProjectDetailsHudurScreen = () => {
       paddingTop: rendered ? headerHeight + TAB_BAR_HEIGHT : 0,
       paddingBottom: bottom,
       minHeight: screenHeight + headerDiff,
+      backgroundColor: Colors.WHITE,
     }),
     [rendered, headerHeight, bottom, screenHeight, headerDiff],
   );
@@ -288,7 +290,7 @@ const ProjectDetailsHudurScreen = () => {
           user={tabIndex === 0 ? data?.hudur : null}
         />
       </Animated.View>
-      <Tab.Navigator tabBar={renderTabBar}>
+      <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">
         <Tab.Screen name="Description">{renderDescription}</Tab.Screen>
         <Tab.Screen name="Question">{renderQuestion}</Tab.Screen>
         <Tab.Screen name="Active bids">{renderActiveBids}</Tab.Screen>

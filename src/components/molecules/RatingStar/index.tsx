@@ -1,6 +1,6 @@
 import React from 'react';
 import {HStack, Icon, Text} from 'native-base';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Octicons from 'react-native-vector-icons/Octicons';
 import Stars from 'react-native-stars';
 import {Colors} from '~/styles';
 import {fontFamily, scale} from '~/utils/style';
@@ -43,14 +43,14 @@ export default function StarRating({
         spacing={spacing}
         fullStar={
           <Icon
-            as={<MaterialCommunityIcons name="star" />}
+            as={<Octicons name="star-fill" />}
             size={size}
             color={Colors.GOLDEN}
           />
         }
         emptyStar={
           <Icon
-            as={<MaterialCommunityIcons name="star-outline" />}
+            as={<Octicons name="star" />}
             size={size}
             color={Colors.BORDER_RATING}
           />
@@ -58,7 +58,7 @@ export default function StarRating({
       />
       {showRating === 'right' && (
         <Text
-          fontSize={size - 2}
+          fontSize={size - 4}
           fontFamily={fontFamily.regular}
           color={Colors.BLACK_1}>
           {Math.round(rate).toFixed(1)}

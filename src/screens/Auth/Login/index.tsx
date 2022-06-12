@@ -40,7 +40,7 @@ export default function LoginScreen({navigation}: NavigationProp) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const {handleSubmit, register} = methods;
+  const {handleSubmit, register, formState} = methods;
 
   const loginOnPress = async (formData: any) => {
     setLoading(true);
@@ -105,8 +105,16 @@ export default function LoginScreen({navigation}: NavigationProp) {
           </VStack>
           <Flex flex={1} justifyContent="flex-end" pb="6">
             <VStack pt="4" px="4" space="6">
-              <CustomInput {...register('email')} placeholder="Email" />
-              <CustomInput {...register('password')} placeholder="Password" />
+              <CustomInput
+                {...register('email')}
+                placeholder="Email"
+                {...{formState}}
+              />
+              <CustomInput
+                {...register('password')}
+                placeholder="Password"
+                {...{formState}}
+              />
             </VStack>
             <Button
               variant="link"

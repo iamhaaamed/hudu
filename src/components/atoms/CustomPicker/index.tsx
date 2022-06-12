@@ -39,6 +39,8 @@ export default React.forwardRef(
       maxHeight = verticalScale(300),
       textStyle = styles.title,
       textColor = Colors.BLACK_2,
+      formState,
+      isHorizontal = false,
     }: {
       name: any;
       data: any;
@@ -62,12 +64,17 @@ export default React.forwardRef(
       maxHeight?: number;
       textStyle?: any;
       textColor?: any;
+      formState?: any;
+      isHorizontal?: boolean;
     },
     ref: any,
   ) => {
     const DropdownButton = useRef();
     const {height: screenHeight} = useWindowDimensions();
     const {field, fieldState} = useController({name});
+
+    const isValid = formState?.isValid;
+    const isDirty = formState?.isDirty;
 
     const [visible, setVisible] = useState(false);
     const [dropdownPosition, setDropdownPosition] =
@@ -146,18 +153,28 @@ export default React.forwardRef(
 
     return (
       <FormControl isInvalid={fieldState.error} w={{base: '100%'}}>
-        <Box mt={label ? '3' : '0'}>
-          {label && (
+        <Box
+          mt={
+            visible || field.value || fieldState.error || isHorizontal
+              ? '3'
+              : '0'
+          }>
+          {(visible || field.value || fieldState.error) && (
             <Text
               position="absolute"
               zIndex={400}
               top="-12"
               left="6"
-              px="2"
+              pl="2"
+              pr="4"
               bg={Colors.WHITE}
-              color={Colors.BLACK_3}
+              color={
+                field.value || fieldState.error || visible
+                  ? Colors.INPUT_LABEL2
+                  : Colors.BLACK_1
+              }
               style={textStyle}>
-              {label}
+              {label ? label : placeholder}
             </Text>
           )}
           <TouchableOpacity
@@ -171,7 +188,13 @@ export default React.forwardRef(
               px="3"
               bg={Colors.WHITE}
               alignItems="center"
-              borderColor={Colors.BLACK_2}>
+              borderColor={
+                fieldState.error
+                  ? Colors.ERROR
+                  : isDirty
+                  ? Colors.SUCCESS
+                  : Colors.BORDER_COLOR
+              }>
               <Text
                 flex={1}
                 numberOfLines={1}
@@ -192,8 +215,8 @@ export default React.forwardRef(
             style={styles.overlay}
             onPress={() => setVisible(false)}>
             <Box
-              top={dropdownPosition.top}
-              bottom={dropdownPosition.bottom}
+              top={dropdownPosition?.top}
+              bottom={dropdownPosition?.bottom}
               maxHeight={maxHeight}
               position="absolute"
               w="100%">
@@ -216,7 +239,10 @@ export default React.forwardRef(
             </Box>
           </TouchableOpacity>
         </Modal>
-        <FormControl.ErrorMessage>
+        <FormControl.ErrorMessage
+          fontSize={scale(13)}
+          fontFamily={fontFamily.regular}
+          mt="0">
           {fieldState?.error?.message}
         </FormControl.ErrorMessage>
       </FormControl>

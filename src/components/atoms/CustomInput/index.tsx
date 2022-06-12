@@ -1,15 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Colors} from '~/styles';
 import {useController} from 'react-hook-form';
 import {fontFamily, scale} from '~/utils/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {
-  TextInput,
-  Platform,
-  StyleSheet,
-  TextInputProps,
-  TextStyle,
-} from 'react-native';
+import {TextInput, Platform, StyleSheet, TextStyle} from 'react-native';
 import {FormControl, Text, HStack, Box, Icon} from 'native-base';
 
 export default React.forwardRef(
@@ -27,6 +21,7 @@ export default React.forwardRef(
       rightText,
       disabled,
       rightComponent,
+      formState,
     }: {
       name: any;
       placeholder?: string;
@@ -54,26 +49,45 @@ export default React.forwardRef(
       rightText?: string;
       disabled?: boolean;
       rightComponent?: any;
+      formState?: any;
     },
     ref: any,
   ) => {
     const {field, fieldState} = useController({name});
+    const [isFocused, setIsFocused] = useState(false);
+
+    const isValid = formState?.isValid;
+    const isDirty = formState?.isDirty;
+
+    const handleFocus = () => {
+      setIsFocused(true);
+    };
+
+    const handleBlur = (val: any) => {
+      setIsFocused(false);
+      field.onBlur?.(val);
+    };
 
     return (
       <FormControl isInvalid={fieldState.error} w={{base: '100%'}}>
-        <Box mt={label ? '3' : '0'}>
-          {label && (
+        <Box mt={isFocused || field.value || fieldState.error ? '3' : '0'}>
+          {(isFocused || field.value || fieldState.error || disabled) && (
             <Text
-              px="2"
+              pl="2"
+              pr="4"
               left="6"
               top="-12"
               zIndex={60}
               bg={Colors.WHITE}
               position="absolute"
               fontSize={scale(14)}
-              fontFamily={fontFamily.medium}
-              color={disabled ? Colors.DISABLE_COLOR : Colors.BLACK_3}>
-              {label}
+              fontFamily={fontFamily.regular}
+              color={
+                field.value || fieldState.error || disabled
+                  ? Colors.INPUT_LABEL2
+                  : Colors.BLACK_1
+              }>
+              {label ? label : placeholder}
             </Text>
           )}
           <HStack
@@ -83,11 +97,20 @@ export default React.forwardRef(
             alignItems="center"
             bg={backgroundColor}
             justifyContent="center"
-            borderColor={disabled ? Colors.DISABLE_COLOR : Colors.BORDER_COLOR}>
+            borderColor={
+              disabled
+                ? Colors.DISABLE_COLOR
+                : fieldState.error
+                ? Colors.ERROR
+                : isDirty
+                ? Colors.SUCCESS
+                : Colors.BORDER_COLOR
+            }>
             <TextInput
               ref={ref}
               value={field.value}
-              onBlur={field.onBlur}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               editable={!disabled}
               autoCapitalize="none"
               placeholder={placeholder}
@@ -102,13 +125,15 @@ export default React.forwardRef(
               style={[
                 inputStyle,
                 {
+                  paddingTop: textArea ? 15 : 5,
+                  fontSize: isFocused ? scale(12) : scale(14),
                   textAlignVertical: textArea ? 'top' : 'center',
                   color: color,
                 },
                 Platform.OS === 'ios' && {minHeight: 45},
               ]}
             />
-            {icon && (
+            {icon && !isFocused && (
               <Icon
                 size={scale(16)}
                 as={<Ionicons name={icon} />}
@@ -126,7 +151,10 @@ export default React.forwardRef(
             {rightComponent && rightComponent()}
           </HStack>
         </Box>
-        <FormControl.ErrorMessage fontFamily={fontFamily.medium}>
+        <FormControl.ErrorMessage
+          fontSize={scale(13)}
+          fontFamily={fontFamily.regular}
+          mt="0">
           {fieldState.error?.message}
         </FormControl.ErrorMessage>
       </FormControl>
@@ -137,7 +165,6 @@ export default React.forwardRef(
 const styles = StyleSheet.create({
   input: {
     flex: 1,
-    fontSize: scale(14),
     fontFamily: fontFamily.regular,
   },
 });

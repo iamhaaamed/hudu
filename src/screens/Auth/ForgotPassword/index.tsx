@@ -22,7 +22,7 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
     mode: 'onChange',
   });
 
-  const {handleSubmit, register} = methods;
+  const {handleSubmit, register, formState} = methods;
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -44,7 +44,11 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
               password
             </Text>
             <VStack space="10">
-              <CustomInput {...register('email')} placeholder="Email" />
+              <CustomInput
+                {...register('email')}
+                placeholder="Email"
+                {...{formState}}
+              />
               <CustomButton
                 title="Send link"
                 height={verticalScale(45)}
