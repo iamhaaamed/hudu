@@ -1,15 +1,15 @@
 import React from 'react';
 import {Box} from 'native-base';
-import {StyleSheet} from 'react-native';
 import ProfileInfo from '~/components/atoms/ProfileInfo';
 import ProfileLinks from '~/components/atoms/ProfileInfo/profile-links';
+import {Colors} from '~/styles';
 
 export default function SectionProfile() {
   return (
     <Box
       p={4}
       pt="30%"
-      bg="#FFF"
+      bg={Colors.WHITE}
       shadow="5"
       width="90%"
       marginTop={24}
@@ -20,5 +20,3 @@ export default function SectionProfile() {
     </Box>
   );
 }
-
-const styles = StyleSheet.create({});

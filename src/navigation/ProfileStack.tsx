@@ -32,7 +32,7 @@ export type ProfileStackParamList = {
   ForgotPassword: undefined;
 };
 
-const navigatorOptions = {
+const publicScreenOption = {
   headerShown: false,
   ...CommonActions,
 };
@@ -41,38 +41,79 @@ const screens = [
   {
     name: 'Profile',
     component: ProfileScreen,
+    options: publicScreenOption,
   },
   {
     name: 'EditProfile',
     component: EditProfileScreen,
+    options: {
+      headerTitle: undefined,
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
   {
     name: 'Reviews',
     component: ReviewsScreen,
+    options: {
+      headerTitle: 'Reviews',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
   {
     name: 'Support',
     component: SupportScreen,
+    options: {
+      headerTitle: 'Support',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
   {
     name: 'Auth',
     component: AuthScreen,
+    options: {
+      headerTitle: undefined,
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
   {
     name: 'Login',
     component: LoginScreen,
+    options: {
+      headerTitle: 'Login',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
   {
     name: 'SignUp',
     component: SignUpScreen,
+    options: {
+      headerTitle: 'Create account',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
   {
     name: 'ForgotPassword',
     component: ForgotPasswordScreen,
+    options: {
+      headerTitle: 'Forgot password',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
   {
     name: 'Notification',
     component: NotificationScreen,
+    options: {
+      headerTitle: 'Notification',
+      headerShown: true,
+      header: (props: any) => <CustomHeader {...props} />,
+    },
   },
 ];
 
@@ -90,18 +131,10 @@ export default function ProfileStack({navigation, route}: any) {
   }, [navigation, route]);
 
   return (
-    <Stack.Navigator screenOptions={navigatorOptions}>
+    <Stack.Navigator>
       {screens.map(screen => (
         //@ts-ignore
-        <Stack.Screen
-          key={screen.name}
-          options={{
-            headerTitle: screen.name,
-            headerShown: screen.name != 'Profile',
-            header: (props: any) => <CustomHeader {...props} />,
-          }}
-          {...screen}
-        />
+        <Stack.Screen key={screen.name} {...screen} />
       ))}
     </Stack.Navigator>
   );

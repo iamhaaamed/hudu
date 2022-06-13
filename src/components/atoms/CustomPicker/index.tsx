@@ -41,6 +41,7 @@ export default React.forwardRef(
       textColor = Colors.BLACK_2,
       formState,
       isHorizontal = false,
+      validation = false,
     }: {
       name: any;
       data: any;
@@ -66,6 +67,7 @@ export default React.forwardRef(
       textColor?: any;
       formState?: any;
       isHorizontal?: boolean;
+      validation?: boolean;
     },
     ref: any,
   ) => {
@@ -91,13 +93,19 @@ export default React.forwardRef(
       DropdownButton?.current?.measure((_fx, _fy, _w, h, _px, py) => {
         if (screenHeight - (py + h) > maxHeight) {
           setDropdownPosition({
-            top: py + h,
+            top:
+              field.value || fieldState.error || isHorizontal
+                ? py + h
+                : py + h + 12,
             bottom: undefined,
           });
         } else if (py > maxHeight) {
           setDropdownPosition({
             top: undefined,
-            bottom: screenHeight - py + 5 - h / 2,
+            bottom:
+              field.value || fieldState.error
+                ? screenHeight - py + 5 - h / 2
+                : screenHeight - py + 5 - h / 2 + 14,
           });
         } else {
           setDropdownPosition({
@@ -118,6 +126,14 @@ export default React.forwardRef(
       setVisible(false);
       field.onChange?.(item?.value);
     };
+
+    const borderColor = fieldState.error
+      ? Colors.ERROR
+      : !validation
+      ? Colors.BORDER_COLOR
+      : isDirty
+      ? Colors.SUCCESS
+      : Colors.BORDER_COLOR;
 
     const renderItem = ({item, index}: {item: any; index: number}) => {
       const isEnable = item?.value === field.value;
@@ -188,19 +204,19 @@ export default React.forwardRef(
               px="3"
               bg={Colors.WHITE}
               alignItems="center"
-              borderColor={
-                fieldState.error
-                  ? Colors.ERROR
-                  : isDirty
-                  ? Colors.SUCCESS
-                  : Colors.BORDER_COLOR
-              }>
+              borderColor={borderColor}>
               <Text
                 flex={1}
                 numberOfLines={1}
                 color={textColor}
                 style={textStyle}>
-                {field.value ? getName(field.value) : placeholder}
+                {field.value
+                  ? getName(field.value)
+                  : !visible
+                  ? label
+                    ? label
+                    : placeholder
+                  : placeholder}
               </Text>
               <Icon
                 as={<MaterialCommunityIcons name="chevron-down" />}

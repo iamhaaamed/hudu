@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {HStack, Text} from 'native-base';
-import Octicons from 'react-native-vector-icons/Octicons';
 import {Colors} from '~/styles';
+import {StarIcon, StarIconFill} from '~/assets/icons';
 
 interface RatingProps {
   count: number;
@@ -15,12 +15,9 @@ export function ProfileRating(props: RatingProps) {
         .map((item, index) => {
           const filled = index < props.count;
           return (
-            <Octicons
-              size={14}
-              key={index}
-              name={filled ? 'star-fill' : 'star'}
-              color={filled ? Colors.WARNING : Colors.BLACK}
-            />
+            <Fragment key={index}>
+              {filled ? <StarIconFill /> : <StarIcon />}
+            </Fragment>
           );
         })}
       {props.total && <Text color={Colors.GARY_3}>({props.total})</Text>}

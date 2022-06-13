@@ -138,9 +138,9 @@ export default function SignUpScreen({navigation}: NavigationProp) {
               <Button
                 px={1}
                 variant="link"
-                onPress={() => navigation.replace('SignUp')}>
+                onPress={() => navigation.replace('Login')}>
                 <Text underline color={Colors.PRIMARY} fontSize="md">
-                  Signin
+                  Sign in
                 </Text>
               </Button>
             </HStack>

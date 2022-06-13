@@ -1,9 +1,9 @@
 import React from 'react';
-import {HStack, Icon, Text} from 'native-base';
-import Octicons from 'react-native-vector-icons/Octicons';
+import {HStack, Text, VStack} from 'native-base';
 import Stars from 'react-native-stars';
 import {Colors} from '~/styles';
 import {fontFamily, scale} from '~/utils/style';
+import {StarIcon, StarIconFill} from '~/assets/icons';
 
 export default function StarRating({
   rate = 0,
@@ -12,6 +12,7 @@ export default function StarRating({
   spacing = 1,
   onChange,
   showRating,
+  total,
 }: {
   rate: number;
   disabled?: boolean;
@@ -19,51 +20,50 @@ export default function StarRating({
   spacing?: number;
   onChange?: any;
   showRating?: 'right' | 'left';
+  total?: number;
 }) {
   const onChangeHandler = (value: number) => {
     onChange?.(value);
   };
 
   return (
-    <HStack space="1" alignItems="center">
-      {showRating === 'left' && (
+    <VStack alignItems="center">
+      <HStack space="1" alignItems="center">
+        {showRating === 'left' && (
+          <Text
+            fontSize={size - 4}
+            fontFamily={fontFamily.regular}
+            color={Colors.GARY_3}>
+            {Math.round(rate).toFixed(1)}
+          </Text>
+        )}
+        <Stars
+          disabled={disabled}
+          default={Math.round(rate)}
+          update={onChangeHandler}
+          count={5}
+          half={false}
+          spacing={spacing}
+          fullStar={<StarIconFill />}
+          emptyStar={<StarIcon />}
+        />
+        {showRating === 'right' && (
+          <Text
+            fontSize={size - 4}
+            fontFamily={fontFamily.regular}
+            color={Colors.GARY_3}>
+            {Math.round(rate).toFixed(1)}
+          </Text>
+        )}
+      </HStack>
+      {total && (
         <Text
           fontSize={size - 2}
           fontFamily={fontFamily.regular}
-          color={Colors.BLACK_1}>
-          {Math.round(rate).toFixed(1)}
+          color={Colors.GARY_3}>
+          {`(${total} Review)`}
         </Text>
       )}
-      <Stars
-        disabled={disabled}
-        default={Math.round(rate)}
-        update={onChangeHandler}
-        count={5}
-        half={false}
-        spacing={spacing}
-        fullStar={
-          <Icon
-            as={<Octicons name="star-fill" />}
-            size={size}
-            color={Colors.GOLDEN}
-          />
-        }
-        emptyStar={
-          <Icon
-            as={<Octicons name="star" />}
-            size={size}
-            color={Colors.BORDER_RATING}
-          />
-        }
-      />
-      {showRating === 'right' && (
-        <Text
-          fontSize={size - 4}
-          fontFamily={fontFamily.regular}
-          color={Colors.BLACK_1}>
-          {Math.round(rate).toFixed(1)}
-        </Text>
-      )}
-    </HStack>
+    </VStack>
   );
 }

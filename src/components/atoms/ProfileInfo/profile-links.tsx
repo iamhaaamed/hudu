@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Colors} from '~/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Box, HStack, Text, VStack} from 'native-base';
-import {useNavigation} from '@react-navigation/native';
 import {Linking, StyleSheet, TouchableOpacity} from 'react-native';
+import {navigate} from '~/navigation/Methods';
+import {authStore, userDataStore} from '~/stores';
+import {QuestionModal} from '~/components';
+import {useSignOutAuth} from '~/hooks/user';
 
 const LINKS = [
   {
@@ -57,25 +60,57 @@ const LINKS = [
 ];
 
 export default function ProfileLinks() {
-  const {navigate} = useNavigation();
+  const {isUserLoggedIn, setIsUserLoggedIn} = authStore(state => state);
+  const {setUserData} = userDataStore(state => state);
+  const {signOut} = useSignOutAuth();
+
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const onItemPressHandler = (item: any) => {
     item.url ? Linking.openURL(item.url) : navigate(item.navLink);
   };
 
-  const onLogOutPressHandler = () => navigate('Auth');
+  const onLogOutPressHandler = () => {
+    if (isUserLoggedIn) {
+      setLogoutModalVisible(true);
+    } else {
+      navigate('Auth');
+    }
+  };
+
+  const onCloseLogoutModal = () => {
+    setLogoutModalVisible(false);
+  };
+
+  const onAcceptLogoutModal = async () => {
+    await signOut();
+    setLogoutModalVisible(false);
+    setIsUserLoggedIn(false);
+    setUserData({});
+  };
 
   return (
-    <VStack mt={5}>
-      {LINKS.map(item => (
-        <LinkItem
-          key={item.id}
-          title={item.title}
-          onPress={onItemPressHandler.bind(null, item)}
-        />
-      ))}
-      <LinkItem last title="Log out" onPress={onLogOutPressHandler} />
-    </VStack>
+    <>
+      <VStack mt={5}>
+        {LINKS.map(item => (
+          <LinkItem
+            key={item.id}
+            title={item.title}
+            onPress={onItemPressHandler.bind(null, item)}
+          />
+        ))}
+        <LinkItem last title="Log out" onPress={onLogOutPressHandler} />
+      </VStack>
+      <QuestionModal
+        visible={logoutModalVisible}
+        onClose={onCloseLogoutModal}
+        title="Are you sur you want log out?"
+        option1="Cancel"
+        option2="Log out"
+        option1OnPress={onCloseLogoutModal}
+        option2OnPress={onAcceptLogoutModal}
+      />
+    </>
   );
 }
 

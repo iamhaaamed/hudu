@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import * as yup from 'yup';
 import {StyleSheet} from 'react-native';
 import {HStack, VStack} from 'native-base';
 import {verticalScale} from '~/utils/style';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
+import {userDataStore} from '~/stores';
 import {
   CustomInput,
   CustomButton,
@@ -13,11 +14,7 @@ import {
   CustomContainer,
   CustomKeyboardAwareScrollView,
 } from '~/components';
-
-const cityData = [
-  {id: 0, title: 'New york', value: 'new_york'},
-  {id: 1, title: 'Washington', value: 'washington'},
-];
+import {useUpdateProfile} from '~/hooks/user';
 
 const stateData = [
   {id: 0, title: 'California', value: 'california'},
@@ -25,29 +22,74 @@ const stateData = [
 ];
 
 const schema = yup.object().shape({
-  firstName: yup.string().required('required'),
-  lastName: yup.string().required('required'),
-  userName: yup.string().required('required'),
-  email: yup.string().required('required'),
-  bio: yup.string().required('required'),
-  address: yup.string().required('required'),
-  city: yup.string().required('required'),
-  state: yup.string().required('required'),
-  zipCode: yup.number().required('required'),
+  imageAddress: yup.string().nullable(),
+  firstName: yup.string().required('required').nullable(),
+  lastName: yup.string().required('required').nullable(),
+  userName: yup.string().required('required').nullable(),
+  email: yup.string().required('required').nullable(),
+  bio: yup.string().required('required').nullable(),
+  streetAddress: yup.string().required('required').nullable(),
+  city: yup.string().required('required').nullable(),
+  state: yup.string().required('required').nullable(),
+  zipCode: yup
+    .string()
+    .required('required')
+    .matches(/^[0-9]+$/, 'Must be only digits')
+    .min(5, 'Must be exactly 5 digits')
+    .max(5, 'Must be exactly 5 digits')
+    .nullable(),
 });
 
 export default function EditProfileScreen({navigation}: NavigationProp) {
+  const {userData} = userDataStore(state => state);
+
+  const {mutate: mutateUpdate, isLoading: updateLoading} = useUpdateProfile();
+
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, formState} = methods;
+  const {handleSubmit, register, formState, setValue} = methods;
 
-  const onEdit = () => {};
+  useEffect(() => {
+    if (userData) {
+      setValue('imageAddress', userData?.imageAddress);
+      setValue('firstName', userData?.firstName);
+      setValue('lastName', userData?.lastName);
+      setValue('userName', userData?.userName);
+      setValue('email', userData?.email);
+      setValue('bio', userData?.bio);
+      setValue('streetAddress', userData?.streetAddress);
+      setValue('city', userData?.city);
+      setValue('state', userData?.state);
+      setValue('zipCode', userData?.zipCode);
+    }
+  }, [userData]);
+
+  const onEdit = async (formData: any) => {
+    const input = {
+      imageAddress: '', //TODO replace with formData
+      firstName: formData?.firstName,
+      lastName: formData?.lastName,
+      userName: formData?.userName,
+      bio: formData?.bio,
+      city: formData?.city,
+      state: formData?.state,
+      zipCode: formData?.zipCode,
+      point: [40.73254, -74.368358],
+      id: userData?.id,
+    };
+    mutateUpdate(input, {
+      onSuccess: (successData: any) => {},
+      onError: (errorData: any) => {},
+    });
+  };
+
+  const loading = updateLoading;
 
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <FormProvider {...methods}>
         <CustomKeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
@@ -87,20 +129,20 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
               {...{formState}}
             />
             <CustomInput
-              {...register('address')}
+              {...register('streetAddress')}
               label="Street address"
               placeholder="Street address"
               {...{formState}}
             />
             <HStack alignItems="center" space="2">
               <VStack flex={1} h="100%">
-                <CustomPicker
+                <CustomInput
                   {...register('city')}
                   label="City"
-                  data={cityData}
-                  placeholder="Select"
-                  height={verticalScale(45)}
+                  placeholder="City"
                   {...{formState}}
+                  height={verticalScale(45)}
+                  isHorizontal
                 />
               </VStack>
               <VStack flex={1} h="100%">
@@ -111,6 +153,7 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
                   placeholder="Select"
                   height={verticalScale(45)}
                   {...{formState}}
+                  isHorizontal
                 />
               </VStack>
             </HStack>
@@ -119,6 +162,8 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
               label="Zip code"
               placeholder="Zip code"
               {...{formState}}
+              keyboardType="numeric"
+              validation
             />
             <CustomButton
               title="Save"
