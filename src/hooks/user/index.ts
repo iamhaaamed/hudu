@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import Config from 'react-native-config';
 import auth from '@react-native-firebase/auth';
 import queryKeys from '~/constants/queryKeys';
@@ -24,7 +25,6 @@ import {
   USER_UPDATE_PROFILE,
   USER_UPDATE_LAST_SEEN,
 } from '~/graphql/user/mutations';
-
 import {
   statusCodes,
   GoogleSignin,
@@ -39,6 +39,7 @@ import {
 } from 'react-native-fbsdk-next';
 import {getResponseMessage} from '~/utils/helper';
 import {authStore, userDataStore} from '~/stores';
+import {replace, resetRoot, goBack} from '~/navigation/Methods';
 
 GoogleSignin.configure({
   scopes: ['profile', 'email'], // what API you want to access on behalf of the user, default is email and profile
@@ -120,6 +121,50 @@ export const useLoginAuth = () => {
   return {loginWithEmailAndPass};
 };
 
+export const useForgotPasswordAuth = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(null);
+
+  const forgotPassword = async (email: string) => {
+    setLoading(true);
+    try {
+      await auth()
+        .sendPasswordResetEmail(email)
+        .then(() => {
+          showMessage({
+            message: 'Email sent successfully',
+            type: 'success',
+          });
+          goBack();
+          setIsSuccess(true);
+          setError(false);
+          setLoading(false);
+        })
+        .catch((errorData: any) => {
+          console.log(error, 'error');
+          setIsSuccess(false);
+          setError(errorData);
+          setLoading(false);
+          const errorMessage = errorData?.message;
+          if (errorMessage) {
+            showMessage({
+              message: errorMessage,
+              type: 'danger',
+            });
+          }
+        });
+    } catch (err: any) {
+      console.log(err, 'err*****');
+      setIsSuccess(false);
+      setError(err);
+      setLoading(false);
+    }
+  };
+
+  return {forgotPassword, loading, isSuccess, error};
+};
+
 export const useGetProfile = (options: any = {}) => {
   const res = useQuery<
     User_GetProfileQuery,
@@ -158,6 +203,7 @@ export const useLogin = () => {
             message: 'You are logged in successfully',
             type: 'success',
           });
+          resetRoot('HomeStack');
         } else {
           showMessage(getResponseMessage(successData.user_login?.status));
         }
@@ -187,6 +233,7 @@ export const useSignUp = () => {
             message: 'You have successfully registered',
             type: 'success',
           });
+          replace('EditProfile');
         } else {
           showMessage(getResponseMessage(successData.user_signUp?.status));
         }
@@ -450,6 +497,10 @@ export const useUpdateProfile = () => {
           successData?.user_updateProfile?.status === ResponseStatus.Success
         ) {
           queryClient.invalidateQueries(queryKeys.userProfile);
+          showMessage(
+            getResponseMessage(successData.user_updateProfile?.status),
+          );
+          goBack();
         }
       },
       onError: (errorData: any) => {

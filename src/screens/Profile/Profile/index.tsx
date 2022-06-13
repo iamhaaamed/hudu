@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import {CustomContainer, SectionProfile} from '~/components';
 
 const ProfileScreen = () => {
@@ -7,7 +7,7 @@ const ProfileScreen = () => {
     <CustomContainer>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 32}}>
+        contentContainerStyle={styles.contentContainerStyle}>
         <SectionProfile />
       </ScrollView>
     </CustomContainer>
@@ -15,3 +15,7 @@ const ProfileScreen = () => {
 };
 
 export default ProfileScreen;
+
+const styles = StyleSheet.create({
+  contentContainerStyle: {paddingBottom: 32},
+});

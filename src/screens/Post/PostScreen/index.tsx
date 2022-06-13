@@ -20,46 +20,29 @@ const expectationData = [
   {id: 0, title: 'Specific time', value: 'specific'},
   {id: 1, title: 'Flexible', value: 'flexible'},
 ];
-const cityData = [
-  {id: 0, title: 'City 1', value: 'city1'},
-  {id: 1, title: 'City 2', value: 'city2'},
-  {id: 2, title: 'City 3', value: 'city3'},
-];
 const stateData = [
-  {id: 0, title: 'State 1', value: 'state1'},
-  {id: 1, title: 'State 2', value: 'state2'},
-  {id: 2, title: 'State 3', value: 'state3'},
-  {id: 3, title: 'State 4', value: 'state4'},
-  {id: 4, title: 'State 5', value: 'state5'},
-  {id: 5, title: 'State 6', value: 'state6'},
-  {id: 6, title: 'State 7', value: 'state7'},
-  {id: 7, title: 'State 8', value: 'state8'},
-  {id: 8, title: 'State 9', value: 'state9'},
-  {id: 9, title: 'State 10', value: 'state10'},
-  {id: 10, title: 'State 11', value: 'state11'},
-  {id: 11, title: 'State 12', value: 'state12'},
-  {id: 12, title: 'State 13', value: 'state13'},
-  {id: 13, title: 'State 14', value: 'state14'},
-  {id: 14, title: 'State 15', value: 'state15'},
-  {id: 15, title: 'State 16', value: 'state16'},
-  {id: 16, title: 'State 17', value: 'state17'},
-  {id: 17, title: 'State 18', value: 'state18'},
-  {id: 18, title: 'State 19', value: 'state19'},
-  {id: 19, title: 'State 20', value: 'state20'},
+  {id: 0, title: 'California', value: 'california'},
+  {id: 1, title: 'Texas', value: 'texas'},
 ];
 
 const schema = yup.object().shape({
-  title: yup.string().required('required'),
-  description: yup.string().required('required'),
-  expectation: yup.string().required('required'),
+  title: yup.string().required('required').nullable(),
+  description: yup.string().required('required').nullable(),
+  expectation: yup.string().required('required').nullable(),
   duration: yup.number().when('expectation', {
     is: 'specific',
-    then: yup.number().required('required'),
+    then: yup.number().required('required').nullable(),
   }),
-  streetAddress: yup.string().required('required'),
-  city: yup.string().required('required'),
-  state: yup.string().required('required'),
-  zipCode: yup.number().required('required'),
+  streetAddress: yup.string().required('required').nullable(),
+  city: yup.string().required('required').nullable(),
+  state: yup.string().required('required').nullable(),
+  zipCode: yup
+    .string()
+    .required('required')
+    .matches(/^[0-9]+$/, 'Must be only digits')
+    .min(5, 'Must be exactly 5 digits')
+    .max(5, 'Must be exactly 5 digits')
+    .nullable(),
 });
 
 const PostScreen = ({navigation}: NavigationProp) => {
@@ -163,12 +146,12 @@ const PostScreen = ({navigation}: NavigationProp) => {
               />
               <HStack alignItems="center" space="2">
                 <Center flex={1}>
-                  <CustomPicker
+                  <CustomInput
                     {...register('city')}
-                    data={cityData}
+                    label="City"
                     placeholder="City"
+                    {...{formState}}
                     height={verticalScale(45)}
-                    textStyle={styles.input}
                     isHorizontal
                   />
                 </Center>

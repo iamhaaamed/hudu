@@ -7,12 +7,6 @@ import {verticalScale} from '~/utils/style';
 import {CustomButton, CustomContainer, CustomImage} from '~/components';
 
 export default function AuthScreen({navigation}: NavigationProp) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: undefined,
-    });
-  }, []);
-
   return (
     <CustomContainer>
       <VStack

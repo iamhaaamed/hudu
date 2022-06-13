@@ -22,6 +22,9 @@ export default React.forwardRef(
       disabled,
       rightComponent,
       formState,
+      validation = false,
+      isHorizontal = false,
+      height,
     }: {
       name: any;
       placeholder?: string;
@@ -50,6 +53,9 @@ export default React.forwardRef(
       disabled?: boolean;
       rightComponent?: any;
       formState?: any;
+      validation?: boolean;
+      height?: number;
+      isHorizontal?: boolean;
     },
     ref: any,
   ) => {
@@ -58,6 +64,16 @@ export default React.forwardRef(
 
     const isValid = formState?.isValid;
     const isDirty = formState?.isDirty;
+
+    const borderColor = disabled
+      ? Colors.DISABLE_COLOR
+      : fieldState.error
+      ? Colors.ERROR
+      : !validation
+      ? Colors.BORDER_COLOR
+      : isDirty
+      ? Colors.SUCCESS
+      : Colors.BORDER_COLOR;
 
     const handleFocus = () => {
       setIsFocused(true);
@@ -70,7 +86,12 @@ export default React.forwardRef(
 
     return (
       <FormControl isInvalid={fieldState.error} w={{base: '100%'}}>
-        <Box mt={isFocused || field.value || fieldState.error ? '3' : '0'}>
+        <Box
+          mt={
+            isFocused || field.value || fieldState.error || isHorizontal
+              ? '3'
+              : '0'
+          }>
           {(isFocused || field.value || fieldState.error || disabled) && (
             <Text
               pl="2"
@@ -91,21 +112,14 @@ export default React.forwardRef(
             </Text>
           )}
           <HStack
+            h={height}
             px="2"
-            borderWidth="0.5"
+            borderWidth="0.7"
             borderRadius="md"
             alignItems="center"
             bg={backgroundColor}
             justifyContent="center"
-            borderColor={
-              disabled
-                ? Colors.DISABLE_COLOR
-                : fieldState.error
-                ? Colors.ERROR
-                : isDirty
-                ? Colors.SUCCESS
-                : Colors.BORDER_COLOR
-            }>
+            borderColor={borderColor}>
             <TextInput
               ref={ref}
               value={field.value}
@@ -113,7 +127,9 @@ export default React.forwardRef(
               onBlur={handleBlur}
               editable={!disabled}
               autoCapitalize="none"
-              placeholder={placeholder}
+              placeholder={
+                !isFocused ? (label ? label : placeholder) : placeholder
+              }
               keyboardType={keyboardType}
               onChangeText={field.onChange}
               numberOfLines={textArea ? 4 : 1}

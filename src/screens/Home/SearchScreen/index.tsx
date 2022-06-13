@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, TextInput} from 'react-native';
-import {HStack, VStack} from 'native-base';
+import {HStack, VStack, IconButton} from 'native-base';
 import {CustomContainer, EmptyData} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import debounce from 'lodash.debounce';
 import images from '~/assets/images';
-import {ProjectItem} from '~/components';
+import {SearchProjectItem} from '~/components';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 const projects = [
   {
@@ -37,7 +38,7 @@ const projects = [
   },
 ];
 
-const SearchScreen = () => {
+const SearchScreen = ({navigation}: any) => {
   const [userQuery, setUserQuery] = useState('');
   const [fetchData, setFetchData] = useState([]);
 
@@ -77,7 +78,13 @@ const SearchScreen = () => {
     }
   };
 
-  const renderItem = ({item}: {item: any}) => <ProjectItem item={item} />;
+  const closeOnPress = () => {
+    navigation.goBack();
+  };
+
+  const renderItem = ({item}: {item: any}) => (
+    <SearchProjectItem {...{item, userQuery}} />
+  );
 
   return (
     <CustomContainer>
@@ -97,7 +104,17 @@ const SearchScreen = () => {
             placeholder="Search project"
             placeholderTextColor={Colors.BLACK_3}
             style={styles.input}
+            autoFocus
           />
+          {userQuery?.length > 0 && (
+            <IconButton
+              onPress={closeOnPress}
+              bg={Colors.WHITE_RIPPLE_COLOR}
+              colorScheme={Colors.WHITE_RIPPLE_COLOR}
+              borderRadius="full"
+              icon={<EvilIcons name="close" color={Colors.BLACK_3} size={18} />}
+            />
+          )}
         </HStack>
         <FlatList
           showsVerticalScrollIndicator={false}

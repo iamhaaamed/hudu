@@ -11,6 +11,7 @@ import {
   CustomContainer,
   CustomKeyboardAwareScrollView,
 } from '~/components';
+import {useForgotPasswordAuth} from '~/hooks/user';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('required'),
@@ -24,16 +25,15 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
 
   const {handleSubmit, register, formState} = methods;
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: 'Forgot password',
-    });
-  }, []);
+  const {forgotPassword, loading: forgotLoading} = useForgotPasswordAuth();
 
-  const onSend = () => {};
+  const onSend = (formData: any) => {
+    console.log({formData});
+    forgotPassword(formData?.email);
+  };
 
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={forgotLoading}>
       <FormProvider {...methods}>
         <CustomKeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
@@ -52,7 +52,7 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
               <CustomButton
                 title="Send link"
                 height={verticalScale(45)}
-                onPress={() => handleSubmit(onSend)}
+                onPress={handleSubmit(onSend)}
               />
             </VStack>
           </VStack>
