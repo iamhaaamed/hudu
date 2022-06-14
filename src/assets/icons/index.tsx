@@ -12,3 +12,4 @@ export {default as BellIcon} from './BellIcon';
 export {default as SearchIcon} from './SearchIcon';
 export {default as StarIcon} from './StarIcon';
 export {default as StarIconFill} from './StarIconFill';
+export {default as AvatarIcon} from './AvatarIcon';

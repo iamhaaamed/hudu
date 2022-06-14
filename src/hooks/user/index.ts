@@ -39,7 +39,7 @@ import {
 } from 'react-native-fbsdk-next';
 import {getResponseMessage} from '~/utils/helper';
 import {authStore, userDataStore} from '~/stores';
-import {replace, resetRoot, goBack} from '~/navigation/Methods';
+import {resetRoot, goBack} from '~/navigation/Methods';
 
 GoogleSignin.configure({
   scopes: ['profile', 'email'], // what API you want to access on behalf of the user, default is email and profile
@@ -203,7 +203,7 @@ export const useLogin = () => {
             message: 'You are logged in successfully',
             type: 'success',
           });
-          resetRoot('HomeStack');
+          resetRoot('MainTabs');
         } else {
           showMessage(getResponseMessage(successData.user_login?.status));
         }
@@ -233,7 +233,6 @@ export const useSignUp = () => {
             message: 'You have successfully registered',
             type: 'success',
           });
-          replace('EditProfile');
         } else {
           showMessage(getResponseMessage(successData.user_signUp?.status));
         }

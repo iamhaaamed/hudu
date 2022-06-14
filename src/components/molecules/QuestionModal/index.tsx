@@ -13,6 +13,7 @@ const QuestionModal = ({
   option2 = '',
   option2OnPress,
   title,
+  loading,
 }: {
   visible: boolean;
   onClose: any;
@@ -21,6 +22,7 @@ const QuestionModal = ({
   option2?: string;
   option2OnPress?: any;
   title: string;
+  loading?: boolean;
 }) => {
   const onCloseHandler = () => {
     onClose?.();
@@ -38,7 +40,8 @@ const QuestionModal = ({
     <ModalContainer
       isVisible={visible}
       onClose={onCloseHandler}
-      style={styles.modal}>
+      style={styles.modal}
+      loading={loading}>
       <VStack
         bg={Colors.WHITE}
         px="2"

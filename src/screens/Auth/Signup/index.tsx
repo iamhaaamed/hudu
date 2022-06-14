@@ -24,9 +24,15 @@ import {
 
 const schema = yup.object().shape({
   email: yup.string().email().required('required'),
-  password: yup.string().required('required'),
+  password: yup
+    .string()
+    .min(6, 'Must be 6 characters or more')
+    .max(36, 'Must be 36 characters or less')
+    .required('Required'),
   confirm: yup
     .string()
+    .min(6, 'Must be 6 characters or more')
+    .max(36, 'Must be 36 characters or less')
     .required('required')
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
 });
@@ -45,6 +51,10 @@ export default function SignUpScreen({navigation}: NavigationProp) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const {handleSubmit, register, formState} = methods;
+
+  const signInOnPress = () => {
+    navigation.replace('Login');
+  };
 
   const signUpOnPress = async (formData: any) => {
     setLoading(true);
@@ -113,16 +123,19 @@ export default function SignUpScreen({navigation}: NavigationProp) {
                 {...register('email')}
                 placeholder="Email"
                 {...{formState}}
+                validation
               />
               <CustomInput
                 {...register('password')}
                 placeholder="Password"
                 {...{formState}}
+                validation
               />
               <CustomInput
                 {...register('confirm')}
                 placeholder="Confirm Password"
                 {...{formState}}
+                validation
               />
             </VStack>
             <Box px="4" py="4">
@@ -135,10 +148,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
             <SectionRowSocial {...{googleOnPress, facebookOnPress}} />
             <HStack alignItems="center" justifyContent="center">
               <Text fontSize="md">Already have an account?</Text>
-              <Button
-                px={1}
-                variant="link"
-                onPress={() => navigation.replace('Login')}>
+              <Button px={1} variant="link" onPress={signInOnPress}>
                 <Text underline color={Colors.PRIMARY} fontSize="md">
                   Sign in
                 </Text>

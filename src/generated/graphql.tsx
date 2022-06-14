@@ -36,6 +36,14 @@ export type AddProjectInput = {
   zipCode: Scalars['String'];
 };
 
+export type AdminDashboardDto = {
+  __typename?: 'AdminDashboardDto';
+  activeBidsCount: Scalars['Int'];
+  activeProjectsCount: Scalars['Int'];
+  activeUsersCount: Scalars['Int'];
+  balance: Scalars['Float'];
+};
+
 export enum ApplyPolicy {
   AfterResolver = 'AFTER_RESOLVER',
   BeforeResolver = 'BEFORE_RESOLVER',
@@ -310,8 +318,8 @@ export type ConversationsSortInput = {
 
 export type EditBidInput = {
   amount?: InputMaybe<Scalars['Float']>;
-  bidId: Scalars['Int'];
   description?: InputMaybe<Scalars['String']>;
+  id: Scalars['Int'];
 };
 
 export type EditProjectInput = {
@@ -619,6 +627,19 @@ export type ListResponseBaseOfQuestionResultArgs = {
   where?: InputMaybe<QuestionFilterInput>;
 };
 
+export type ListResponseBaseOfUsers = {
+  __typename?: 'ListResponseBaseOfUsers';
+  result?: Maybe<UsersCollectionSegment>;
+  status: ResponseStatus;
+};
+
+export type ListResponseBaseOfUsersResultArgs = {
+  order?: InputMaybe<Array<UsersSortInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<UsersFilterInput>;
+};
+
 export type MessageInput = {
   careerId?: InputMaybe<Scalars['Int']>;
   conversationId?: InputMaybe<Scalars['Int']>;
@@ -690,8 +711,10 @@ export type Mutation = {
   notification_addNotification?: Maybe<ListResponseBaseOfNotification>;
   notification_readNotification?: Maybe<ResponseBaseOfNotification>;
   project_addFeedBack?: Maybe<ResponseBaseOfBid>;
+  project_addImageToProject?: Maybe<ResponseBaseOfProjectImages>;
   project_addProject?: Maybe<ResponseBaseOfProject>;
   project_addQuestion?: Maybe<ResponseBaseOfQuestion>;
+  project_deleteProject?: Maybe<ResponseBaseOfProject>;
   project_editProject?: Maybe<ResponseBaseOfProject>;
   project_faileProject?: Maybe<ResponseBaseOfProject>;
   project_finisheProject?: Maybe<ResponseBaseOfProject>;
@@ -699,6 +722,7 @@ export type Mutation = {
   project_reopenProject?: Maybe<ResponseBaseOfProject>;
   project_unlike?: Maybe<ResponseBaseOfUserLikeProject>;
   user_UpdateLastSeen?: Maybe<ResponseBaseOfUsers>;
+  user_activationUser?: Maybe<ResponseBaseOfUsers>;
   user_signUp?: Maybe<ResponseBaseOfUsers>;
   user_updateProfile?: Maybe<ResponseBaseOfUsers>;
 };
@@ -751,12 +775,21 @@ export type MutationProject_AddFeedBackArgs = {
   feedbackInput?: InputMaybe<FeedbackInput>;
 };
 
+export type MutationProject_AddImageToProjectArgs = {
+  imageAddress?: InputMaybe<Scalars['String']>;
+  projectId: Scalars['Int'];
+};
+
 export type MutationProject_AddProjectArgs = {
   addProjectInput?: InputMaybe<AddProjectInput>;
 };
 
 export type MutationProject_AddQuestionArgs = {
   questionInput?: InputMaybe<QuestionInput>;
+};
+
+export type MutationProject_DeleteProjectArgs = {
+  projectId: Scalars['Int'];
 };
 
 export type MutationProject_EditProjectArgs = {
@@ -782,6 +815,11 @@ export type MutationProject_ReopenProjectArgs = {
 export type MutationProject_UnlikeArgs = {
   projectId: Scalars['Int'];
   userId?: InputMaybe<Scalars['Int']>;
+};
+
+export type MutationUser_ActivationUserArgs = {
+  isActive: Scalars['Boolean'];
+  userId: Scalars['Int'];
 };
 
 export type MutationUser_UpdateProfileArgs = {
@@ -904,6 +942,7 @@ export type Project = {
   isDeleted: Scalars['Boolean'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
+  projectDeadLine: Scalars['DateTime'];
   projectImages?: Maybe<Array<Maybe<ProjectImages>>>;
   projectStatus: ProjectStatus;
   questions?: Maybe<Array<Maybe<Question>>>;
@@ -955,6 +994,7 @@ export type ProjectFilterInput = {
   latitude?: InputMaybe<ComparableDoubleOperationFilterInput>;
   longitude?: InputMaybe<ComparableDoubleOperationFilterInput>;
   or?: InputMaybe<Array<ProjectFilterInput>>;
+  projectDeadLine?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   projectImages?: InputMaybe<ListFilterInputTypeOfProjectImagesFilterInput>;
   projectStatus?: InputMaybe<ProjectStatusOperationFilterInput>;
   questions?: InputMaybe<ListFilterInputTypeOfQuestionFilterInput>;
@@ -989,7 +1029,6 @@ export type ProjectImagesFilterInput = {
 };
 
 export type ProjectImagesInput = {
-  id?: InputMaybe<Scalars['Int']>;
   imageAddress?: InputMaybe<Scalars['String']>;
 };
 
@@ -1003,6 +1042,7 @@ export type ProjectSortInput = {
   isDeleted?: InputMaybe<SortEnumType>;
   latitude?: InputMaybe<SortEnumType>;
   longitude?: InputMaybe<SortEnumType>;
+  projectDeadLine?: InputMaybe<SortEnumType>;
   projectStatus?: InputMaybe<SortEnumType>;
   state?: InputMaybe<SortEnumType>;
   streetAddress?: InputMaybe<SortEnumType>;
@@ -1037,7 +1077,9 @@ export type Query = {
   project_getQuestions?: Maybe<ListResponseBaseOfQuestion>;
   project_getUserLikeProject?: Maybe<ResponseBaseOfProjectDto>;
   project_getUserLikeProjects?: Maybe<ListResponseBaseOfProjectDto>;
+  user_getAdminDashboard?: Maybe<ResponseBaseOfAdminDashboardDto>;
   user_getProfile?: Maybe<ResponseBaseOfUsers>;
+  user_getUsers?: Maybe<ListResponseBaseOfUsers>;
   user_login?: Maybe<ResponseBaseOfUsers>;
 };
 
@@ -1120,6 +1162,12 @@ export type ResponseBase = {
   status: ResponseStatus;
 };
 
+export type ResponseBaseOfAdminDashboardDto = {
+  __typename?: 'ResponseBaseOfAdminDashboardDto';
+  result?: Maybe<AdminDashboardDto>;
+  status: ResponseStatus;
+};
+
 export type ResponseBaseOfBid = {
   __typename?: 'ResponseBaseOfBid';
   result?: Maybe<Bid>;
@@ -1147,6 +1195,12 @@ export type ResponseBaseOfProject = {
 export type ResponseBaseOfProjectDto = {
   __typename?: 'ResponseBaseOfProjectDto';
   result?: Maybe<ProjectDto>;
+  status: ResponseStatus;
+};
+
+export type ResponseBaseOfProjectImages = {
+  __typename?: 'ResponseBaseOfProjectImages';
+  result?: Maybe<ProjectImages>;
   status: ResponseStatus;
 };
 
@@ -1277,26 +1331,31 @@ export type UserTypesOperationFilterInput = {
 
 export type Users = {
   __typename?: 'Users';
+  asHuduRates: Scalars['Float'];
+  asListerRates: Scalars['Float'];
+  averageRate: Scalars['Float'];
   bio?: Maybe<Scalars['String']>;
   city?: Maybe<Scalars['String']>;
   createdDate: Scalars['DateTime'];
   email?: Maybe<Scalars['String']>;
   externalId?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
+  huduersWhoRatedToMeCount: Scalars['Int'];
   hudus?: Maybe<Array<Maybe<Bid>>>;
   id: Scalars['Int'];
   imageAddress?: Maybe<Scalars['String']>;
+  isActive: Scalars['Boolean'];
   isDeleted: Scalars['Boolean'];
   lastName?: Maybe<Scalars['String']>;
   lastSeen: Scalars['DateTime'];
   latitude: Scalars['Float'];
   listers?: Maybe<Array<Maybe<Bid>>>;
+  listersWhoRatedToMeCount: Scalars['Int'];
   longitude: Scalars['Float'];
   notifications?: Maybe<Array<Maybe<Notification>>>;
   payments?: Maybe<Array<Maybe<Payment>>>;
   projects?: Maybe<Array<Maybe<Project>>>;
   questions?: Maybe<Array<Maybe<Question>>>;
-  rate: Scalars['Int'];
   state?: Maybe<Scalars['String']>;
   streetAddress?: Maybe<Scalars['String']>;
   userLikeProjects?: Maybe<Array<Maybe<UserLikeProject>>>;
@@ -1305,29 +1364,42 @@ export type Users = {
   zipCode?: Maybe<Scalars['String']>;
 };
 
+export type UsersCollectionSegment = {
+  __typename?: 'UsersCollectionSegment';
+  items?: Maybe<Array<Maybe<Users>>>;
+  /** Information to aid in pagination. */
+  pageInfo: CollectionSegmentInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type UsersFilterInput = {
   and?: InputMaybe<Array<UsersFilterInput>>;
+  asHuduRates?: InputMaybe<ComparableDoubleOperationFilterInput>;
+  asListerRates?: InputMaybe<ComparableDoubleOperationFilterInput>;
+  averageRate?: InputMaybe<ComparableDoubleOperationFilterInput>;
   bio?: InputMaybe<StringOperationFilterInput>;
   city?: InputMaybe<StringOperationFilterInput>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   email?: InputMaybe<StringOperationFilterInput>;
   externalId?: InputMaybe<StringOperationFilterInput>;
   firstName?: InputMaybe<StringOperationFilterInput>;
+  huduersWhoRatedToMeCount?: InputMaybe<ComparableInt32OperationFilterInput>;
   hudus?: InputMaybe<ListFilterInputTypeOfBidFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   imageAddress?: InputMaybe<StringOperationFilterInput>;
+  isActive?: InputMaybe<BooleanOperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
   lastName?: InputMaybe<StringOperationFilterInput>;
   lastSeen?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   latitude?: InputMaybe<ComparableDoubleOperationFilterInput>;
   listers?: InputMaybe<ListFilterInputTypeOfBidFilterInput>;
+  listersWhoRatedToMeCount?: InputMaybe<ComparableInt32OperationFilterInput>;
   longitude?: InputMaybe<ComparableDoubleOperationFilterInput>;
   notifications?: InputMaybe<ListFilterInputTypeOfNotificationFilterInput>;
   or?: InputMaybe<Array<UsersFilterInput>>;
   payments?: InputMaybe<ListFilterInputTypeOfPaymentFilterInput>;
   projects?: InputMaybe<ListFilterInputTypeOfProjectFilterInput>;
   questions?: InputMaybe<ListFilterInputTypeOfQuestionFilterInput>;
-  rate?: InputMaybe<ComparableInt32OperationFilterInput>;
   state?: InputMaybe<StringOperationFilterInput>;
   streetAddress?: InputMaybe<StringOperationFilterInput>;
   userLikeProjects?: InputMaybe<ListFilterInputTypeOfUserLikeProjectFilterInput>;
@@ -1337,20 +1409,25 @@ export type UsersFilterInput = {
 };
 
 export type UsersSortInput = {
+  asHuduRates?: InputMaybe<SortEnumType>;
+  asListerRates?: InputMaybe<SortEnumType>;
+  averageRate?: InputMaybe<SortEnumType>;
   bio?: InputMaybe<SortEnumType>;
   city?: InputMaybe<SortEnumType>;
   createdDate?: InputMaybe<SortEnumType>;
   email?: InputMaybe<SortEnumType>;
   externalId?: InputMaybe<SortEnumType>;
   firstName?: InputMaybe<SortEnumType>;
+  huduersWhoRatedToMeCount?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   imageAddress?: InputMaybe<SortEnumType>;
+  isActive?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
   lastName?: InputMaybe<SortEnumType>;
   lastSeen?: InputMaybe<SortEnumType>;
   latitude?: InputMaybe<SortEnumType>;
+  listersWhoRatedToMeCount?: InputMaybe<SortEnumType>;
   longitude?: InputMaybe<SortEnumType>;
-  rate?: InputMaybe<SortEnumType>;
   state?: InputMaybe<SortEnumType>;
   streetAddress?: InputMaybe<SortEnumType>;
   userName?: InputMaybe<SortEnumType>;
@@ -1397,10 +1474,15 @@ export type Bid_AcceptBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1419,10 +1501,15 @@ export type Bid_AcceptBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1438,6 +1525,7 @@ export type Bid_AcceptBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -1501,10 +1589,15 @@ export type Bid_AddBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1523,10 +1616,15 @@ export type Bid_AddBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1542,6 +1640,7 @@ export type Bid_AddBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -1605,10 +1704,15 @@ export type Bid_CancellBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1627,10 +1731,15 @@ export type Bid_CancellBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1646,6 +1755,7 @@ export type Bid_CancellBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -1709,10 +1819,15 @@ export type Bid_DeleteBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1731,10 +1846,15 @@ export type Bid_DeleteBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1750,6 +1870,7 @@ export type Bid_DeleteBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -1813,10 +1934,15 @@ export type Bid_EditBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1835,10 +1961,15 @@ export type Bid_EditBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1854,6 +1985,7 @@ export type Bid_EditBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -1917,10 +2049,15 @@ export type Bid_RejectBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1939,10 +2076,15 @@ export type Bid_RejectBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -1958,6 +2100,7 @@ export type Bid_RejectBidMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -2067,10 +2210,15 @@ export type Message_CreateMessageMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2123,10 +2271,15 @@ export type Message_DeleteMessageMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2216,41 +2369,6 @@ export type Message_GetUserMessagesQuery = {
   } | null;
 };
 
-export type Notification_GetNotificationsQueryVariables = Exact<{
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<NotificationFilterInput>;
-  order?: InputMaybe<Array<NotificationSortInput> | NotificationSortInput>;
-}>;
-
-export type Notification_GetNotificationsQuery = {
-  __typename?: 'Query';
-  notification_getNotifications?: {
-    __typename?: 'ListResponseBaseOfNotification';
-    status: ResponseStatus;
-    result?: {
-      __typename?: 'NotificationCollectionSegment';
-      totalCount: number;
-      items?: Array<{
-        __typename?: 'Notification';
-        title?: string | null;
-        description?: string | null;
-        isReaded: boolean;
-        notificationType: NotificationType;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      pageInfo: {
-        __typename?: 'CollectionSegmentInfo';
-        hasNextPage: boolean;
-        hasPreviousPage: boolean;
-      };
-    } | null;
-  } | null;
-};
-
 export type Notification_AddNotificationMutationVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -2322,15 +2440,55 @@ export type Notification_ReadNotificationMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
         createdDate: any;
       } | null;
+    } | null;
+  } | null;
+};
+
+export type Notification_GetNotificationsQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<NotificationFilterInput>;
+  order?: InputMaybe<Array<NotificationSortInput> | NotificationSortInput>;
+}>;
+
+export type Notification_GetNotificationsQuery = {
+  __typename?: 'Query';
+  notification_getNotifications?: {
+    __typename?: 'ListResponseBaseOfNotification';
+    status: ResponseStatus;
+    result?: {
+      __typename?: 'NotificationCollectionSegment';
+      totalCount: number;
+      items?: Array<{
+        __typename?: 'Notification';
+        title?: string | null;
+        description?: string | null;
+        isReaded: boolean;
+        notificationType: NotificationType;
+        userId: number;
+        id: number;
+        isDeleted: boolean;
+        createdDate: any;
+      } | null> | null;
+      pageInfo: {
+        __typename?: 'CollectionSegmentInfo';
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+      };
     } | null;
   } | null;
 };
@@ -2374,10 +2532,15 @@ export type Project_AddFeedBackMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2396,10 +2559,15 @@ export type Project_AddFeedBackMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2415,6 +2583,7 @@ export type Project_AddFeedBackMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -2458,6 +2627,7 @@ export type Project_AddProjectMutation = {
       streetAddress?: string | null;
       city?: string | null;
       state?: string | null;
+      projectDeadLine: any;
       longitude: number;
       latitude: number;
       zipCode?: string | null;
@@ -2522,11 +2692,56 @@ export type Project_AddProjectMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
+        id: number;
+        isDeleted: boolean;
+        createdDate: any;
+      } | null;
+    } | null;
+  } | null;
+};
+
+export type Project_AddImageToProjectMutationVariables = Exact<{
+  imageAddress?: InputMaybe<Scalars['String']>;
+  projectId: Scalars['Int'];
+}>;
+
+export type Project_AddImageToProjectMutation = {
+  __typename?: 'Mutation';
+  project_addImageToProject?: {
+    __typename?: 'ResponseBaseOfProjectImages';
+    status: ResponseStatus;
+    result?: {
+      __typename?: 'ProjectImages';
+      imageAddress?: string | null;
+      projectId: number;
+      id: number;
+      isDeleted: boolean;
+      createdDate: any;
+      project?: {
+        __typename?: 'Project';
+        projectStatus: ProjectStatus;
+        title?: string | null;
+        description?: string | null;
+        duration: number;
+        availability: Availability;
+        streetAddress?: string | null;
+        city?: string | null;
+        state?: string | null;
+        projectDeadLine: any;
+        longitude: number;
+        latitude: number;
+        zipCode?: string | null;
+        userId: number;
         id: number;
         isDeleted: boolean;
         createdDate: any;
@@ -2583,6 +2798,7 @@ export type Project_AddQuestionMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -2604,10 +2820,15 @@ export type Project_AddQuestionMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2636,6 +2857,7 @@ export type Project_EditProjectMutation = {
       streetAddress?: string | null;
       city?: string | null;
       state?: string | null;
+      projectDeadLine: any;
       longitude: number;
       latitude: number;
       zipCode?: string | null;
@@ -2700,10 +2922,15 @@ export type Project_EditProjectMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2732,6 +2959,7 @@ export type Project_FaileProjectMutation = {
       streetAddress?: string | null;
       city?: string | null;
       state?: string | null;
+      projectDeadLine: any;
       longitude: number;
       latitude: number;
       zipCode?: string | null;
@@ -2796,10 +3024,15 @@ export type Project_FaileProjectMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2828,6 +3061,7 @@ export type Project_FinisheProjectMutation = {
       streetAddress?: string | null;
       city?: string | null;
       state?: string | null;
+      projectDeadLine: any;
       longitude: number;
       latitude: number;
       zipCode?: string | null;
@@ -2892,10 +3126,15 @@ export type Project_FinisheProjectMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2931,6 +3170,7 @@ export type Project_LikeMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -2952,10 +3192,15 @@ export type Project_LikeMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -2984,6 +3229,7 @@ export type Project_ReopenProjectMutation = {
       streetAddress?: string | null;
       city?: string | null;
       state?: string | null;
+      projectDeadLine: any;
       longitude: number;
       latitude: number;
       zipCode?: string | null;
@@ -3048,10 +3294,15 @@ export type Project_ReopenProjectMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -3088,6 +3339,7 @@ export type Project_UnlikeMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
@@ -3109,10 +3361,15 @@ export type Project_UnlikeMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        isActive: boolean;
         longitude: number;
         latitude: number;
         zipCode?: string | null;
-        rate: number;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
         externalId?: string | null;
         id: number;
         isDeleted: boolean;
@@ -3174,6 +3431,24 @@ export type Project_GetProjectsQuery = {
       items?: Array<{
         __typename?: 'ProjectDto';
         isLiked: boolean;
+        project?: {
+          __typename?: 'Project';
+          projectStatus: ProjectStatus;
+          title?: string | null;
+          description?: string | null;
+          duration: number;
+          availability: Availability;
+          streetAddress?: string | null;
+          city?: string | null;
+          state?: string | null;
+          longitude: number;
+          latitude: number;
+          zipCode?: string | null;
+          userId: number;
+          id: number;
+          isDeleted: boolean;
+          createdDate: any;
+        } | null;
       } | null> | null;
       pageInfo: {
         __typename?: 'CollectionSegmentInfo';
@@ -3280,135 +3555,6 @@ export type Project_GetUserLikeProjectsQuery = {
   } | null;
 };
 
-export type User_GetProfileQueryVariables = Exact<{
-  userId?: InputMaybe<Scalars['Int']>;
-}>;
-
-export type User_GetProfileQuery = {
-  __typename?: 'Query';
-  user_getProfile?: {
-    __typename?: 'ResponseBaseOfUsers';
-    status: ResponseStatus;
-    result?: {
-      __typename?: 'Users';
-      email?: string | null;
-      userName?: string | null;
-      lastSeen: any;
-      userTypes: UserTypes;
-      imageAddress?: string | null;
-      firstName?: string | null;
-      lastName?: string | null;
-      bio?: string | null;
-      streetAddress?: string | null;
-      city?: string | null;
-      state?: string | null;
-      longitude: number;
-      latitude: number;
-      zipCode?: string | null;
-      rate: number;
-      externalId?: string | null;
-      id: number;
-      isDeleted: boolean;
-      createdDate: any;
-      payments?: Array<{
-        __typename?: 'Payment';
-        amount: number;
-        intentId?: string | null;
-        intentStatus?: string | null;
-        clientSecret?: string | null;
-        bidId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      userLikeProjects?: Array<{
-        __typename?: 'UserLikeProject';
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      projects?: Array<{
-        __typename?: 'Project';
-        projectStatus: ProjectStatus;
-        title?: string | null;
-        description?: string | null;
-        duration: number;
-        availability: Availability;
-        streetAddress?: string | null;
-        city?: string | null;
-        state?: string | null;
-        longitude: number;
-        latitude: number;
-        zipCode?: string | null;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      notifications?: Array<{
-        __typename?: 'Notification';
-        title?: string | null;
-        description?: string | null;
-        isReaded: boolean;
-        notificationType: NotificationType;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      questions?: Array<{
-        __typename?: 'Question';
-        text?: string | null;
-        parentId?: number | null;
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      hudus?: Array<{
-        __typename?: 'Bid';
-        bidStatus: BidStatus;
-        amount: number;
-        description?: string | null;
-        hudusComment?: string | null;
-        hudusRate?: string | null;
-        isHuduCommented: boolean;
-        listersComment?: string | null;
-        listersRate?: string | null;
-        isListerCommented: boolean;
-        huduId: number;
-        listerId: number;
-        projectId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      listers?: Array<{
-        __typename?: 'Bid';
-        bidStatus: BidStatus;
-        amount: number;
-        description?: string | null;
-        hudusComment?: string | null;
-        hudusRate?: string | null;
-        isHuduCommented: boolean;
-        listersComment?: string | null;
-        listersRate?: string | null;
-        isListerCommented: boolean;
-        huduId: number;
-        listerId: number;
-        projectId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-    } | null;
-  } | null;
-};
-
 export type User_LoginQueryVariables = Exact<{[key: string]: never}>;
 
 export type User_LoginQuery = {
@@ -3432,106 +3578,10 @@ export type User_LoginQuery = {
       longitude: number;
       latitude: number;
       zipCode?: string | null;
-      rate: number;
       externalId?: string | null;
       id: number;
       isDeleted: boolean;
       createdDate: any;
-      payments?: Array<{
-        __typename?: 'Payment';
-        amount: number;
-        intentId?: string | null;
-        intentStatus?: string | null;
-        clientSecret?: string | null;
-        bidId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      userLikeProjects?: Array<{
-        __typename?: 'UserLikeProject';
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      projects?: Array<{
-        __typename?: 'Project';
-        projectStatus: ProjectStatus;
-        title?: string | null;
-        description?: string | null;
-        duration: number;
-        availability: Availability;
-        streetAddress?: string | null;
-        city?: string | null;
-        state?: string | null;
-        longitude: number;
-        latitude: number;
-        zipCode?: string | null;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      notifications?: Array<{
-        __typename?: 'Notification';
-        title?: string | null;
-        description?: string | null;
-        isReaded: boolean;
-        notificationType: NotificationType;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      questions?: Array<{
-        __typename?: 'Question';
-        text?: string | null;
-        parentId?: number | null;
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      hudus?: Array<{
-        __typename?: 'Bid';
-        bidStatus: BidStatus;
-        amount: number;
-        description?: string | null;
-        hudusComment?: string | null;
-        hudusRate?: string | null;
-        isHuduCommented: boolean;
-        listersComment?: string | null;
-        listersRate?: string | null;
-        isListerCommented: boolean;
-        huduId: number;
-        listerId: number;
-        projectId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      listers?: Array<{
-        __typename?: 'Bid';
-        bidStatus: BidStatus;
-        amount: number;
-        description?: string | null;
-        hudusComment?: string | null;
-        hudusRate?: string | null;
-        isHuduCommented: boolean;
-        listersComment?: string | null;
-        listersRate?: string | null;
-        isListerCommented: boolean;
-        huduId: number;
-        listerId: number;
-        projectId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
     } | null;
   } | null;
 };
@@ -3559,106 +3609,10 @@ export type User_SignUpMutation = {
       longitude: number;
       latitude: number;
       zipCode?: string | null;
-      rate: number;
       externalId?: string | null;
       id: number;
       isDeleted: boolean;
       createdDate: any;
-      payments?: Array<{
-        __typename?: 'Payment';
-        amount: number;
-        intentId?: string | null;
-        intentStatus?: string | null;
-        clientSecret?: string | null;
-        bidId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      userLikeProjects?: Array<{
-        __typename?: 'UserLikeProject';
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      projects?: Array<{
-        __typename?: 'Project';
-        projectStatus: ProjectStatus;
-        title?: string | null;
-        description?: string | null;
-        duration: number;
-        availability: Availability;
-        streetAddress?: string | null;
-        city?: string | null;
-        state?: string | null;
-        longitude: number;
-        latitude: number;
-        zipCode?: string | null;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      notifications?: Array<{
-        __typename?: 'Notification';
-        title?: string | null;
-        description?: string | null;
-        isReaded: boolean;
-        notificationType: NotificationType;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      questions?: Array<{
-        __typename?: 'Question';
-        text?: string | null;
-        parentId?: number | null;
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      hudus?: Array<{
-        __typename?: 'Bid';
-        bidStatus: BidStatus;
-        amount: number;
-        description?: string | null;
-        hudusComment?: string | null;
-        hudusRate?: string | null;
-        isHuduCommented: boolean;
-        listersComment?: string | null;
-        listersRate?: string | null;
-        isListerCommented: boolean;
-        huduId: number;
-        listerId: number;
-        projectId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      listers?: Array<{
-        __typename?: 'Bid';
-        bidStatus: BidStatus;
-        amount: number;
-        description?: string | null;
-        hudusComment?: string | null;
-        hudusRate?: string | null;
-        isHuduCommented: boolean;
-        listersComment?: string | null;
-        listersRate?: string | null;
-        isListerCommented: boolean;
-        huduId: number;
-        listerId: number;
-        projectId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
     } | null;
   } | null;
 };
@@ -3685,109 +3639,19 @@ export type User_UpdateLastSeenMutation = {
       streetAddress?: string | null;
       city?: string | null;
       state?: string | null;
+      isActive: boolean;
       longitude: number;
       latitude: number;
       zipCode?: string | null;
-      rate: number;
+      asHuduRates: number;
+      listersWhoRatedToMeCount: number;
+      asListerRates: number;
+      huduersWhoRatedToMeCount: number;
+      averageRate: number;
       externalId?: string | null;
       id: number;
       isDeleted: boolean;
       createdDate: any;
-      payments?: Array<{
-        __typename?: 'Payment';
-        amount: number;
-        intentId?: string | null;
-        intentStatus?: string | null;
-        clientSecret?: string | null;
-        bidId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      userLikeProjects?: Array<{
-        __typename?: 'UserLikeProject';
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      projects?: Array<{
-        __typename?: 'Project';
-        projectStatus: ProjectStatus;
-        title?: string | null;
-        description?: string | null;
-        duration: number;
-        availability: Availability;
-        streetAddress?: string | null;
-        city?: string | null;
-        state?: string | null;
-        longitude: number;
-        latitude: number;
-        zipCode?: string | null;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      notifications?: Array<{
-        __typename?: 'Notification';
-        title?: string | null;
-        description?: string | null;
-        isReaded: boolean;
-        notificationType: NotificationType;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      questions?: Array<{
-        __typename?: 'Question';
-        text?: string | null;
-        parentId?: number | null;
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      hudus?: Array<{
-        __typename?: 'Bid';
-        bidStatus: BidStatus;
-        amount: number;
-        description?: string | null;
-        hudusComment?: string | null;
-        hudusRate?: string | null;
-        isHuduCommented: boolean;
-        listersComment?: string | null;
-        listersRate?: string | null;
-        isListerCommented: boolean;
-        huduId: number;
-        listerId: number;
-        projectId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
-      listers?: Array<{
-        __typename?: 'Bid';
-        bidStatus: BidStatus;
-        amount: number;
-        description?: string | null;
-        hudusComment?: string | null;
-        hudusRate?: string | null;
-        isHuduCommented: boolean;
-        listersComment?: string | null;
-        listersRate?: string | null;
-        isListerCommented: boolean;
-        huduId: number;
-        listerId: number;
-        projectId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
     } | null;
   } | null;
 };
@@ -3814,10 +3678,54 @@ export type User_UpdateProfileMutation = {
       streetAddress?: string | null;
       city?: string | null;
       state?: string | null;
+      isActive: boolean;
       longitude: number;
       latitude: number;
       zipCode?: string | null;
-      rate: number;
+      asHuduRates: number;
+      listersWhoRatedToMeCount: number;
+      asListerRates: number;
+      huduersWhoRatedToMeCount: number;
+      averageRate: number;
+      externalId?: string | null;
+      id: number;
+      isDeleted: boolean;
+      createdDate: any;
+    } | null;
+  } | null;
+};
+
+export type User_GetProfileQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type User_GetProfileQuery = {
+  __typename?: 'Query';
+  user_getProfile?: {
+    __typename?: 'ResponseBaseOfUsers';
+    status: ResponseStatus;
+    result?: {
+      __typename?: 'Users';
+      email?: string | null;
+      userName?: string | null;
+      lastSeen: any;
+      userTypes: UserTypes;
+      imageAddress?: string | null;
+      firstName?: string | null;
+      lastName?: string | null;
+      bio?: string | null;
+      streetAddress?: string | null;
+      city?: string | null;
+      state?: string | null;
+      isActive: boolean;
+      longitude: number;
+      latitude: number;
+      zipCode?: string | null;
+      asHuduRates: number;
+      listersWhoRatedToMeCount: number;
+      asListerRates: number;
+      huduersWhoRatedToMeCount: number;
+      averageRate: number;
       externalId?: string | null;
       id: number;
       isDeleted: boolean;
@@ -3852,6 +3760,7 @@ export type User_UpdateProfileMutation = {
         streetAddress?: string | null;
         city?: string | null;
         state?: string | null;
+        projectDeadLine: any;
         longitude: number;
         latitude: number;
         zipCode?: string | null;

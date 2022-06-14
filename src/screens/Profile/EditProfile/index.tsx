@@ -5,7 +5,7 @@ import {HStack, VStack} from 'native-base';
 import {verticalScale} from '~/utils/style';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
-import {userDataStore} from '~/stores';
+import {authStore, userDataStore} from '~/stores';
 import {
   CustomInput,
   CustomButton,
@@ -14,7 +14,7 @@ import {
   CustomContainer,
   CustomKeyboardAwareScrollView,
 } from '~/components';
-import {useUpdateProfile} from '~/hooks/user';
+import {useGetProfile, useUpdateProfile} from '~/hooks/user';
 
 const stateData = [
   {id: 0, title: 'California', value: 'california'},
@@ -40,8 +40,15 @@ const schema = yup.object().shape({
     .nullable(),
 });
 
-export default function EditProfileScreen({navigation}: NavigationProp) {
+export default function EditProfileScreen() {
   const {userData} = userDataStore(state => state);
+  const {isUserLoggedIn} = authStore(state => state);
+
+  const {isLoading: getProfileLoading, data: getProfile} = useGetProfile({
+    enabled: isUserLoggedIn,
+  });
+
+  const profile = getProfile?.user_getProfile?.result ?? {};
 
   const {mutate: mutateUpdate, isLoading: updateLoading} = useUpdateProfile();
 
@@ -53,23 +60,23 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
   const {handleSubmit, register, formState, setValue} = methods;
 
   useEffect(() => {
-    if (userData) {
-      setValue('imageAddress', userData?.imageAddress);
-      setValue('firstName', userData?.firstName);
-      setValue('lastName', userData?.lastName);
-      setValue('userName', userData?.userName);
-      setValue('email', userData?.email);
-      setValue('bio', userData?.bio);
-      setValue('streetAddress', userData?.streetAddress);
-      setValue('city', userData?.city);
-      setValue('state', userData?.state);
-      setValue('zipCode', userData?.zipCode);
+    if (profile) {
+      setValue('imageAddress', profile?.imageAddress);
+      setValue('firstName', profile?.firstName);
+      setValue('lastName', profile?.lastName);
+      setValue('userName', profile?.userName);
+      setValue('email', profile?.email);
+      setValue('bio', profile?.bio);
+      setValue('streetAddress', profile?.streetAddress);
+      setValue('city', profile?.city);
+      setValue('state', profile?.state);
+      setValue('zipCode', profile?.zipCode);
     }
-  }, [userData]);
+  }, [profile]);
 
   const onEdit = async (formData: any) => {
     const input = {
-      imageAddress: '', //TODO replace with formData
+      imageAddress: formData?.imageAddress,
       firstName: formData?.firstName,
       lastName: formData?.lastName,
       userName: formData?.userName,
@@ -86,7 +93,7 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
     });
   };
 
-  const loading = updateLoading;
+  const loading = updateLoading || getProfileLoading;
 
   return (
     <CustomContainer isLoading={loading}>
@@ -94,7 +101,7 @@ export default function EditProfileScreen({navigation}: NavigationProp) {
         <CustomKeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}>
-          <ProfilePicker />
+          <ProfilePicker {...register('imageAddress')} />
           <VStack py="4" px="4" space="6">
             <CustomInput
               {...register('firstName')}

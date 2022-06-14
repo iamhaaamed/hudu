@@ -1,6 +1,6 @@
 import React from 'react';
 import {Colors} from '~/styles';
-import {Flex, VStack} from 'native-base';
+import {VStack} from 'native-base';
 import images from '~/assets/images';
 import {StyleSheet} from 'react-native';
 import {verticalScale} from '~/utils/style';
@@ -23,11 +23,15 @@ export default function AuthScreen({navigation}: NavigationProp) {
         <VStack width="full" px="4" space="6">
           <CustomButton
             title="Create account"
-            onPress={() => navigation.navigate('SignUp')}
+            onPress={() =>
+              navigation.navigate('AuthStack', {
+                screen: 'SignUp',
+              })
+            }
           />
           <CustomButton
             title="Login"
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.navigate('AuthStack', {screen: 'Login'})}
           />
         </VStack>
       </VStack>

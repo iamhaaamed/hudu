@@ -3,20 +3,18 @@ import {CommonActions} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   HomeScreen,
-  NotificationScreen,
   ProjectDetailsHudurScreen,
   ListerProfileScreen,
   HudurProfileScreen,
   SearchScreen,
 } from '~/screens';
-import {CustomHeader} from '~/components/atoms/CustomHeader';
+import {CustomHeader} from '~/components';
 
 const Stack = createNativeStackNavigator();
 
 export type HomeStackParamList = {
   Home: undefined;
   Search: undefined;
-  Notification: undefined;
   ProjectDetailsHudur: undefined;
   ListerProfile: undefined;
   HudurProfile: undefined;
@@ -32,15 +30,6 @@ const screens = [
     name: 'Home',
     component: HomeScreen,
     options: publicScreenOption,
-  },
-  {
-    name: 'Notification',
-    component: NotificationScreen,
-    options: {
-      headerTitle: 'Notification',
-      headerShown: true,
-      header: (props: any) => <CustomHeader {...props} />,
-    },
   },
   {
     name: 'ProjectDetailsHudur',

@@ -20,6 +20,11 @@ export {default as ProfilePicker} from './atoms/ProfilePicker';
 export {default as ReviewItem} from './atoms/ReviewItem';
 export {default as CustomCollapseText} from './atoms/CustomCollapseText';
 export {default as SearchProjectItem} from './atoms/SearchProjectItem';
+export {default as CustomHeader} from './atoms/CustomHeader';
+export {default as CustomLoading} from './atoms/CustomLoading';
+export {default as ProfileLinks} from './atoms/ProfileLinks';
+export {default as ProfileInfo} from './atoms/ProfileInfo';
+export {default as ProfileRating} from './atoms/ProfileRating';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';
@@ -33,7 +38,6 @@ export {default as SectionChooseHudur} from './molecules/SectionChooseHudur';
 export {default as ReviewModal} from './molecules/ReviewModal';
 export {default as EditModal} from './molecules/EditModal';
 export {default as ChooseHudurModal} from './molecules/ChooseHudurModal';
-export {default as SectionProfile} from './molecules/SectionProfile';
 export {default as AttachmentPickerModal} from './molecules/AttachmentPickerModal';
 export {default as ConfirmationActionSheet} from './molecules/ConfirmationActionSheet';
 export {default as QuestionModal} from './molecules/QuestionModal';

@@ -52,10 +52,15 @@ export const NOTIFICATION_READ_NOTIFICATION = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted

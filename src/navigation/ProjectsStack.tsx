@@ -6,7 +6,7 @@ import {
   ProjectDetailsListerScreen,
   HudurProfileListerScreen,
 } from '~/screens';
-import {CustomHeader} from '~/components/atoms/CustomHeader';
+import {CustomHeader} from '~/components';
 
 const Stack = createNativeStackNavigator();
 

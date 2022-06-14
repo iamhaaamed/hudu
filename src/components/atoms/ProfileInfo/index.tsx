@@ -1,11 +1,18 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {StyleSheet} from 'react-native';
 import {Text, VStack} from 'native-base';
 import {Colors} from '~/styles';
 import {fontFamily, scale} from '~/utils/style';
 import {CustomImage, RatingStar} from '~/components';
 
-export default function ProfileInfo() {
+export default function ProfileInfo({data}: {data: any}) {
+  const totalReview = useMemo(() => {
+    const listerCounts = data?.listersWhoRatedToMeCount;
+    const hudurCounts = data?.huduersWhoRatedToMeCount;
+    const reviews = Number(listerCounts) + Number(hudurCounts);
+    return reviews ? reviews : 0;
+  }, [data]);
+
   return (
     <VStack
       top={-50}
@@ -15,16 +22,20 @@ export default function ProfileInfo() {
       space="1">
       <CustomImage
         style={styles.avatar}
-        imageSource={
-          'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
-        }
+        imageSource={data?.imageAddress}
         resizeMode="stretch"
       />
-      <Text fontFamily={fontFamily.bold}>BCcontracting</Text>
+      <Text fontFamily={fontFamily.bold}>{data?.userName}</Text>
       <Text fontFamily={fontFamily.regular} color={Colors.GARY_3}>
-        BCcontracting@gmail.com
+        {data?.email}
       </Text>
-      <RatingStar rate={4} showRating="left" size={14} total={200} />
+      <RatingStar
+        disabled
+        rate={data?.averageRate}
+        showRating="right"
+        size={14}
+        total={totalReview}
+      />
     </VStack>
   );
 }

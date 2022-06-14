@@ -14,19 +14,10 @@ import {
   HuduIcon,
   HuduIconFill,
 } from '~/assets/icons';
-import {useTabBar} from '~/context/TabBarContext';
 
 const CustomTabBar = ({state, navigation}: {state?: any; navigation?: any}) => {
-  const {hideTabBar} = useTabBar();
-
   return (
-    <View
-      style={[
-        styles.main,
-        {
-          display: hideTabBar ? 'none' : 'flex',
-        },
-      ]}>
+    <View style={styles.main}>
       <View style={styles.container}>
         {state.routes.map((route: any, index: number) => {
           const isFocused = state.index === index;

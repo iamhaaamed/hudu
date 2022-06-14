@@ -15,10 +15,15 @@ export const USER_GET_PROFILE = gql`
         streetAddress
         city
         state
+        isActive
         longitude
         latitude
         zipCode
-        rate
+        asHuduRates
+        listersWhoRatedToMeCount
+        asListerRates
+        huduersWhoRatedToMeCount
+        averageRate
         payments {
           amount
           intentId
@@ -46,6 +51,7 @@ export const USER_GET_PROFILE = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode

@@ -30,10 +30,15 @@ export const MESSAGE_CREATE_MESSAGE = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -79,10 +84,15 @@ export const MESSAGE_DELETE_MESSAGE = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
