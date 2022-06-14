@@ -321,6 +321,8 @@ scalar Geometry
 type Query {
   user_login: ResponseBaseOfUsers
   user_getProfile(userId: Int): ResponseBaseOfUsers
+  user_getUsers: ListResponseBaseOfUsers
+  user_getAdminDashboard: ResponseBaseOfAdminDashboardDto
   message_getConversation(conversationId: Int!): ListResponseBaseOfMessages
   message_getUserMessages: ListResponseBaseOfConversationDto
   notification_getNotifications: ListResponseBaseOfNotification
@@ -335,6 +337,7 @@ type Query {
 type Mutation {
   user_signUp: ResponseBaseOfUsers
   user_updateProfile(userInput: UserInput): ResponseBaseOfUsers
+  user_activationUser(isActive: Boolean!, userId: Int!): ResponseBaseOfUsers
   user_UpdateLastSeen: ResponseBaseOfUsers
   message_createMessage(messageInput: MessageInput): ResponseBaseOfMessages
   message_removeConversation(conversationId: Int!): ResponseBase
@@ -347,6 +350,11 @@ type Mutation {
   ): ResponseBaseOfNotification
   project_addProject(addProjectInput: AddProjectInput): ResponseBaseOfProject
   project_editProject(editProjectInput: EditProjectInput): ResponseBaseOfProject
+  project_deleteProject(projectId: Int!): ResponseBaseOfProject
+  project_addImageToProject(
+    imageAddress: String
+    projectId: Int!
+  ): ResponseBaseOfProjectImages
   project_finisheProject(projectId: Int!): ResponseBaseOfProject
   project_faileProject(projectId: Int!): ResponseBaseOfProject
   project_reopenProject(projectId: Int!): ResponseBaseOfProject
@@ -450,6 +458,7 @@ type Project {
   streetAddress: String
   city: String
   state: String
+  projectDeadLine: DateTime!
   longitude: Float!
   latitude: Float!
   zipCode: String
@@ -509,10 +518,15 @@ type Users {
   streetAddress: String
   city: String
   state: String
+  isActive: Boolean!
   longitude: Float!
   latitude: Float!
   zipCode: String
-  rate: Int!
+  asHuduRates: Float!
+  listersWhoRatedToMeCount: Int!
+  asListerRates: Float!
+  huduersWhoRatedToMeCount: Int!
+  averageRate: Float!
   payments: [Payment]
   userLikeProjects: [UserLikeProject]
   projects: [Project]
@@ -524,6 +538,13 @@ type Users {
   id: Int!
   isDeleted: Boolean!
   createdDate: DateTime!
+}
+
+type AdminDashboardDto {
+  activeBidsCount: Int!
+  activeProjectsCount: Int!
+  activeUsersCount: Int!
+  balance: Float!
 }
 
 type ConversationDto {
@@ -592,25 +613,6 @@ enum Availability {
 enum UserTypes {
   ADMIN
   USER
-}
-
-type ResponseBaseOfUserLikeProject {
-  result: UserLikeProject
-  status: ResponseStatus!
-}
-
-input EditProjectInput {
-  id: Int!
-  title: String
-  description: String
-  duration: Int
-  availability: Availability
-  streetAddress: String
-  city: String
-  state: String
-  point: Position
-  zipCode: String
-  projectImages: [ProjectImagesInput]
 }
 
 input AddProjectInput {
@@ -740,8 +742,47 @@ type ListResponseBaseOfMessages {
   status: ResponseStatus!
 }
 
+type ResponseBaseOfAdminDashboardDto {
+  result: AdminDashboardDto
+  status: ResponseStatus!
+}
+
+type ListResponseBaseOfUsers {
+  result(
+    skip: Int
+    take: Int
+    where: UsersFilterInput
+    order: [UsersSortInput!]
+  ): UsersCollectionSegment
+  status: ResponseStatus!
+}
+
 type ResponseBaseOfUsers {
   result: Users
+  status: ResponseStatus!
+}
+
+input EditProjectInput {
+  id: Int!
+  title: String
+  description: String
+  duration: Int
+  availability: Availability
+  streetAddress: String
+  city: String
+  state: String
+  point: Position
+  zipCode: String
+  projectImages: [ProjectImagesInput]
+}
+
+type ResponseBaseOfProjectImages {
+  result: ProjectImages
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfUserLikeProject {
+  result: UserLikeProject
   status: ResponseStatus!
 }
 
@@ -768,7 +809,7 @@ input BidInput {
 }
 
 input EditBidInput {
-  bidId: Int!
+  id: Int!
   amount: Float
   description: String
 }
@@ -997,6 +1038,79 @@ type MessagesCollectionSegment {
   totalCount: Int!
 }
 
+input UsersFilterInput {
+  and: [UsersFilterInput!]
+  or: [UsersFilterInput!]
+  email: StringOperationFilterInput
+  userName: StringOperationFilterInput
+  lastSeen: ComparableDateTimeOperationFilterInput
+  userTypes: UserTypesOperationFilterInput
+  imageAddress: StringOperationFilterInput
+  firstName: StringOperationFilterInput
+  lastName: StringOperationFilterInput
+  bio: StringOperationFilterInput
+  streetAddress: StringOperationFilterInput
+  city: StringOperationFilterInput
+  state: StringOperationFilterInput
+  isActive: BooleanOperationFilterInput
+  longitude: ComparableDoubleOperationFilterInput
+  latitude: ComparableDoubleOperationFilterInput
+  zipCode: StringOperationFilterInput
+  asHuduRates: ComparableDoubleOperationFilterInput
+  listersWhoRatedToMeCount: ComparableInt32OperationFilterInput
+  asListerRates: ComparableDoubleOperationFilterInput
+  huduersWhoRatedToMeCount: ComparableInt32OperationFilterInput
+  averageRate: ComparableDoubleOperationFilterInput
+  payments: ListFilterInputTypeOfPaymentFilterInput
+  userLikeProjects: ListFilterInputTypeOfUserLikeProjectFilterInput
+  projects: ListFilterInputTypeOfProjectFilterInput
+  notifications: ListFilterInputTypeOfNotificationFilterInput
+  questions: ListFilterInputTypeOfQuestionFilterInput
+  hudus: ListFilterInputTypeOfBidFilterInput
+  listers: ListFilterInputTypeOfBidFilterInput
+  externalId: StringOperationFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input UsersSortInput {
+  email: SortEnumType
+  userName: SortEnumType
+  lastSeen: SortEnumType
+  userTypes: SortEnumType
+  imageAddress: SortEnumType
+  firstName: SortEnumType
+  lastName: SortEnumType
+  bio: SortEnumType
+  streetAddress: SortEnumType
+  city: SortEnumType
+  state: SortEnumType
+  isActive: SortEnumType
+  longitude: SortEnumType
+  latitude: SortEnumType
+  zipCode: SortEnumType
+  asHuduRates: SortEnumType
+  listersWhoRatedToMeCount: SortEnumType
+  asListerRates: SortEnumType
+  huduersWhoRatedToMeCount: SortEnumType
+  averageRate: SortEnumType
+  externalId: SortEnumType
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+type UsersCollectionSegment {
+  items: [Users]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
 input BidStatusOperationFilterInput {
   eq: BidStatus
   neq: BidStatus
@@ -1039,37 +1153,6 @@ input BooleanOperationFilterInput {
   neq: Boolean
 }
 
-input UsersFilterInput {
-  and: [UsersFilterInput!]
-  or: [UsersFilterInput!]
-  email: StringOperationFilterInput
-  userName: StringOperationFilterInput
-  lastSeen: ComparableDateTimeOperationFilterInput
-  userTypes: UserTypesOperationFilterInput
-  imageAddress: StringOperationFilterInput
-  firstName: StringOperationFilterInput
-  lastName: StringOperationFilterInput
-  bio: StringOperationFilterInput
-  streetAddress: StringOperationFilterInput
-  city: StringOperationFilterInput
-  state: StringOperationFilterInput
-  longitude: ComparableDoubleOperationFilterInput
-  latitude: ComparableDoubleOperationFilterInput
-  zipCode: StringOperationFilterInput
-  rate: ComparableInt32OperationFilterInput
-  payments: ListFilterInputTypeOfPaymentFilterInput
-  userLikeProjects: ListFilterInputTypeOfUserLikeProjectFilterInput
-  projects: ListFilterInputTypeOfProjectFilterInput
-  notifications: ListFilterInputTypeOfNotificationFilterInput
-  questions: ListFilterInputTypeOfQuestionFilterInput
-  hudus: ListFilterInputTypeOfBidFilterInput
-  listers: ListFilterInputTypeOfBidFilterInput
-  externalId: StringOperationFilterInput
-  id: ComparableInt32OperationFilterInput
-  isDeleted: BooleanOperationFilterInput
-  createdDate: ComparableDateTimeOperationFilterInput
-}
-
 input ComparableInt32OperationFilterInput {
   eq: Int
   neq: Int
@@ -1096,6 +1179,7 @@ input ProjectFilterInput {
   streetAddress: StringOperationFilterInput
   city: StringOperationFilterInput
   state: StringOperationFilterInput
+  projectDeadLine: ComparableDateTimeOperationFilterInput
   longitude: ComparableDoubleOperationFilterInput
   latitude: ComparableDoubleOperationFilterInput
   zipCode: StringOperationFilterInput
@@ -1137,28 +1221,6 @@ enum SortEnumType {
   DESC
 }
 
-input UsersSortInput {
-  email: SortEnumType
-  userName: SortEnumType
-  lastSeen: SortEnumType
-  userTypes: SortEnumType
-  imageAddress: SortEnumType
-  firstName: SortEnumType
-  lastName: SortEnumType
-  bio: SortEnumType
-  streetAddress: SortEnumType
-  city: SortEnumType
-  state: SortEnumType
-  longitude: SortEnumType
-  latitude: SortEnumType
-  zipCode: SortEnumType
-  rate: SortEnumType
-  externalId: SortEnumType
-  id: SortEnumType
-  isDeleted: SortEnumType
-  createdDate: SortEnumType
-}
-
 input ProjectSortInput {
   projectStatus: SortEnumType
   title: SortEnumType
@@ -1168,6 +1230,7 @@ input ProjectSortInput {
   streetAddress: SortEnumType
   city: SortEnumType
   state: SortEnumType
+  projectDeadLine: SortEnumType
   longitude: SortEnumType
   latitude: SortEnumType
   zipCode: SortEnumType
@@ -1355,11 +1418,6 @@ input ProjectImagesFilterInput {
   createdDate: ComparableDateTimeOperationFilterInput
 }
 
-input ProjectImagesInput {
-  id: Int
-  imageAddress: String
-}
-
 enum ResponseStatus {
   SUCCESS
   NOT_FOUND
@@ -1387,4 +1445,8 @@ enum ResponseStatus {
   ACTIVE_BIDS_EXIST
   IN_PROGRESS_BID_EXIST
   SELF_BID_NOT_ALLOWED
+}
+
+input ProjectImagesInput {
+  imageAddress: String
 }

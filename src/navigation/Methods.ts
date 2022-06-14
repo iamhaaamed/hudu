@@ -4,7 +4,6 @@ import {
   StackActions,
 } from '@react-navigation/native';
 import {RootStackParamList} from './types';
-//import {RootStackParamList} from './types';
 
 export const navigationRef = createNavigationContainerRef();
 

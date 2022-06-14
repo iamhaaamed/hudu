@@ -5,18 +5,18 @@ import {HStack, IconButton, Text} from 'native-base';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 
-export function CustomHeader({
+const CustomHeader = ({
   back,
   route,
   options,
   navigation,
-}: NativeStackHeaderProps) {
+}: NativeStackHeaderProps) => {
   return (
     <HStack px={4} alignItems="center" bgColor={Colors.WHITE}>
       {back && (
         <IconButton
           onPress={() => navigation.goBack()}
-          icon={<Icon name="chevron-back" color="#000" size={24} />}
+          icon={<Icon name="chevron-back" color={Colors.BLACK} size={24} />}
         />
       )}
       <Text
@@ -29,4 +29,6 @@ export function CustomHeader({
       <IconButton disabled />
     </HStack>
   );
-}
+};
+
+export default CustomHeader;

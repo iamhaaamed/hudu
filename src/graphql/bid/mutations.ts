@@ -25,10 +25,15 @@ export const BID_ACCEPT_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -47,10 +52,15 @@ export const BID_ACCEPT_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -66,6 +76,7 @@ export const BID_ACCEPT_BID = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -120,10 +131,15 @@ export const BID_ADD_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -142,10 +158,15 @@ export const BID_ADD_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -161,6 +182,7 @@ export const BID_ADD_BID = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -215,10 +237,15 @@ export const BID_CANCELL_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -237,10 +264,15 @@ export const BID_CANCELL_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -256,6 +288,7 @@ export const BID_CANCELL_BID = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -310,10 +343,15 @@ export const BID_DELETE_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -332,10 +370,15 @@ export const BID_DELETE_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -351,6 +394,7 @@ export const BID_DELETE_BID = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -405,10 +449,15 @@ export const BID_EDIT_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -427,10 +476,15 @@ export const BID_EDIT_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -446,6 +500,7 @@ export const BID_EDIT_BID = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -500,10 +555,15 @@ export const BID_REJECT_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -522,10 +582,15 @@ export const BID_REJECT_BID = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -541,6 +606,7 @@ export const BID_REJECT_BID = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode

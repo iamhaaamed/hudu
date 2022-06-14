@@ -1,7 +1,7 @@
 import React from 'react';
 import {Colors} from '~/styles';
 import {HStack, Text, VStack} from 'native-base';
-import {ProfileRating} from '../ProfileInfo/profile-rating';
+import {ProfileRating} from '~/components';
 
 interface ReviewItemProps {
   rate: number;

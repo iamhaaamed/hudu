@@ -56,7 +56,7 @@ export default function StarRating({
           </Text>
         )}
       </HStack>
-      {total && (
+      {(total || total >= 0) && (
         <Text
           fontSize={size - 2}
           fontFamily={fontFamily.regular}

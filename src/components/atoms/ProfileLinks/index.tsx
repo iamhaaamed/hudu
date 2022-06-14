@@ -60,22 +60,23 @@ const LINKS = [
 ];
 
 export default function ProfileLinks() {
-  const {isUserLoggedIn, setIsUserLoggedIn} = authStore(state => state);
+  const {setIsUserLoggedIn} = authStore(state => state);
   const {setUserData} = userDataStore(state => state);
   const {signOut} = useSignOutAuth();
 
+  const [loading, setLoading] = useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const onItemPressHandler = (item: any) => {
-    item.url ? Linking.openURL(item.url) : navigate(item.navLink);
+    item.url
+      ? Linking.openURL(item.url)
+      : navigate('AuthStack', {
+          screen: item.navLink,
+        });
   };
 
   const onLogOutPressHandler = () => {
-    if (isUserLoggedIn) {
-      setLogoutModalVisible(true);
-    } else {
-      navigate('Auth');
-    }
+    setLogoutModalVisible(true);
   };
 
   const onCloseLogoutModal = () => {
@@ -83,7 +84,9 @@ export default function ProfileLinks() {
   };
 
   const onAcceptLogoutModal = async () => {
+    setLoading(true);
     await signOut();
+    setLoading(false);
     setLogoutModalVisible(false);
     setIsUserLoggedIn(false);
     setUserData({});
@@ -109,6 +112,7 @@ export default function ProfileLinks() {
         option2="Log out"
         option1OnPress={onCloseLogoutModal}
         option2OnPress={onAcceptLogoutModal}
+        loading={loading}
       />
     </>
   );
