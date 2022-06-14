@@ -17,14 +17,23 @@ const SearchProjectItem = ({
     navigate('ProjectDetailsHudur');
   };
 
-  const getHighlightedText = (text: any, highlight: any) => {
+  const getHighlightedText = (
+    text: any,
+    highlight: any,
+    fontSize: number = scale(11),
+  ) => {
     const parts = text?.split(new RegExp(`(${highlight})`, 'gi'));
     return (
-      <Text fontFamily={fontFamily.regular} fontSize={scale(14)}>
+      <Text fontSize={fontSize}>
         {' '}
         {parts.map((part: any, i: number) => (
           <Text
             key={i}
+            fontFamily={
+              part.toLowerCase() === highlight?.toLowerCase()
+                ? fontFamily.bold
+                : fontFamily.regular
+            }
             color={
               part.toLowerCase() === highlight?.toLowerCase()
                 ? Colors.BLACK_3
@@ -50,15 +59,14 @@ const SearchProjectItem = ({
         activeOpacity={0.7}
         onPress={onPressHandler}>
         <CustomImage
-          local
-          imageSource={item?.image}
+          imageSource={item?.project?.projectImages?.[0]?.imageAddress}
           style={styles.image}
           resizeMode="stretch">
           <VStack flex={1} justifyContent="space-between">
             <HStack w="100%" px="2" py="2">
-              <ProjectFavoriteIcon />
+              <ProjectFavoriteIcon {...{isLiked: item?.isLiked}} />
             </HStack>
-            <HStack alignItems="center" w="100%" px="2" h={verticalScale(24)}>
+            <HStack alignItems="center" w="100%" h={verticalScale(24)}>
               <Box
                 w="100%"
                 h="100%"
@@ -67,6 +75,7 @@ const SearchProjectItem = ({
                 opacity={0.75}
               />
               <Text
+                mx="2"
                 zIndex={10}
                 color={Colors.WHITE}
                 fontSize={scale(11)}
@@ -77,14 +86,10 @@ const SearchProjectItem = ({
           </VStack>
         </CustomImage>
         <VStack py="2" px="2" space="2" flex={1}>
-          {item?.title && getHighlightedText(item?.title, userQuery)}
-          <Text
-            fontSize={scale(11)}
-            fontFamily={fontFamily.regular}
-            numberOfLines={3}
-            color={Colors.PLACEHOLDER}>
-            {item?.description}
-          </Text>
+          {item?.project?.title &&
+            getHighlightedText(item?.project?.title, userQuery, scale(14))}
+          {item?.project?.description &&
+            getHighlightedText(item?.project?.description, userQuery)}
         </VStack>
         <HStack pb="2" px="2" justifyContent="space-between">
           <Text

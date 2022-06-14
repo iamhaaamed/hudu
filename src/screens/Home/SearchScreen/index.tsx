@@ -5,42 +5,35 @@ import {CustomContainer, EmptyData} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import debounce from 'lodash.debounce';
-import images from '~/assets/images';
 import {SearchProjectItem} from '~/components';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-
-const projects = [
-  {
-    id: 0,
-    timeLeft: '3 Days',
-    title: 'Project 1',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 1,
-    timeLeft: '3 Days',
-    title: 'Project 2',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    image: images.testImage1,
-  },
-  {
-    id: 2,
-    timeLeft: '3 Days',
-    title: 'Project 3',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-];
+import {useGetProjects} from '~/hooks/project';
 
 const SearchScreen = ({navigation}: any) => {
   const [userQuery, setUserQuery] = useState('');
+  const [searchText, setSearchText] = useState('');
   const [fetchData, setFetchData] = useState([]);
+
+  const options =
+    searchText?.length > 0
+      ? {
+          where: {
+            or: [
+              {project: {title: {contains: searchText}}},
+              {project: {description: {contains: searchText}}},
+            ],
+          },
+        }
+      : {};
+
+  const {
+    isLoading: getProjectLoading,
+    data: getProjects,
+    fetchNextPage: fetchNextPageProjects,
+    hasNextPage: hasNextPageProjects,
+  } = useGetProjects(options);
+
+  const projects = getProjects?.pages ?? [];
 
   const delayedQuery = debounce(() => updateQuery(), 500);
 
@@ -59,13 +52,7 @@ const SearchScreen = ({navigation}: any) => {
 
   const sendQuery = async (query: any) => {
     if (query.length > 0) {
-      const newData = projects.filter((item: any) => {
-        const itemData = `${(item.title || '').toUpperCase()}`;
-        const textData = userQuery.toUpperCase();
-        const t = itemData.indexOf(textData) > -1;
-        return t;
-      });
-      setFetchData(newData);
+      setSearchText(query);
       //   searchMutation.mutate(query, {
       //     onSuccess: (data) => {
       //       setFetchData(data);
@@ -74,7 +61,7 @@ const SearchScreen = ({navigation}: any) => {
       //     onError: () => {},
       //   });
     } else {
-      setFetchData([]);
+      setSearchText(query);
     }
   };
 
@@ -82,12 +69,20 @@ const SearchScreen = ({navigation}: any) => {
     navigation.goBack();
   };
 
+  const onLoadMore = () => {
+    if (hasNextPageProjects) {
+      fetchNextPageProjects();
+    }
+  };
+
   const renderItem = ({item}: {item: any}) => (
-    <SearchProjectItem {...{item, userQuery}} />
+    <SearchProjectItem {...{item, userQuery: searchText}} />
   );
 
+  const loading = getProjectLoading;
+
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <VStack space="4" py="4" flex={1}>
         <HStack
           alignItems="center"
@@ -122,9 +117,14 @@ const SearchScreen = ({navigation}: any) => {
           contentContainerStyle={styles.contentContainerStyle}
           ListEmptyComponent={EmptyData}
           numColumns={2}
-          data={fetchData}
+          data={projects}
           renderItem={renderItem}
           keyExtractor={(_, index) => `key${index}`}
+          onEndReachedThreshold={0.5}
+          onEndReached={({distanceFromEnd}) => {
+            if (distanceFromEnd < 0) return;
+            onLoadMore?.();
+          }}
         />
       </VStack>
     </CustomContainer>

@@ -1,8 +1,7 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, RefreshControl} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, VStack} from 'native-base';
 import {
-  CustomKeyboardAwareScrollView,
   CustomContainer,
   SectionUserRow,
   SectionSearchBox,
@@ -32,8 +31,6 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   const profile = getProfile?.user_getProfile?.result ?? {};
   const projects = getProjects?.pages ?? [];
 
-  console.log({profile, projects});
-
   const onLoadMore = () => {
     if (hasNextPageProjects) {
       fetchNextPageProjects();
@@ -44,18 +41,6 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
     refetchProjects();
   };
 
-  const isCloseToBottom = ({
-    layoutMeasurement,
-    contentOffset,
-    contentSize,
-  }: any) => {
-    const paddingToBottom = 20;
-    return (
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom
-    );
-  };
-
   const questionHandler = () => {
     navigation.navigate('ProfileStack', {screen: 'Support'});
   };
@@ -64,27 +49,18 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
 
   return (
     <CustomContainer isLoading={loading}>
-      <CustomKeyboardAwareScrollView
-        onScroll={({nativeEvent}: any) => {
-          if (isCloseToBottom(nativeEvent)) {
-            onLoadMore();
-          }
-        }}
-        scrollEventThrottle={400}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetchingProjects}
-            onRefresh={reLoad}
-          />
-        }
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainerStyle}>
-        <VStack space="3" py="2" flex={1}>
-          {isUserLoggedIn && <SectionUserRow data={profile} />}
-          <SectionSearchBox />
-          <SectionProjects />
-        </VStack>
-      </CustomKeyboardAwareScrollView>
+      <VStack space="3" py="2" flex={1}>
+        {isUserLoggedIn && <SectionUserRow data={profile} />}
+        <SectionSearchBox />
+        <SectionProjects
+          {...{
+            data: projects,
+            onLoadMore,
+            reLoad,
+            isRefetching: isRefetchingProjects,
+          }}
+        />
+      </VStack>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={questionHandler}
