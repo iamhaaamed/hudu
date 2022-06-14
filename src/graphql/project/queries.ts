@@ -20,6 +20,10 @@ export const PROJECT_GET_PROJECT = gql`
           id
           isDeleted
           createdDate
+          projectImages {
+            imageAddress
+            id
+          }
         }
         isLiked
       }
@@ -54,6 +58,10 @@ export const PROJECT_GET_PROJECTS = gql`
             id
             isDeleted
             createdDate
+            projectImages {
+              imageAddress
+              id
+            }
           }
           isLiked
         }

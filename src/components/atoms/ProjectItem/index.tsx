@@ -24,15 +24,14 @@ const ProjectItem = ({item}: {item?: any}) => {
         activeOpacity={0.7}
         onPress={onPressHandler}>
         <CustomImage
-          local
-          imageSource={item?.image}
+          imageSource={item?.project?.projectImages?.[0]?.imageAddress}
           style={styles.image}
           resizeMode="stretch">
           <VStack flex={1} justifyContent="space-between">
             <HStack w="100%" px="2" py="2">
-              <ProjectFavoriteIcon />
+              <ProjectFavoriteIcon {...{isLiked: item?.isLiked}} />
             </HStack>
-            <HStack alignItems="center" w="100%" px="2" h={verticalScale(24)}>
+            <HStack alignItems="center" w="100%" h={verticalScale(24)}>
               <Box
                 w="100%"
                 h="100%"
@@ -41,6 +40,7 @@ const ProjectItem = ({item}: {item?: any}) => {
                 opacity={0.75}
               />
               <Text
+                mx="2"
                 zIndex={10}
                 color={Colors.WHITE}
                 fontSize={scale(11)}
@@ -52,17 +52,17 @@ const ProjectItem = ({item}: {item?: any}) => {
         </CustomImage>
         <VStack py="2" px="2" space="2" flex={1}>
           <Text
-            fontSize={scale(18)}
+            fontSize={scale(14)}
             fontFamily={fontFamily.bold}
             numberOfLines={1}>
-            {item?.title}
+            {item?.project?.title}
           </Text>
           <Text
             fontSize={scale(11)}
             fontFamily={fontFamily.regular}
             numberOfLines={3}
             color={Colors.PLACEHOLDER}>
-            {item?.description}
+            {item?.project?.description}
           </Text>
         </VStack>
         <HStack pb="2" px="2" justifyContent="space-between">

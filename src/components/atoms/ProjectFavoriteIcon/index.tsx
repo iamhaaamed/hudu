@@ -4,13 +4,25 @@ import {Icon, Center, Spinner} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {scale} from '~/utils/style';
 import {Colors} from '~/styles';
+import {authStore} from '~/stores';
+import {showMessage} from 'react-native-flash-message';
 
-const ProjectFavoriteIcon = () => {
+const ProjectFavoriteIcon = ({isLiked}: {isLiked?: boolean}) => {
+  const {isUserLoggedIn} = authStore(state => state);
   const [isActive, setIsActive] = useState(false);
   const loading = false;
 
   const onPressHandler = () => {
-    setIsActive(prevState => !prevState);
+    if (isUserLoggedIn) {
+      setIsActive(prevState => !prevState);
+    } else {
+      showMessage({
+        message: 'You are not logged in',
+        type: 'info',
+        icon: 'info',
+        position: 'center',
+      });
+    }
   };
 
   return (
@@ -25,7 +37,7 @@ const ProjectFavoriteIcon = () => {
           <Icon
             as={
               <MaterialCommunityIcons
-                name={isActive ? 'heart' : 'heart-outline'}
+                name={isLiked ? 'heart' : 'heart-outline'}
               />
             }
             size={scale(11)}
