@@ -1,20 +1,42 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {Icon, Center, Spinner} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {scale} from '~/utils/style';
 import {Colors} from '~/styles';
-import {authStore} from '~/stores';
+import {authStore, userDataStore} from '~/stores';
 import {showMessage} from 'react-native-flash-message';
+import {useProjectLike, useProjectUnLike} from '~/hooks/project';
 
-const ProjectFavoriteIcon = ({isLiked}: {isLiked?: boolean}) => {
+const ProjectFavoriteIcon = ({
+  isLiked,
+  projectId,
+}: {
+  isLiked?: boolean;
+  projectId: number;
+}) => {
   const {isUserLoggedIn} = authStore(state => state);
-  const [isActive, setIsActive] = useState(false);
-  const loading = false;
+  const {userData} = userDataStore(state => state);
+
+  const {mutate: projectLikeMutate, isLoading: projectLikeLoading} =
+    useProjectLike();
+  const {mutate: projectUnLikeMutate, isLoading: projectUnLikeLoading} =
+    useProjectUnLike();
 
   const onPressHandler = () => {
     if (isUserLoggedIn) {
-      setIsActive(prevState => !prevState);
+      if (isLiked) {
+        const input = {projectId, userId: userData?.id};
+        projectUnLikeMutate(input, {
+          onSuccess: () => {},
+          onError: () => {},
+        });
+      } else {
+        projectLikeMutate(projectId, {
+          onSuccess: () => {},
+          onError: () => {},
+        });
+      }
     } else {
       showMessage({
         message: 'You are not logged in',
@@ -24,6 +46,8 @@ const ProjectFavoriteIcon = ({isLiked}: {isLiked?: boolean}) => {
       });
     }
   };
+
+  const loading = projectLikeLoading || projectUnLikeLoading;
 
   return (
     <TouchableOpacity
@@ -41,7 +65,7 @@ const ProjectFavoriteIcon = ({isLiked}: {isLiked?: boolean}) => {
               />
             }
             size={scale(11)}
-            color={isActive ? Colors.ERROR : Colors.BLACK}
+            color={isLiked ? Colors.ERROR : Colors.BLACK}
           />
         )}
       </Center>
