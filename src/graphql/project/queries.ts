@@ -24,6 +24,11 @@ export const PROJECT_GET_PROJECT = gql`
             imageAddress
             id
           }
+          bids {
+            bidStatus
+            amount
+            description
+          }
         }
         isLiked
       }
@@ -61,6 +66,11 @@ export const PROJECT_GET_PROJECTS = gql`
             projectImages {
               imageAddress
               id
+            }
+            bids {
+              bidStatus
+              amount
+              description
             }
           }
           isLiked
@@ -125,6 +135,15 @@ export const PROJECT_GET_USER_LIKE_PROJECT = gql`
           id
           isDeleted
           createdDate
+          projectImages {
+            imageAddress
+            id
+          }
+          bids {
+            bidStatus
+            amount
+            description
+          }
         }
         isLiked
       }
@@ -144,6 +163,32 @@ export const PROJECT_GET_USER_LIKE_PROJECTS = gql`
       result(skip: $skip, take: $take, where: $where, order: $order) {
         items {
           isLiked
+          project {
+            projectStatus
+            title
+            description
+            duration
+            availability
+            streetAddress
+            city
+            state
+            longitude
+            latitude
+            zipCode
+            userId
+            id
+            isDeleted
+            createdDate
+            projectImages {
+              imageAddress
+              id
+            }
+            bids {
+              bidStatus
+              amount
+              description
+            }
+          }
         }
         pageInfo {
           hasNextPage

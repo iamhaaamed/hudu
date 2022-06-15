@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Box, VStack, HStack} from 'native-base';
 import {Colors} from '~/styles';
@@ -7,6 +7,19 @@ import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {navigate} from '~/navigation/Methods';
 
 const ProjectItem = ({item}: {item?: any}) => {
+  const lowBid = useMemo(() => {
+    let res = -1;
+    if (item?.project?.bids?.length > 0) {
+      res = Math.min.apply(
+        Math,
+        item?.project?.bids?.map(function (object: any) {
+          return object?.amount;
+        }),
+      );
+    }
+    return res;
+  }, []);
+
   const onPressHandler = () => {
     navigate('ProjectDetailsHudur');
   };
@@ -73,15 +86,17 @@ const ProjectItem = ({item}: {item?: any}) => {
             fontFamily={fontFamily.regular}
             numberOfLines={1}
             color={Colors.BLACK_1}>
-            {item?.lowBid ? 'Current low bid' : 'Be the first bidder'}
+            {item?.project?.bids?.length > 0 && lowBid !== -1
+              ? 'Current low bid'
+              : 'Be the first bidder'}
           </Text>
-          {item?.lowBid && (
+          {item?.project?.bids?.length > 0 && lowBid !== -1 && (
             <Text
               fontSize={scale(11)}
               fontFamily={fontFamily.regular}
               color={Colors.INFO}
               numberOfLines={1}>
-              $ {item?.lowBid}
+              $ {lowBid}
             </Text>
           )}
         </HStack>

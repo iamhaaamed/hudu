@@ -1,17 +1,38 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {Icon, Center, Spinner} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {scale} from '~/utils/style';
 import {Colors} from '~/styles';
+import {authStore, userDataStore} from '~/stores';
+import {useProjectUnLike} from '~/hooks/project';
 
-const FavoriteIcon = () => {
-  const [isActive, setIsActive] = useState(false);
-  const loading = false;
+const FavoriteIcon = ({
+  isLiked,
+  projectId,
+}: {
+  isLiked?: boolean;
+  projectId: number;
+}) => {
+  const {isUserLoggedIn} = authStore(state => state);
+  const {userData} = userDataStore(state => state);
+
+  const {mutate: projectUnLikeMutate, isLoading: projectUnLikeLoading} =
+    useProjectUnLike();
 
   const onPressHandler = () => {
-    setIsActive(prevState => !prevState);
+    if (isUserLoggedIn) {
+      if (isLiked) {
+        const input = {projectId, userId: userData?.id};
+        projectUnLikeMutate(input, {
+          onSuccess: () => {},
+          onError: () => {},
+        });
+      }
+    }
   };
+
+  const loading = projectUnLikeLoading;
 
   return (
     <TouchableOpacity
@@ -25,11 +46,11 @@ const FavoriteIcon = () => {
           <Icon
             as={
               <MaterialCommunityIcons
-                name={isActive ? 'heart' : 'heart-outline'}
+                name={isLiked ? 'heart' : 'heart-outline'}
               />
             }
             size={scale(11)}
-            color={isActive ? Colors.ERROR : Colors.BLACK}
+            color={isLiked ? Colors.ERROR : Colors.BLACK}
           />
         )}
       </Center>
