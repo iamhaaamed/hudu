@@ -59,3 +59,4 @@ export {default as SectionQuestionRouteLister} from './organisms/SectionQuestion
 export {default as SectionActiveBidsRouteLister} from './organisms/SectionActiveBidsRouteLister';
 export {default as TabBar} from './organisms/TabBar';
 export {default as Header} from './organisms/Header';
+export {default as SectionProjectImages} from './organisms/SectionProjectImages';

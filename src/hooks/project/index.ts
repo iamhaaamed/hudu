@@ -241,8 +241,8 @@ export const useAddProject = () => {
     any,
     Project_AddProjectMutationVariables
   >(
-    async (AddProjectInput: any) => {
-      return graphQLClient.request(PROJECT_ADD_PROJECT, {AddProjectInput});
+    async (addProjectInput: any) => {
+      return graphQLClient.request(PROJECT_ADD_PROJECT, {addProjectInput});
     },
     {
       onSuccess: (successData: any) => {

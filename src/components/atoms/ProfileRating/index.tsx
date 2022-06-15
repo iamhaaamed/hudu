@@ -7,7 +7,7 @@ interface RatingProps {
   count: number;
   total?: number;
 }
-export function ProfileRating(props: RatingProps) {
+const ProfileRating = (props: RatingProps) => {
   return (
     <HStack p={1} alignItems="center" space={0.5}>
       {Array(5)
@@ -23,4 +23,6 @@ export function ProfileRating(props: RatingProps) {
       {props.total && <Text color={Colors.GARY_3}>({props.total})</Text>}
     </HStack>
   );
-}
+};
+
+export default ProfileRating;
