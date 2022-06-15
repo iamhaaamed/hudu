@@ -13,6 +13,8 @@ import * as yup from 'yup';
 import images from '~/assets/images';
 import {fontFamily, scale} from '~/utils/style';
 import {Colors} from '~/styles';
+import {useGetUserLikeProjects} from '~/hooks/project';
+import {authStore} from '~/stores';
 
 const schema = yup.object().shape({
   sort: yup.string(),
@@ -48,21 +50,39 @@ const favorites = [
 ];
 
 const FavoriteScreen = () => {
+  const {isUserLoggedIn} = authStore(state => state);
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
+  const {
+    isLoading: getUserLikeProjectsLoading,
+    data: getUserLikeProjects,
+    fetchNextPage: fetchNextPageUserLikeProjects,
+    hasNextPage: hasNextPageUserLikeProjects,
+    refetch: refetchUserLikeProjects,
+    isRefetching: isRefetchingUserLikeProjects,
+  } = useGetUserLikeProjects({enabled: isUserLoggedIn});
+
+  const userLikeProjects = getUserLikeProjects?.pages ?? [];
+
   const {register, watch} = methods;
 
   const sort = watch('sort');
 
-  const onLoadMore = () => {};
+  const onLoadMore = () => {
+    if (hasNextPageUserLikeProjects) {
+      fetchNextPageUserLikeProjects();
+    }
+  };
 
   const renderItem = ({item}: {item: any}) => <FavoriteItem item={item} />;
 
+  const loading = getUserLikeProjectsLoading;
+
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <FormProvider {...methods}>
         <VStack space="3" py="4" flex={1}>
           <HStack px="4" justifyContent="flex-end">
@@ -83,7 +103,7 @@ const FavoriteScreen = () => {
             contentContainerStyle={styles.contentContainerStyle}
             ListEmptyComponent={EmptyData}
             numColumns={2}
-            data={favorites}
+            data={userLikeProjects}
             renderItem={renderItem}
             keyExtractor={(_, index) => `key${index}`}
             onEndReachedThreshold={0.5}
