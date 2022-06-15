@@ -54,37 +54,39 @@ const SearchProjectItem = ({
       shadow="4"
       borderRadius="md"
       bg={Colors.WHITE}>
+      <CustomImage
+        imageSource={item?.project?.projectImages?.[0]?.imageAddress}
+        style={styles.image}
+        resizeMode="stretch">
+        <VStack flex={1} justifyContent="space-between">
+          <HStack w="100%" px="2" py="2">
+            <ProjectFavoriteIcon
+              {...{isLiked: item?.isLiked, projectId: item?.project?.id}}
+            />
+          </HStack>
+          <HStack alignItems="center" w="100%" h={verticalScale(24)}>
+            <Box
+              w="100%"
+              h="100%"
+              position="absolute"
+              bg={Colors.BLACK_1}
+              opacity={0.75}
+            />
+            <Text
+              mx="2"
+              zIndex={10}
+              color={Colors.WHITE}
+              fontSize={scale(11)}
+              fontFamily={fontFamily.medium}>
+              Time left: {item?.timeLeft}
+            </Text>
+          </HStack>
+        </VStack>
+      </CustomImage>
       <TouchableOpacity
         style={styles.flex1}
         activeOpacity={0.7}
         onPress={onPressHandler}>
-        <CustomImage
-          imageSource={item?.project?.projectImages?.[0]?.imageAddress}
-          style={styles.image}
-          resizeMode="stretch">
-          <VStack flex={1} justifyContent="space-between">
-            <HStack w="100%" px="2" py="2">
-              <ProjectFavoriteIcon {...{isLiked: item?.isLiked}} />
-            </HStack>
-            <HStack alignItems="center" w="100%" h={verticalScale(24)}>
-              <Box
-                w="100%"
-                h="100%"
-                position="absolute"
-                bg={Colors.BLACK_1}
-                opacity={0.75}
-              />
-              <Text
-                mx="2"
-                zIndex={10}
-                color={Colors.WHITE}
-                fontSize={scale(11)}
-                fontFamily={fontFamily.medium}>
-                Time left: {item?.timeLeft}
-              </Text>
-            </HStack>
-          </VStack>
-        </CustomImage>
         <VStack py="2" px="2" space="2" flex={1}>
           {item?.project?.title &&
             getHighlightedText(item?.project?.title, userQuery, scale(14))}
