@@ -10,9 +10,17 @@ import {
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {resetRoot} from '~/navigation/Methods';
+import {useAddProject} from '~/hooks/project';
+import {ResponseStatus} from '~/generated/graphql';
+import {useGetLocation} from '~/hooks/location';
 
 const PreviewPostScreen = ({navigation, route}: any) => {
   const {params} = route?.params;
+
+  const {mutate: addProjectMutate, isLoading: addProjectLoading} =
+    useAddProject();
+  const {mutate: getLocationMutate, isLoading: getLocationLoading} =
+    useGetLocation();
 
   const [questionModalVisible, setQuestionModalVisible] =
     useState<boolean>(false);
@@ -26,7 +34,25 @@ const PreviewPostScreen = ({navigation, route}: any) => {
   };
 
   const listProjectOnPress = () => {
-    setQuestionModalVisible(true);
+    getLocationMutate(params?.zipCode, {
+      onSuccess: (success: any) => {
+        if (success?.status === 1) {
+          const lat = parseFloat(success?.output?.[0]?.latitude);
+          const long = parseFloat(success?.output?.[0]?.longitude);
+          const input = {...params, point: [lat, long]};
+          addProjectMutate(input, {
+            onSuccess: (successData: any) => {
+              if (
+                successData?.project_addProject?.status ===
+                ResponseStatus.Success
+              ) {
+                setQuestionModalVisible(true);
+              }
+            },
+          });
+        }
+      },
+    });
   };
 
   const onCloseQuestionModal = () => {
@@ -47,8 +73,10 @@ const PreviewPostScreen = ({navigation, route}: any) => {
     </Center>
   );
 
+  const loading = addProjectLoading || getLocationLoading;
+
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}>
@@ -75,7 +103,7 @@ const PreviewPostScreen = ({navigation, route}: any) => {
             </Center>
           </HStack>
           <FlatList
-            data={params?.images || []}
+            data={params?.projectImages || []}
             renderItem={renderItem}
             keyExtractor={(_, index: number) => `img${index}`}
             horizontal

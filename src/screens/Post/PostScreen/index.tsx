@@ -1,14 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
-import {FlatList, VStack, Center, HStack} from 'native-base';
+import {VStack, Center, HStack} from 'native-base';
 import {
   CustomContainer,
   CustomKeyboardAwareScrollView,
-  CustomImageUploader,
-  ImageBoxViewer,
   CustomInput,
   CustomPicker,
   CustomButton,
+  SectionProjectImages,
 } from '~/components';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -16,9 +15,9 @@ import * as yup from 'yup';
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 
-const expectationData = [
-  {id: 0, title: 'Specific time', value: 'specific'},
-  {id: 1, title: 'Flexible', value: 'flexible'},
+const availabilityData = [
+  {id: 0, title: 'Specific time', value: 'SPECIFIC_TIME'},
+  {id: 1, title: 'Flexible', value: 'FLEXIBLE'},
 ];
 const stateData = [
   {id: 0, title: 'California', value: 'california'},
@@ -26,11 +25,12 @@ const stateData = [
 ];
 
 const schema = yup.object().shape({
+  projectImages: yup.array().required('required').nullable(),
   title: yup.string().required('required').nullable(),
   description: yup.string().required('required').nullable(),
-  expectation: yup.string().required('required').nullable(),
-  duration: yup.number().when('expectation', {
-    is: 'specific',
+  availability: yup.string().required('required').nullable(),
+  duration: yup.number().when('availability', {
+    is: 'SPECIFIC_TIME',
     then: yup.number().required('required').nullable(),
   }),
   streetAddress: yup.string().required('required').nullable(),
@@ -53,39 +53,11 @@ const PostScreen = ({navigation}: NavigationProp) => {
 
   const {handleSubmit, register, watch, formState} = methods;
 
-  const expectation = watch('expectation');
-
-  const [images, setImages] = useState<string[]>([]);
-
-  const onUploadImage = (image: string) => {
-    setImages(prevState => [...prevState, image]);
-  };
-
-  const onDeleteImage = (image: string, index: number) => {
-    setImages(imageData => imageData.filter((_, indx) => indx !== index));
-  };
+  const availability = watch('availability');
 
   const previewOnPress = (formData: any) => {
-    const inputData = {
-      ...formData,
-      images,
-    };
-    navigation.navigate('PreviewPost', {params: inputData});
+    navigation.navigate('PreviewPost', {params: formData});
   };
-
-  const ListHeaderComponent = () => (
-    <Center mx="4">
-      <CustomImageUploader onUploadImage={onUploadImage} />
-    </Center>
-  );
-
-  const renderItem = ({item, index}: {item: any; index: number}) => (
-    <Center mr="4">
-      <ImageBoxViewer
-        {...{item, onDelete: (itm: string) => onDeleteImage(itm, index)}}
-      />
-    </Center>
-  );
 
   return (
     <CustomContainer>
@@ -94,14 +66,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}>
           <VStack py="4" space="6">
-            <FlatList
-              data={images}
-              ListHeaderComponent={ListHeaderComponent}
-              renderItem={renderItem}
-              keyExtractor={(_, index: number) => `img${index}`}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-            />
+            <SectionProjectImages {...register('projectImages')} />
             <VStack px="4" space="3" flex={1}>
               <CustomInput
                 {...register('title')}
@@ -119,14 +84,14 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 {...{formState}}
               />
               <CustomPicker
-                {...register('expectation')}
+                {...register('availability')}
                 label="Expectation for Project Completion"
-                data={expectationData}
+                data={availabilityData}
                 placeholder="Select"
                 height={verticalScale(45)}
                 textStyle={styles.input}
               />
-              {expectation && expectation === 'specific' && (
+              {availability && availability === 'SPECIFIC_TIME' && (
                 <CustomInput
                   {...register('duration')}
                   placeholder="Duration"
@@ -173,6 +138,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 backgroundColor={Colors.WHITE}
                 inputStyle={styles.input}
                 {...{formState}}
+                validation
               />
               <CustomButton
                 title="Preview"
