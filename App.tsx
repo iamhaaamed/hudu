@@ -80,6 +80,7 @@ const App = () => {
         showMessage({
           message: `Something went wrong: ${error.message}`,
           type: 'danger',
+          icon: 'danger',
         });
       },
       onSuccess: async (data: any) => {

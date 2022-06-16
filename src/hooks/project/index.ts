@@ -228,7 +228,11 @@ export const useAddFeedBack = () => {
       onSuccess: () => {},
       onError: (errorData: any) => {
         console.log('project_addFeedBackError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -254,7 +258,11 @@ export const useAddProject = () => {
       },
       onError: (errorData: any) => {
         console.log('project_addProjectError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -280,7 +288,11 @@ export const useAddQuestion = () => {
       },
       onError: (errorData: any) => {
         console.log('project_addQuestionError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -306,7 +318,11 @@ export const useEditProject = () => {
       },
       onError: (errorData: any) => {
         console.log('project_editProjectError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -332,7 +348,11 @@ export const useFailProject = () => {
       },
       onError: (errorData: any) => {
         console.log('project_failProjectError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -358,7 +378,11 @@ export const useFinishProject = () => {
       },
       onError: (errorData: any) => {
         console.log('project_finishProjectError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -383,7 +407,11 @@ export const useProjectLike = () => {
       },
       onError: (errorData: any) => {
         console.log('project_likeError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -409,7 +437,11 @@ export const useReOpenProject = () => {
       },
       onError: (errorData: any) => {
         console.log('project_reopenProjectError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -434,7 +466,11 @@ export const useProjectUnLike = () => {
       },
       onError: (errorData: any) => {
         console.log('project_unlikeError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );

@@ -122,7 +122,11 @@ export const useCreateMessage = () => {
       },
       onError: (errorData: any) => {
         console.log('message_createMessageError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -148,7 +152,11 @@ export const useDeleteMessage = () => {
       },
       onError: (errorData: any) => {
         console.log('message_deleteMessageError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -177,7 +185,11 @@ export const useRemoveConversation = () => {
       },
       onError: (errorData: any) => {
         console.log('message_removeConversationError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );

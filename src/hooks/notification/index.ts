@@ -81,7 +81,11 @@ export const useAddNotification = () => {
       },
       onError: (errorData: any) => {
         console.log('notification_addNotificationError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -110,7 +114,11 @@ export const useReadNotification = () => {
       },
       onError: (errorData: any) => {
         console.log('notification_readNotificationError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
