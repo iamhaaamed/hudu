@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Colors} from '~/styles';
 import {useController} from 'react-hook-form';
-import {fontFamily, scale} from '~/utils/style';
+import {fontFamily, scale, verticalScale} from '~/utils/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput, Platform, StyleSheet, TextStyle} from 'react-native';
 import {FormControl, Text, HStack, Box, Icon} from 'native-base';
@@ -24,7 +24,7 @@ export default React.forwardRef(
       formState,
       validation = false,
       isHorizontal = false,
-      height,
+      height = verticalScale(45),
     }: {
       name: any;
       placeholder?: string;
@@ -112,7 +112,7 @@ export default React.forwardRef(
             </Text>
           )}
           <HStack
-            h={height}
+            h={textArea ? undefined : height}
             px="2"
             borderWidth="0.7"
             borderRadius="md"

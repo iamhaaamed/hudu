@@ -1,8 +1,6 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
-import {Icon, Center, Spinner} from 'native-base';
+import {Spinner, IconButton} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {scale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {authStore, userDataStore} from '~/stores';
 import {showMessage} from 'react-native-flash-message';
@@ -11,9 +9,11 @@ import {useProjectLike, useProjectUnLike} from '~/hooks/project';
 const ProjectFavoriteIcon = ({
   isLiked,
   projectId,
+  size = 18,
 }: {
   isLiked?: boolean;
   projectId: number;
+  size?: number;
 }) => {
   const {isUserLoggedIn} = authStore(state => state);
   const {userData} = userDataStore(state => state);
@@ -50,26 +50,24 @@ const ProjectFavoriteIcon = ({
   const loading = projectLikeLoading || projectUnLikeLoading;
 
   return (
-    <TouchableOpacity
+    <IconButton
       disabled={loading}
-      activeOpacity={0.9}
-      onPress={onPressHandler}>
-      <Center p="1" borderRadius="full" bg={Colors.WHITE}>
-        {loading ? (
-          <Spinner size={scale(9)} color={Colors.BLACK} />
+      onPress={onPressHandler}
+      bg={Colors.WHITE_RIPPLE_COLOR}
+      colorScheme={Colors.WHITE_RIPPLE_COLOR}
+      borderRadius="full"
+      icon={
+        loading ? (
+          <Spinner size={size} color={Colors.BLACK} />
         ) : (
-          <Icon
-            as={
-              <MaterialCommunityIcons
-                name={isLiked ? 'heart' : 'heart-outline'}
-              />
-            }
-            size={scale(11)}
+          <MaterialCommunityIcons
+            name={isLiked ? 'heart' : 'heart-outline'}
             color={isLiked ? Colors.ERROR : Colors.BLACK}
+            size={size}
           />
-        )}
-      </Center>
-    </TouchableOpacity>
+        )
+      }
+    />
   );
 };
 
