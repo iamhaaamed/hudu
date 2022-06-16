@@ -25,6 +25,12 @@ export const BID_GET_BIDS = gql`
           id
           isDeleted
           createdDate
+          lister {
+            userName
+            firstName
+            lastName
+            id
+          }
         }
         pageInfo {
           hasNextPage

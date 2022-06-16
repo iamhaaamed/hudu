@@ -1,41 +1,73 @@
 import React from 'react';
-import {Divider} from 'native-base';
 import {FlatList, StyleSheet} from 'react-native';
-import ReviewItem from '~/components/atoms/ReviewItem';
-import SectionReviewContainer from '../../molecules/SectionReviewContainer';
+import {VStack} from 'native-base';
+import {
+  HudurReviewItem,
+  SectionReviewContainer,
+  CustomLoading,
+  EmptyData,
+} from '~/components';
+import {useGetBids} from '~/hooks/bid';
+import {userDataStore} from '~/stores';
 
-export default function SectionHudurReviews() {
-  const onLoadMore = () => {};
+const SectionHudurReviews = () => {
+  const {userData} = userDataStore(state => state);
 
-  const renderItem = ({item}: {item: any}) => (
-    <ReviewItem title={item.title} content={item.content} rate={item.rate} />
+  const hudurReviewOption = {
+    where: {bidStatus: {eq: 'FINISHED'}, huduId: {eq: userData?.id}},
+  };
+
+  const {
+    isLoading: getHudurReviewsLoading,
+    data: getHudurReviews,
+    fetchNextPage: fetchNextPageHudurReviews,
+    hasNextPage: hasNextPageHudurReviews,
+    refetch: refetchHudurReviews,
+    isRefetching: isRefetchingHudurReviews,
+  } = useGetBids(hudurReviewOption);
+
+  const hudurReviews = getHudurReviews?.pages ?? [];
+
+  console.log(hudurReviews);
+
+  const onLoadMore = () => {
+    if (hasNextPageHudurReviews) {
+      fetchNextPageHudurReviews();
+    }
+  };
+
+  const renderItem = ({item, index}: {item: any; index: number}) => (
+    <HudurReviewItem {...{item, index, arrayLength: hudurReviews?.length}} />
   );
-
-  const ItemSeparatorComponent = () => <Divider mx="3" />;
 
   return (
     <SectionReviewContainer>
-      <FlatList
-        data={Array(15).fill({
-          title: 'Lister name',
-          content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          rate: 3,
-        })}
-        renderItem={renderItem}
-        onEndReachedThreshold={0.5}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(_, index) => `key${index}`}
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        contentContainerStyle={styles.contentContainerStyle}
-        onEndReached={({distanceFromEnd}: any) => {
-          if (distanceFromEnd < 0) return;
-          onLoadMore();
-        }}
-      />
+      <VStack flexGrow={1} h="100%">
+        {getHudurReviewsLoading ? (
+          <CustomLoading />
+        ) : (
+          <FlatList
+            data={hudurReviews}
+            refreshing={isRefetchingHudurReviews}
+            onRefresh={refetchHudurReviews}
+            renderItem={renderItem}
+            ListEmptyComponent={EmptyData}
+            onEndReachedThreshold={0.5}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(_, index) => `key${index}`}
+            contentContainerStyle={styles.contentContainerStyle}
+            onEndReached={({distanceFromEnd}: any) => {
+              if (distanceFromEnd < 0) return;
+              onLoadMore();
+            }}
+          />
+        )}
+      </VStack>
     </SectionReviewContainer>
   );
-}
+};
+
+export default React.memo(SectionHudurReviews);
 
 const styles = StyleSheet.create({
   contentContainerStyle: {
