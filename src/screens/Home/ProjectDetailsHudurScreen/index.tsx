@@ -20,7 +20,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import useScrollSync from '~/hooks/useScrollSync';
-import {Connection} from '~/types/Connection';
 import {ScrollPair} from '~/types/ScrollPair';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {HeaderConfig} from '~/types/HeaderConfig';
@@ -36,6 +35,7 @@ import {
 import {verticalScale} from '~/utils/style';
 import images from '~/assets/images';
 import {Colors} from '~/styles';
+import {useGetProject} from '~/hooks/project';
 
 const data = {
   title: 'Duct need cleaned out',
@@ -92,7 +92,17 @@ const HEADER_HEIGHT = 0;
 
 const Tab = createMaterialTopTabNavigator();
 
-const ProjectDetailsHudurScreen = () => {
+const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
+  const {projectId} = route?.params;
+
+  const {isLoading: getProjectLoading, data: getProject} = useGetProject({
+    projectId,
+  });
+
+  const project = getProject?.project_getProject?.result ?? {};
+
+  console.log({project});
+
   const {top, bottom} = useSafeAreaInsets();
 
   const {height: screenHeight} = useWindowDimensions();
@@ -204,7 +214,7 @@ const ProjectDetailsHudurScreen = () => {
     [rendered, headerHeight, bottom, screenHeight, headerDiff],
   );
 
-  const sharedProps = useMemo<Partial<FlatListProps<Connection>>>(
+  const sharedProps = useMemo<Partial<FlatListProps<any>>>(
     () => ({
       contentContainerStyle,
       onMomentumScrollEnd: sync,
@@ -219,7 +229,7 @@ const ProjectDetailsHudurScreen = () => {
     () => (
       <SectionDescriptionRoute
         ref={descriptionRef}
-        data={data?.description}
+        data={project?.project}
         onScroll={descriptionScrollHandler}
         {...sharedProps}
       />
@@ -281,13 +291,17 @@ const ProjectDetailsHudurScreen = () => {
     [rendered, top, headerAnimatedStyle],
   );
 
+  const loading = getProjectLoading;
+
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <Animated.View onLayout={handleHeaderLayout} style={headerContainerStyle}>
         <Header
-          title={data?.title}
-          images={data?.images}
-          user={tabIndex === 0 ? data?.hudur : null}
+          title={project?.project?.title}
+          images={project?.project?.projectImages}
+          user={tabIndex === 0 ? project?.project?.user : null}
+          isLiked={project?.isLiked}
+          projectId={project?.project?.id}
         />
       </Animated.View>
       <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">

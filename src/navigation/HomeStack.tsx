@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator();
 export type HomeStackParamList = {
   Home: undefined;
   Search: undefined;
-  ProjectDetailsHudur: undefined;
+  ProjectDetailsHudur: {projectId?: number};
   ListerProfile: undefined;
   HudurProfile: undefined;
 };
