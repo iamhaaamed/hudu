@@ -13,3 +13,5 @@ export {default as SearchIcon} from './SearchIcon';
 export {default as StarIcon} from './StarIcon';
 export {default as StarIconFill} from './StarIconFill';
 export {default as AvatarIcon} from './AvatarIcon';
+export {default as SendIcon} from './SendIcon';
+export {default as LocationIcon} from './LocationIcon';

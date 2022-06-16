@@ -1,8 +1,7 @@
 import React, {forwardRef, useCallback, memo} from 'react';
 import {StyleSheet, FlatList} from 'react-native';
-import {HStack, Icon, Text, VStack} from 'native-base';
+import {HStack, Text, VStack} from 'native-base';
 import Animated from 'react-native-reanimated';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import dayjs from 'dayjs';
 import {Colors} from '~/styles';
 import images from '~/assets/images';
@@ -10,6 +9,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {CustomImage} from '~/components';
+import {LocationIcon} from '~/assets/icons';
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -87,11 +87,7 @@ const SectionDescriptionRouteLister = forwardRef(
           </HStack>
           <HStack alignItems="center" justifyContent="space-between">
             <HStack alignItems="center" space="1">
-              <Icon
-                as={<Ionicons name="location-outline" />}
-                color={Colors.PRIMARY}
-                size={scale(16)}
-              />
+              <LocationIcon />
               <Text
                 fontSize={scale(16)}
                 fontFamily={fontFamily.regular}

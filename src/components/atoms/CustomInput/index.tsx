@@ -96,7 +96,7 @@ export default React.forwardRef(
             <Text
               pl="2"
               pr="4"
-              left="6"
+              left="4"
               top="-12"
               zIndex={60}
               bg={Colors.WHITE}
@@ -141,7 +141,8 @@ export default React.forwardRef(
               style={[
                 inputStyle,
                 {
-                  paddingTop: textArea ? 15 : 5,
+                  paddingTop: textArea ? 15 : 0,
+                  paddingBottom: textArea ? 15 : 0,
                   fontSize: isFocused ? scale(12) : scale(14),
                   textAlignVertical: textArea ? 'top' : 'center',
                   color: color,
@@ -182,5 +183,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontFamily: fontFamily.regular,
+    height: '100%',
   },
 });
