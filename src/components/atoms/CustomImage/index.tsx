@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, Platform} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,6 +15,7 @@ const CustomImage = ({
   backgroundColor = Colors.GARY_1,
   local = false,
   children,
+  imageSourceArray,
 }: {
   imageSource?: any;
   style?: any;
@@ -23,8 +24,31 @@ const CustomImage = ({
   backgroundColor?: any;
   local?: boolean;
   children?: any;
+  imageSourceArray?: any;
 }) => {
   const [imageZoom, setImageZoom] = useState<boolean>(false);
+
+  const imageArray = useMemo(() => {
+    let imageItems = [];
+    if (imageSourceArray?.length > 0) {
+      imageSourceArray?.map((imageObject: any) => {
+        if (local) {
+          imageItems.push({
+            url: '',
+            props: {
+              source: imageObject,
+            },
+          });
+        } else {
+          imageItems.push({
+            uri: imageObject,
+            priority: FastImage.priority.high,
+          });
+        }
+      });
+    }
+    return imageItems;
+  }, [imageSourceArray]);
 
   const onPressHandler = () => {
     setImageZoom(true);
@@ -77,16 +101,20 @@ const CustomImage = ({
         </View>
         <ImageViewer
           enableSwipeDown
-          imageUrls={[
-            local
-              ? {
-                  url: '',
-                  props: {
-                    source: imageSource,
-                  },
-                }
-              : {url: imageSource},
-          ]}
+          imageUrls={
+            imageSourceArray
+              ? imageArray
+              : [
+                  local
+                    ? {
+                        url: '',
+                        props: {
+                          source: imageSource,
+                        },
+                      }
+                    : {url: imageSource},
+                ]
+          }
           onSwipeDown={oncloseZoomModal}
         />
       </ModalContainer>

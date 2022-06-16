@@ -8,10 +8,10 @@ import {CustomInput} from '~/components';
 import {fontFamily, scale} from '~/utils/style';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
-import Feather from 'react-native-vector-icons/Feather';
+import {SendIcon} from '~/assets/icons';
 
 const schema = yup.object().shape({
-  message: yup.string().required('required'),
+  message: yup.string(),
 });
 
 export const AnimatedFlatList: typeof FlatList =
@@ -96,13 +96,14 @@ const SectionQuestionRoute = forwardRef(
                   colorScheme={Colors.WHITE_RIPPLE_COLOR}
                   borderRadius="full"
                   icon={
-                    <Feather
-                      name="navigation"
-                      color={Colors.BLACK_3}
-                      size={24}
+                    <SendIcon
+                      fillColor={
+                        messageText?.length > 0
+                          ? Colors.PRIMARY
+                          : Colors.BLACK_1
+                      }
                     />
                   }
-                  style={{transform: [{rotate: '45deg'}]}}
                 />
               )}
             />

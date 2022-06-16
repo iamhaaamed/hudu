@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Box, HStack, IconButton, VStack, Text, Center} from 'native-base';
-import {CustomImage, RatingStar} from '~/components';
+import {CustomImage, RatingStar, CustomCarousel} from '~/components';
 import {goBack, navigate} from '~/navigation/Methods';
 import {Colors} from '~/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,7 +9,7 @@ import {fontFamily, scale, verticalScale} from '~/utils/style';
 
 export const PHOTO_SIZE = 120;
 
-const Header = ({title, image, user}: any) => {
+const Header = ({title, images, user}: any) => {
   const backOnPress = () => {
     goBack();
   };
@@ -22,12 +22,14 @@ const Header = ({title, image, user}: any) => {
 
   return (
     <VStack h={user ? verticalScale(396) : verticalScale(310)}>
-      <CustomImage
-        local
-        style={[styles.image]}
-        resizeMode="stretch"
-        imageSource={image}>
-        <HStack p="4" alignItems="center" justifyContent="space-between">
+      <VStack>
+        <HStack
+          w="100%"
+          position="absolute"
+          zIndex={4}
+          p="4"
+          alignItems="center"
+          justifyContent="space-between">
           <IconButton
             onPress={backOnPress}
             bg={Colors.WHITE_RIPPLE_COLOR}
@@ -47,7 +49,8 @@ const Header = ({title, image, user}: any) => {
             }
           />
         </HStack>
-      </CustomImage>
+        <CustomCarousel height={verticalScale(302)} data={images} />
+      </VStack>
       <Box
         bg={Colors.WHITE}
         w="100%"
@@ -116,10 +119,6 @@ const Header = ({title, image, user}: any) => {
 };
 
 const styles = StyleSheet.create({
-  image: {
-    width: '100%',
-    height: verticalScale(302),
-  },
   avatar: {
     height: scale(46),
     width: scale(46),

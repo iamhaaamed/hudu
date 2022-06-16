@@ -180,7 +180,7 @@ export default React.forwardRef(
               position="absolute"
               zIndex={400}
               top="-12"
-              left="6"
+              left="4"
               pl="2"
               pr="4"
               bg={Colors.WHITE}

@@ -29,7 +29,7 @@ const SectionUserRow = ({data}: {data: any}) => {
             fontSize={scale(14)}
             fontFamily={fontFamily.regular}
             color={Colors.BLACK_1}>
-            {data?.firstName}
+            {data?.userName}
           </Text>
           <RatingStar disabled showRating="right" rate={data?.averageRate} />
         </HStack>

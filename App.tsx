@@ -5,6 +5,7 @@ import {
   Platform,
   UIManager,
   StatusBar,
+  LogBox,
 } from 'react-native';
 import {NativeBaseProvider} from 'native-base';
 import AppNavigator from '~/navigation/AppNavigator';
@@ -17,6 +18,11 @@ import auth from '@react-native-firebase/auth';
 import {authStore, userDataStore} from '~/stores';
 import graphQLClient from 'src/graphql/graphQLClient';
 import {useSignOutAuth} from '~/hooks/user';
+
+LogBox.ignoreLogs([
+  'ViewPropTypes will be removed',
+  'ColorPropType will be removed',
+]);
 
 if (
   Platform.OS === 'android' &&

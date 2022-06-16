@@ -6,11 +6,9 @@ import {Colors} from '~/styles';
 export default function StarIconFill({
   size = scale(14),
   fillColor = Colors.GOLDEN,
-  backGroundColor = Colors.TAB_BAR_SHADOW,
 }: {
   size?: number;
   fillColor?: string;
-  backGroundColor?: string;
 }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 32.374 32.373">
