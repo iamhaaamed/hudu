@@ -286,7 +286,7 @@ const ProjectDetailsHudurScreen = () => {
       <Animated.View onLayout={handleHeaderLayout} style={headerContainerStyle}>
         <Header
           title={data?.title}
-          image={data?.images}
+          images={data?.images}
           user={tabIndex === 0 ? data?.hudur : null}
         />
       </Animated.View>

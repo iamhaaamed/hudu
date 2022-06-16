@@ -39,7 +39,7 @@ import {Colors} from '~/styles';
 
 const data = {
   title: 'Duct need cleaned out',
-  image: images.testImage1,
+  images: [images.testImage1, images.intro3],
   hudur: {
     name: 'Mary Olivia',
     email: 'aaa@gmail.com',
@@ -342,7 +342,7 @@ const ProjectDetailsListerScreen = () => {
       <Animated.View onLayout={handleHeaderLayout} style={headerContainerStyle}>
         <Header
           title={data?.title}
-          image={data?.image}
+          images={data?.images}
           user={tabIndex === 0 ? data?.hudur : null}
         />
       </Animated.View>
