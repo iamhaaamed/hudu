@@ -9,7 +9,7 @@ export default function EmptyData({text = 'No Result'}: {text?: string}) {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Center flex={1}>
         <Text
-          color={Colors.BLACK_3}
+          color={Colors.PLACEHOLDER}
           fontFamily={fontFamily.regular}
           fontSize={scale(16)}>
           {text}

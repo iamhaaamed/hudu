@@ -31,7 +31,7 @@ export default function StarRating({
       <HStack space="1" alignItems="center">
         {showRating === 'left' && (
           <Text
-            fontSize={size - 4}
+            fontSize={size - 2}
             fontFamily={fontFamily.regular}
             color={Colors.GARY_3}>
             {Math.round(rate).toFixed(1)}
@@ -44,12 +44,12 @@ export default function StarRating({
           count={5}
           half={false}
           spacing={spacing}
-          fullStar={<StarIconFill />}
-          emptyStar={<StarIcon />}
+          fullStar={<StarIconFill size={size} />}
+          emptyStar={<StarIcon size={size} />}
         />
         {showRating === 'right' && (
           <Text
-            fontSize={size - 4}
+            fontSize={size - 2}
             fontFamily={fontFamily.regular}
             color={Colors.GARY_3}>
             {Math.round(rate).toFixed(1)}

@@ -36,6 +36,7 @@ export const uploadFile = async (param: any) => {
       showMessage({
         message: JSON.stringify(error),
         type: 'danger',
+        icon: 'danger',
       });
       reject(error);
     }

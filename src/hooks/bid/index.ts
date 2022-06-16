@@ -84,7 +84,11 @@ export const useAcceptBid = () => {
       },
       onError: (errorData: any) => {
         console.log('bid_acceptBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -108,7 +112,11 @@ export const useRejectBid = () => {
       },
       onError: (errorData: any) => {
         console.log('bid_rejectBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -128,7 +136,11 @@ export const useAddBid = () => {
       },
       onError: (errorData: any) => {
         console.log('bid_addBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -152,7 +164,11 @@ export const useCancelBid = () => {
       },
       onError: (errorData: any) => {
         console.log('bid_cancellBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -176,7 +192,11 @@ export const useDeleteBid = () => {
       },
       onError: (errorData: any) => {
         console.log('bid_DeleteBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -196,7 +216,11 @@ export const useEditBid = () => {
       },
       onError: (errorData: any) => {
         console.log('bid_editBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );

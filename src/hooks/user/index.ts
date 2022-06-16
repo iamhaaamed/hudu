@@ -81,6 +81,7 @@ export const useSignUpAuth = () => {
         showMessage({
           message: errorMessage,
           type: 'danger',
+          icon: 'danger',
         });
       }
       return {data: null, error: errorData, loading: false};
@@ -112,6 +113,7 @@ export const useLoginAuth = () => {
         showMessage({
           message: errorMessage,
           type: 'danger',
+          icon: 'danger',
         });
       }
       return {data: null, error: errorData, loading: false};
@@ -135,6 +137,7 @@ export const useForgotPasswordAuth = () => {
           showMessage({
             message: 'Email sent successfully',
             type: 'success',
+            icon: 'success',
           });
           goBack();
           setIsSuccess(true);
@@ -151,6 +154,7 @@ export const useForgotPasswordAuth = () => {
             showMessage({
               message: errorMessage,
               type: 'danger',
+              icon: 'danger',
             });
           }
         });
@@ -202,6 +206,7 @@ export const useLogin = () => {
           showMessage({
             message: 'You are logged in successfully',
             type: 'success',
+            icon: 'success',
           });
           resetRoot('MainTabs');
         } else {
@@ -210,7 +215,11 @@ export const useLogin = () => {
       },
       onError: (errorData: any) => {
         console.log('user_loginError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -232,6 +241,7 @@ export const useSignUp = () => {
           showMessage({
             message: 'You have successfully registered',
             type: 'success',
+            icon: 'success',
           });
         } else {
           showMessage(getResponseMessage(successData.user_signUp?.status));
@@ -239,7 +249,11 @@ export const useSignUp = () => {
       },
       onError: (errorData: any) => {
         console.log('user_signUpError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -474,7 +488,11 @@ export const useUpdateLastSeen = () => {
       onSuccess: () => {},
       onError: (errorData: any) => {
         console.log('user_UpdateLastSeenError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -504,7 +522,11 @@ export const useUpdateProfile = () => {
       },
       onError: (errorData: any) => {
         console.log('user_updateProfileError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );

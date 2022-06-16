@@ -18,6 +18,7 @@ export default function ReviewsScreen(props: NavigationProp) {
 
   const move = (currentPage: number) =>
     viewPager?.current?.setPage(currentPage);
+
   return (
     <CustomContainer>
       <HStack
@@ -30,7 +31,7 @@ export default function ReviewsScreen(props: NavigationProp) {
           const isActive = index === page;
           return (
             <TouchableOpacity
-              key={`item${index}`}
+              key={item}
               style={styles.flex1}
               activeOpacity={0.7}
               onPress={() => move(index)}>
@@ -57,9 +58,9 @@ export default function ReviewsScreen(props: NavigationProp) {
         {tabData.map((item: any, index: number) => {
           switch (item) {
             case 'As lister':
-              return <SectionListerReviews key={index + 1} />;
+              return <SectionListerReviews key={`lister${index}`} />;
             case 'As HUDUr':
-              return <SectionHudurReviews key={index + 1} />;
+              return <SectionHudurReviews key={`hudur${index}`} />;
             default:
               return;
           }
