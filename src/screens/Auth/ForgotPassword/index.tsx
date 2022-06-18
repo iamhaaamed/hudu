@@ -40,8 +40,8 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
           contentContainerStyle={styles.contentContainerStyle}>
           <VStack px="4" pt="10" space="20">
             <Text fontSize="md">
-              Please write your email address that send a link for changing your
-              password
+              Please enter the email addresses linked to your HUDU account. A
+              link will be sent to reset your password.
             </Text>
             <VStack space="10">
               <CustomInput
