@@ -99,7 +99,7 @@ const SectionDescriptionRouteLister = forwardRef(
               fontSize={scale(16)}
               fontFamily={fontFamily.regular}
               color={Colors.BLACK_3}>
-              {dayjs('2022-06-07 11:25').toNow(true)}
+              {'12 minutes'}
             </Text>
           </HStack>
           <CustomImage
@@ -118,7 +118,6 @@ const SectionDescriptionRouteLister = forwardRef(
     return (
       <AnimatedFlatList
         ref={ref}
-        style={styles.container}
         ListHeaderComponent={ListHeaderComponent}
         renderItem={renderItem}
         keyExtractor={keyExtractor}

@@ -45,6 +45,7 @@ export {default as QuestionModal} from './molecules/QuestionModal';
 export {default as SectionReviewContainer} from './molecules/SectionReviewContainer';
 export {default as SectionRowSocial} from './molecules/SectionRowSocial';
 export {default as CustomCarousel} from './molecules/CustomCarousel';
+export {default as ActiveBidItem} from './molecules/ActiveBidItem';
 
 //organisms
 export {default as CustomTabBar} from './organisms/CustomTabBar';

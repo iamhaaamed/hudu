@@ -28,6 +28,43 @@ export const PROJECT_GET_PROJECT = gql`
             bidStatus
             amount
             description
+            hudu {
+              userName
+              imageAddress
+              averageRate
+              listersWhoRatedToMeCount
+              huduersWhoRatedToMeCount
+            }
+            lister {
+              userName
+              imageAddress
+              averageRate
+              listersWhoRatedToMeCount
+              huduersWhoRatedToMeCount
+            }
+          }
+          questions {
+            text
+            parentQuestion {
+              text
+            }
+            parentId
+            childrenQuestions {
+              text
+            }
+            user {
+              userName
+            }
+          }
+          user {
+            email
+            userName
+            imageAddress
+            firstName
+            lastName
+            averageRate
+            listersWhoRatedToMeCount
+            huduersWhoRatedToMeCount
           }
         }
         isLiked
@@ -103,6 +140,21 @@ export const PROJECT_GET_QUESTIONS = gql`
           id
           isDeleted
           createdDate
+          text
+          user {
+            userName
+            email
+            imageAddress
+            firstName
+          }
+          userId
+          parentId
+          parentQuestion {
+            text
+            user {
+              userName
+            }
+          }
         }
         pageInfo {
           hasNextPage

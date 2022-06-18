@@ -1,4 +1,4 @@
-import React, {useState, forwardRef, useCallback, memo} from 'react';
+import React, {useState, forwardRef, useCallback, memo, useMemo} from 'react';
 import {StyleSheet, FlatList} from 'react-native';
 import {HStack, Text, VStack} from 'native-base';
 import Animated from 'react-native-reanimated';
@@ -46,6 +46,19 @@ const SectionDescriptionRoute = forwardRef(
     }: any,
     ref,
   ) => {
+    const lowBid = useMemo(() => {
+      let res = -1;
+      if (data?.bids?.length > 0) {
+        res = Math.min.apply(
+          Math,
+          data?.bids?.map(function (object: any) {
+            return object?.amount;
+          }),
+        );
+      }
+      return res;
+    }, []);
+
     const [editModalVisible, setEditModalVisible] = useState(false);
 
     const closeEditModal = () => {
@@ -76,14 +89,18 @@ const SectionDescriptionRoute = forwardRef(
               fontSize={scale(16)}
               fontFamily={fontFamily.regular}
               color={Colors.BLACK_1}>
-              Current low bid
+              {data?.bids?.length > 0 && lowBid !== -1
+                ? 'Current low bid'
+                : 'Be the first bidder'}
             </Text>
-            <Text
-              fontSize={scale(16)}
-              fontFamily={fontFamily.regular}
-              color={Colors.PRIMARY}>
-              ${data?.lowBid}
-            </Text>
+            {data?.bids?.length > 0 && lowBid !== -1 && (
+              <Text
+                fontSize={scale(16)}
+                fontFamily={fontFamily.regular}
+                color={Colors.PRIMARY}>
+                ${lowBid}
+              </Text>
+            )}
           </HStack>
           <HStack alignItems="center" justifyContent="space-between">
             <Text
@@ -106,14 +123,14 @@ const SectionDescriptionRoute = forwardRef(
                 fontSize={scale(16)}
                 fontFamily={fontFamily.regular}
                 color={Colors.PRIMARY}>
-                {data?.location}
+                {data?.state}, {data?.city}
               </Text>
             </HStack>
             <Text
               fontSize={scale(16)}
               fontFamily={fontFamily.regular}
               color={Colors.BLACK_3}>
-              {dayjs('2022-06-07 11:25').toNow(true)}
+              {'12 minutes'}
             </Text>
           </HStack>
           <CustomImage
@@ -129,7 +146,7 @@ const SectionDescriptionRoute = forwardRef(
           />
         </VStack>
       ),
-      [],
+      [data],
     );
 
     const renderItem = () => <></>;
@@ -138,7 +155,6 @@ const SectionDescriptionRoute = forwardRef(
       <>
         <AnimatedFlatList
           ref={ref}
-          style={styles.container}
           ListHeaderComponent={ListHeaderComponent}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
