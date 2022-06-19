@@ -17,7 +17,7 @@ export type HomeStackParamList = {
   Search: undefined;
   ProjectDetailsHudur: {projectId?: number};
   ListerProfile: undefined;
-  HudurProfile: undefined;
+  HudurProfile: {userId?: number};
 };
 
 const publicScreenOption = {

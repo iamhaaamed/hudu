@@ -25,6 +25,7 @@ export const IMAGE_UPLOADER_BACKGROUND = '#E7EBEF';
 export const WHITE_RIPPLE_COLOR = 'rgba(252,252,253,0.75)';
 export const CANCEL_BUTTON = '#E6ACAD';
 export const INPUT_LABEL2 = '#707070';
+export const CANCEL_CARD_BACKGROUND = '#DCDFE6';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';

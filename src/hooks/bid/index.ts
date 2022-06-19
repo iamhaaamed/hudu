@@ -21,6 +21,7 @@ import {
   Bid_EditBidMutationVariables,
 } from '~/generated/graphql';
 import {showMessage} from 'react-native-flash-message';
+import {getResponseMessage} from '~/utils/helper';
 import {
   BID_ACCEPT_BID,
   BID_REJECT_BID,
@@ -132,6 +133,7 @@ export const useAddBid = () => {
       onSuccess: (successData: any) => {
         if (successData?.bid_addBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_addBid?.status));
         }
       },
       onError: (errorData: any) => {
@@ -160,6 +162,7 @@ export const useCancelBid = () => {
       onSuccess: (successData: any) => {
         if (successData?.bid_cancellBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
         }
       },
       onError: (errorData: any) => {

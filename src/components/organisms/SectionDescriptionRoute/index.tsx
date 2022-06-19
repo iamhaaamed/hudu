@@ -11,6 +11,8 @@ import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {CustomButton, CustomImage, EditModal} from '~/components';
 import {LocationIcon} from '~/assets/icons';
 import {useAddBid} from '~/hooks/bid';
+import {authStore} from '~/stores';
+import {navigate} from '~/navigation/Methods';
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -47,6 +49,8 @@ const SectionDescriptionRoute = forwardRef(
     }: any,
     ref,
   ) => {
+    const {isUserLoggedIn} = authStore(state => state);
+
     const {mutate: mutateAddBid, isLoading: addBidLoading} = useAddBid();
 
     const lowBid = useMemo(() => {
@@ -69,19 +73,27 @@ const SectionDescriptionRoute = forwardRef(
     };
 
     const submitEditModal = (formData: any) => {
-      console.log({formData});
-      // mutateAddBid(
-      //   {},
-      //   {
-      //     onSuccess: (successData: any) => {},
-      //     onError: (errorData: any) => {},
-      //   },
-      // );
-      //setEditModalVisible(false);
+      const input = {
+        description: formData?.description,
+        projectId: data?.id,
+        amount: formData?.amount,
+      };
+      mutateAddBid(input, {
+        onSuccess: () => {
+          setEditModalVisible(false);
+        },
+        onError: () => {
+          setEditModalVisible(false);
+        },
+      });
     };
 
     const submitBidOnPress = () => {
-      setEditModalVisible(true);
+      if (isUserLoggedIn) {
+        setEditModalVisible(true);
+      } else {
+        navigate('AuthStack');
+      }
     };
 
     const keyExtractor = useCallback((_, index: number) => `key${index}`, []);

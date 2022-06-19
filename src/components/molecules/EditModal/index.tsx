@@ -14,8 +14,8 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  amount: yup.number().required('required'),
-  describe: yup.string().required('required'),
+  amount: yup.number().required('required').nullable(),
+  description: yup.string().required('required').nullable(),
 });
 
 const EditModal = ({
@@ -56,6 +56,7 @@ const EditModal = ({
         <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
           <ModalHeader text={title} />
           <CustomInput
+            autoFocus
             {...register('amount')}
             label="Bid amount"
             placeholder="0"
@@ -65,7 +66,7 @@ const EditModal = ({
             {...{formState}}
           />
           <CustomInput
-            {...register('describe')}
+            {...register('description')}
             label="Describe your proposal"
             placeholder="Enter Describe your proposal"
             backgroundColor={Colors.WHITE}

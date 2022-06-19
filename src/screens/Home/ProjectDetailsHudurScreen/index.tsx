@@ -251,11 +251,19 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
         ref={QuestionRef}
         data={questions}
         listerId={project?.project?.userId}
+        projectId={projectId}
         onScroll={suggestionsScrollHandler}
         {...sharedProps}
       />
     ),
-    [QuestionRef, suggestionsScrollHandler, sharedProps, questions, project],
+    [
+      QuestionRef,
+      suggestionsScrollHandler,
+      sharedProps,
+      questions,
+      project,
+      projectId,
+    ],
   );
 
   const renderActiveBids = useCallback(

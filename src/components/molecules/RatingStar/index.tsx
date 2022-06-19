@@ -13,6 +13,7 @@ export default function StarRating({
   onChange,
   showRating,
   total,
+  fillColor = Colors.GOLDEN,
 }: {
   rate: number;
   disabled?: boolean;
@@ -21,6 +22,7 @@ export default function StarRating({
   onChange?: any;
   showRating?: 'right' | 'left';
   total?: number;
+  fillColor?: any;
 }) {
   const onChangeHandler = (value: number) => {
     onChange?.(value);
@@ -44,7 +46,7 @@ export default function StarRating({
           count={5}
           half={false}
           spacing={spacing}
-          fullStar={<StarIconFill size={size} />}
+          fullStar={<StarIconFill fillColor={fillColor} size={size} />}
           emptyStar={<StarIcon size={size} />}
         />
         {showRating === 'right' && (
