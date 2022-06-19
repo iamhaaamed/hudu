@@ -33,60 +33,9 @@ import {
   Header,
 } from '~/components';
 import {verticalScale} from '~/utils/style';
-import images from '~/assets/images';
 import {Colors} from '~/styles';
 import {useGetProject, useGetQuestions} from '~/hooks/project';
 import {useGetBids} from '~/hooks/bid';
-
-const data = {
-  title: 'Duct need cleaned out',
-  images: [images.testImage1, images.intro2],
-  hudur: {
-    name: 'Mary Olivia',
-    email: 'aaa@gmail.com',
-    rating: 4,
-    totalReviews: 200,
-    image: images.testImage1,
-  },
-  description: {
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    lowBid: 100,
-    timeLeft: '3Days:3H:23M:20S',
-    location: 'Grimes , IA',
-    howLong: '12 Minutes',
-  },
-  questions: [
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
-  ],
-  activeBids: [
-    {
-      id: 1,
-      name: 'BCcontracting',
-      note: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-      bidAmount: 150,
-      rating: 3,
-      totalReviews: 130,
-      image: images.testImage1,
-    },
-    {
-      id: 3,
-      name: 'You',
-      note: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-      bidAmount: 180,
-      rating: 4,
-      totalReviews: 170,
-      image: images.testImage1,
-    },
-  ],
-};
 
 const TAB_BAR_HEIGHT = verticalScale(35);
 const HEADER_HEIGHT = 0;

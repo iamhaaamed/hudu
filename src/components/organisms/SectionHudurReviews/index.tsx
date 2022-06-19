@@ -28,8 +28,6 @@ const SectionHudurReviews = () => {
 
   const hudurReviews = getHudurReviews?.pages ?? [];
 
-  console.log(hudurReviews);
-
   const onLoadMore = () => {
     if (hasNextPageHudurReviews) {
       fetchNextPageHudurReviews();

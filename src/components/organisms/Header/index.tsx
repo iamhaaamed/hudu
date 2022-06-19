@@ -27,7 +27,7 @@ const Header = ({title, images, user, isLiked, projectId}: any) => {
   };
 
   const listerProfileOnPress = () => {
-    navigate('ListerProfile');
+    navigate('ListerProfile', {userId: user?.id});
   };
 
   return (
