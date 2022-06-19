@@ -27,6 +27,7 @@ export default React.forwardRef(
       height = verticalScale(45),
       labelFontSize = scale(14),
       fontSize = scale(14),
+      autoFocus,
     }: {
       name: any;
       placeholder?: string;
@@ -60,6 +61,7 @@ export default React.forwardRef(
       isHorizontal?: boolean;
       labelFontSize?: number;
       fontSize?: number;
+      autoFocus?: boolean;
     },
     ref: any,
   ) => {
@@ -125,6 +127,7 @@ export default React.forwardRef(
             justifyContent="center"
             borderColor={borderColor}>
             <TextInput
+              autoFocus={autoFocus}
               ref={ref}
               value={field.value}
               onFocus={handleFocus}
