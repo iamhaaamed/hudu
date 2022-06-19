@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Colors} from '~/styles';
 import {useController} from 'react-hook-form';
-import {fontFamily, scale} from '~/utils/style';
+import {fontFamily, scale, verticalScale} from '~/utils/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput, Platform, StyleSheet, TextStyle} from 'react-native';
 import {FormControl, Text, HStack, Box, Icon} from 'native-base';
@@ -24,7 +24,9 @@ export default React.forwardRef(
       formState,
       validation = false,
       isHorizontal = false,
-      height,
+      height = verticalScale(45),
+      labelFontSize = scale(14),
+      fontSize = scale(14),
     }: {
       name: any;
       placeholder?: string;
@@ -56,6 +58,8 @@ export default React.forwardRef(
       validation?: boolean;
       height?: number;
       isHorizontal?: boolean;
+      labelFontSize?: number;
+      fontSize?: number;
     },
     ref: any,
   ) => {
@@ -101,7 +105,7 @@ export default React.forwardRef(
               zIndex={60}
               bg={Colors.WHITE}
               position="absolute"
-              fontSize={scale(14)}
+              fontSize={labelFontSize}
               fontFamily={fontFamily.regular}
               color={
                 field.value || fieldState.error || disabled
@@ -112,7 +116,7 @@ export default React.forwardRef(
             </Text>
           )}
           <HStack
-            h={height}
+            h={textArea ? undefined : height}
             px="2"
             borderWidth="0.7"
             borderRadius="md"
@@ -143,7 +147,7 @@ export default React.forwardRef(
                 {
                   paddingTop: textArea ? 15 : 0,
                   paddingBottom: textArea ? 15 : 0,
-                  fontSize: isFocused ? scale(12) : scale(14),
+                  fontSize: isFocused ? fontSize - 2 : fontSize,
                   textAlignVertical: textArea ? 'top' : 'center',
                   color: color,
                 },
@@ -159,7 +163,7 @@ export default React.forwardRef(
             )}
             {rightText && (
               <Text
-                fontSize={scale(14)}
+                fontSize={fontSize}
                 fontFamily={fontFamily.regular}
                 color={disabled ? Colors.DISABLE_COLOR : Colors.RIGHT_TEXT}>
                 {rightText}

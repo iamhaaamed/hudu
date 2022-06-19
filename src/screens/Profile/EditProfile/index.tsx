@@ -15,6 +15,7 @@ import {
   CustomKeyboardAwareScrollView,
 } from '~/components';
 import {useGetProfile, useUpdateProfile} from '~/hooks/user';
+import {useGetLocation} from '~/hooks/location';
 
 const stateData = [
   {id: 0, title: 'California', value: 'california'},
@@ -48,6 +49,9 @@ export default function EditProfileScreen() {
     enabled: isUserLoggedIn,
   });
 
+  const {mutate: getLocationMutate, isLoading: getLocationLoading} =
+    useGetLocation();
+
   const profile = getProfile?.user_getProfile?.result ?? {};
 
   const {mutate: mutateUpdate, isLoading: updateLoading} = useUpdateProfile();
@@ -75,25 +79,34 @@ export default function EditProfileScreen() {
   }, [profile]);
 
   const onEdit = async (formData: any) => {
-    const input = {
-      imageAddress: formData?.imageAddress,
-      firstName: formData?.firstName,
-      lastName: formData?.lastName,
-      userName: formData?.userName,
-      bio: formData?.bio,
-      city: formData?.city,
-      state: formData?.state,
-      zipCode: formData?.zipCode,
-      point: [40.73254, -74.368358],
-      id: userData?.id,
-    };
-    mutateUpdate(input, {
-      onSuccess: (successData: any) => {},
-      onError: (errorData: any) => {},
+    getLocationMutate(formData?.zipCode, {
+      onSuccess: (success: any) => {
+        if (success?.status === 1) {
+          const lat = parseFloat(success?.output?.[0]?.latitude);
+          const long = parseFloat(success?.output?.[0]?.longitude);
+          const input = {
+            imageAddress: formData?.imageAddress,
+            firstName: formData?.firstName,
+            lastName: formData?.lastName,
+            userName: formData?.userName,
+            bio: formData?.bio,
+            city: formData?.city,
+            state: formData?.state,
+            zipCode: formData?.zipCode,
+            streetAddress: formData?.streetAddress,
+            point: [lat, long],
+            id: userData?.id,
+          };
+          mutateUpdate(input, {
+            onSuccess: (successData: any) => {},
+            onError: (errorData: any) => {},
+          });
+        }
+      },
     });
   };
 
-  const loading = updateLoading || getProfileLoading;
+  const loading = updateLoading || getProfileLoading || getLocationLoading;
 
   return (
     <CustomContainer isLoading={loading}>

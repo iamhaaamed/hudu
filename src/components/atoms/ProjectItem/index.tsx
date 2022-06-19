@@ -21,7 +21,7 @@ const ProjectItem = ({item}: {item?: any}) => {
   }, []);
 
   const onPressHandler = () => {
-    navigate('ProjectDetailsHudur');
+    navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
   };
 
   return (

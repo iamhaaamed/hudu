@@ -64,9 +64,9 @@ export const useGetProject = (options: any = {}) => {
     Project_GetProjectQueryVariables,
     any
   >(
-    [queryKeys.project],
+    [queryKeys.project, options],
     async () => {
-      return graphQLClient.request(PROJECT_GET_PROJECT);
+      return graphQLClient.request(PROJECT_GET_PROJECT, options);
     },
     {
       ...options,
@@ -402,6 +402,7 @@ export const useProjectLike = () => {
       onSuccess: (successData: any) => {
         if (successData?.project_like?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.project);
           queryClient.invalidateQueries(queryKeys.userLikeProjects);
         }
       },
@@ -461,6 +462,7 @@ export const useProjectUnLike = () => {
       onSuccess: (successData: any) => {
         if (successData?.project_unlike?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.project);
           queryClient.invalidateQueries(queryKeys.userLikeProjects);
         }
       },

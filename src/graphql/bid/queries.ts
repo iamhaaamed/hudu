@@ -31,6 +31,14 @@ export const BID_GET_BIDS = gql`
             lastName
             id
           }
+          hudu {
+            userName
+            imageAddress
+            averageRate
+            listersWhoRatedToMeCount
+            huduersWhoRatedToMeCount
+            id
+          }
         }
         pageInfo {
           hasNextPage

@@ -35,6 +35,8 @@ const SectionQuestionRoute = forwardRef(
       mode: 'onChange',
     });
 
+    console.log({data});
+
     const {handleSubmit, register, watch, formState} = methods;
 
     const sendOnPress = () => {};

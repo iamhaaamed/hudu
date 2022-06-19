@@ -56,7 +56,12 @@ const PostScreen = ({navigation}: NavigationProp) => {
   const availability = watch('availability');
 
   const previewOnPress = (formData: any) => {
-    navigation.navigate('PreviewPost', {params: formData});
+    if (availability !== 'SPECIFIC_TIME') {
+      const input = {...formData, duration: 0};
+      navigation.navigate('PreviewPost', {params: input});
+    } else {
+      navigation.navigate('PreviewPost', {params: formData});
+    }
   };
 
   return (
@@ -85,7 +90,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
               />
               <CustomPicker
                 {...register('availability')}
-                label="Expectation for Project Completion"
+                label="Availability to complete project"
                 data={availabilityData}
                 placeholder="Select"
                 height={verticalScale(45)}
@@ -94,11 +99,13 @@ const PostScreen = ({navigation}: NavigationProp) => {
               {availability && availability === 'SPECIFIC_TIME' && (
                 <CustomInput
                   {...register('duration')}
+                  //placeholder="Please list what days and times the project can be completed"
                   placeholder="Duration"
                   keyboardType="numeric"
-                  rightText="Day"
                   backgroundColor={Colors.WHITE}
                   inputStyle={styles.input}
+                  //fontSize={scale(10)}
+                  //labelFontSize={scale(10)}
                   {...{formState}}
                 />
               )}

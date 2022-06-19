@@ -1,7 +1,12 @@
-import React, {memo} from 'react';
+import React, {memo, useMemo} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Box, HStack, IconButton, VStack, Text, Center} from 'native-base';
-import {CustomImage, RatingStar, CustomCarousel} from '~/components';
+import {
+  CustomImage,
+  RatingStar,
+  CustomCarousel,
+  ProjectFavoriteIcon,
+} from '~/components';
 import {goBack, navigate} from '~/navigation/Methods';
 import {Colors} from '~/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,12 +14,17 @@ import {fontFamily, scale, verticalScale} from '~/utils/style';
 
 export const PHOTO_SIZE = 120;
 
-const Header = ({title, images, user}: any) => {
+const Header = ({title, images, user, isLiked, projectId}: any) => {
+  const totalReview = useMemo(() => {
+    const listerCounts = user?.listersWhoRatedToMeCount;
+    const hudurCounts = user?.huduersWhoRatedToMeCount;
+    const reviews = Number(listerCounts) + Number(hudurCounts);
+    return reviews ? reviews : 0;
+  }, [user]);
+
   const backOnPress = () => {
     goBack();
   };
-
-  const favoriteOnPress = () => {};
 
   const listerProfileOnPress = () => {
     navigate('ListerProfile');
@@ -39,15 +49,7 @@ const Header = ({title, images, user}: any) => {
               <Ionicons name="chevron-back" color={Colors.BLACK_3} size={24} />
             }
           />
-          <IconButton
-            onPress={favoriteOnPress}
-            bg={Colors.WHITE_RIPPLE_COLOR}
-            colorScheme={Colors.WHITE_RIPPLE_COLOR}
-            borderRadius="full"
-            icon={
-              <Ionicons name="heart-outline" color={Colors.BLACK_3} size={24} />
-            }
-          />
+          <ProjectFavoriteIcon {...{isLiked, projectId, size: 24}} />
         </HStack>
         <CustomCarousel height={verticalScale(302)} data={images} />
       </VStack>
@@ -81,34 +83,22 @@ const Header = ({title, images, user}: any) => {
               style={styles.profileRow}>
               <HStack space="4">
                 <CustomImage
-                  local
-                  imageSource={user?.image}
+                  imageSource={user?.imageAddress}
                   style={styles.avatar}
                   resizeMode="stretch"
                 />
-                <VStack space="0.5" flex={1}>
-                  <Text
-                    fontSize={scale(16)}
-                    color={Colors.BLACK_1}
-                    fontFamily={fontFamily.medium}>
-                    {user?.name}
-                  </Text>
-                  <Text
-                    fontSize={scale(12)}
-                    color={Colors.PLACEHOLDER}
-                    fontFamily={fontFamily.regular}>
-                    {user?.email}
-                  </Text>
-                </VStack>
-                <VStack space="0.5" alignItems="center">
-                  <RatingStar rate={user?.rating} showRating="right" />
-                  <Text
-                    fontSize={scale(10)}
-                    color={Colors.PLACEHOLDER}
-                    fontFamily={fontFamily.regular}>
-                    {`(${user?.totalReviews} review)`}
-                  </Text>
-                </VStack>
+                <Text
+                  flex={1}
+                  fontSize={scale(16)}
+                  color={Colors.BLACK_1}
+                  fontFamily={fontFamily.medium}>
+                  {user?.userName}
+                </Text>
+                <RatingStar
+                  rate={user?.averageRate}
+                  showRating="right"
+                  total={totalReview}
+                />
               </HStack>
             </TouchableOpacity>
           </Center>

@@ -19,6 +19,7 @@ export default function AuthScreen({navigation}: NavigationProp) {
           style={styles.image}
           resizeMode="stretch"
           imageSource={images.huduLogo}
+          backgroundColor={Colors.TRANSPARENT}
         />
         <VStack width="full" px="4" space="6">
           <CustomButton

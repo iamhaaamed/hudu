@@ -42,7 +42,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   };
 
   const questionHandler = () => {
-    navigation.navigate('ProfileStack', {screen: 'Support'});
+    navigation.navigate('AuthStack', {screen: 'Support'});
   };
 
   const loading = getProfileLoading || getProjectLoading;

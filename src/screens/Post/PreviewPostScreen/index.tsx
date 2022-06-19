@@ -133,7 +133,7 @@ const PreviewPostScreen = ({navigation, route}: any) => {
                 fontSize={scale(16)}
                 fontFamily={fontFamily.regular}
                 color={Colors.BLACK_1}>
-                {params?.expectation}
+                {params?.availability}
               </Text>
             </HStack>
             <Text
