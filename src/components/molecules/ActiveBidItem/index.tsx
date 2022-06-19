@@ -30,7 +30,7 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
   const currentUser = userData?.id === item?.huduId;
 
   const onPressHandler = () => {
-    navigate('HudurProfile');
+    navigate('HudurProfile', {userId: item?.huduId});
   };
 
   console.log({item});
@@ -89,7 +89,7 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
               <VStack alignItems="center">
                 <RatingStar
                   size={14}
-                  rate={item?.rating}
+                  rate={item?.hudu?.averageRate}
                   showRating="right"
                   total={totalReview}
                   disabled

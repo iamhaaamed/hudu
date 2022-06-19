@@ -8,6 +8,7 @@ import {CustomInput, QuestionItem} from '~/components';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {SendIcon} from '~/assets/icons';
+import {authStore} from '~/stores';
 
 const schema = yup.object().shape({
   message: yup.string(),
@@ -30,6 +31,8 @@ const SectionQuestionRoute = forwardRef(
     }: any,
     ref,
   ) => {
+    const {isUserLoggedIn} = authStore(state => state);
+
     const {...methods} = useForm<Record<string, any>, object>({
       resolver: yupResolver<yup.AnyObjectSchema>(schema),
       mode: 'onChange',
@@ -69,32 +72,34 @@ const SectionQuestionRoute = forwardRef(
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={ItemSeparatorComponent}
         />
-        <VStack px="4" py="4">
-          <FormProvider {...methods}>
-            <CustomInput
-              {...register('message')}
-              placeholder="Cannot find your question? Type it here"
-              backgroundColor={Colors.WHITE}
-              {...{formState}}
-              rightComponent={() => (
-                <IconButton
-                  onPress={sendOnPress}
-                  colorScheme={Colors.WHITE_RIPPLE_COLOR}
-                  borderRadius="full"
-                  icon={
-                    <SendIcon
-                      fillColor={
-                        messageText?.length > 0
-                          ? Colors.PRIMARY
-                          : Colors.BLACK_1
-                      }
-                    />
-                  }
-                />
-              )}
-            />
-          </FormProvider>
-        </VStack>
+        {isUserLoggedIn && (
+          <VStack px="4" py="4">
+            <FormProvider {...methods}>
+              <CustomInput
+                {...register('message')}
+                placeholder="Cannot find your question? Type it here"
+                backgroundColor={Colors.WHITE}
+                {...{formState}}
+                rightComponent={() => (
+                  <IconButton
+                    onPress={sendOnPress}
+                    colorScheme={Colors.WHITE_RIPPLE_COLOR}
+                    borderRadius="full"
+                    icon={
+                      <SendIcon
+                        fillColor={
+                          messageText?.length > 0
+                            ? Colors.PRIMARY
+                            : Colors.BLACK_1
+                        }
+                      />
+                    }
+                  />
+                )}
+              />
+            </FormProvider>
+          </VStack>
+        )}
       </VStack>
     );
   },
