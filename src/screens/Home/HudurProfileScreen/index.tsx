@@ -119,7 +119,7 @@ const HudurProfileScreen = ({navigation, route}: any) => {
             </Text>
             <VStack alignItems="flex-end">
               <RatingStar
-                size={14}
+                size={12}
                 rate={profile?.averageRate}
                 showRating="right"
                 disabled
@@ -144,52 +144,54 @@ const HudurProfileScreen = ({navigation, route}: any) => {
           color={Colors.BLACK_1}>
           Reviews
         </Text>
-        <VStack
-          space="2"
-          m="4"
-          px="4"
-          py="4"
-          borderRadius="lg"
-          shadow="2"
-          bg={Colors.WHITE}>
-          {listerReviews?.map((itm: any, indx: number) => {
-            if (itm?.listersComment) {
-              return (
-                <VStack key={indx}>
-                  <HStack>
-                    <Text
-                      flex={0.15}
-                      numberOfLines={1}
-                      fontSize={scale(12)}
-                      color={Colors.BLACK_1}
-                      fontFamily={fontFamily.regular}>
-                      {itm?.lister?.userName ?? 'Lister'} :
-                    </Text>
-                    <HStack space="1" flex={0.85}>
+        {listerReviews?.length > 0 && (
+          <VStack
+            space="2"
+            m="4"
+            px="4"
+            py="4"
+            borderRadius="lg"
+            shadow="2"
+            bg={Colors.WHITE}>
+            {listerReviews?.map((itm: any, indx: number) => {
+              if (itm?.listersComment) {
+                return (
+                  <VStack key={indx}>
+                    <HStack>
                       <Text
-                        flex={1}
+                        flex={0.15}
+                        numberOfLines={1}
                         fontSize={scale(12)}
-                        color={Colors.PLACEHOLDER}
+                        color={Colors.BLACK_1}
                         fontFamily={fontFamily.regular}>
-                        {itm?.listersComment}
+                        {itm?.lister?.userName ?? 'Lister'} :
                       </Text>
-                      <VStack space="1">
-                        <RatingStar
-                          rate={itm?.listersRate}
-                          showRating="right"
-                          disabled
-                          size={12}
-                        />
-                      </VStack>
+                      <HStack space="1" flex={0.85}>
+                        <Text
+                          flex={1}
+                          fontSize={scale(12)}
+                          color={Colors.PLACEHOLDER}
+                          fontFamily={fontFamily.regular}>
+                          {itm?.listersComment}
+                        </Text>
+                        <VStack space="1">
+                          <RatingStar
+                            rate={itm?.listersRate}
+                            showRating="right"
+                            disabled
+                            size={12}
+                          />
+                        </VStack>
+                      </HStack>
                     </HStack>
-                  </HStack>
-                  {indx < listerReviews?.length - 1 && <Divider my="2" />}
-                </VStack>
-              );
-            }
-            return null;
-          })}
-        </VStack>
+                    {indx < listerReviews?.length - 1 && <Divider my="2" />}
+                  </VStack>
+                );
+              }
+              return null;
+            })}
+          </VStack>
+        )}
       </ScrollView>
     </CustomContainer>
   );

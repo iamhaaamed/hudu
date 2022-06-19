@@ -16,7 +16,7 @@ export type HomeStackParamList = {
   Home: undefined;
   Search: undefined;
   ProjectDetailsHudur: {projectId?: number};
-  ListerProfile: undefined;
+  ListerProfile: {userId?: number};
   HudurProfile: {userId?: number};
 };
 
