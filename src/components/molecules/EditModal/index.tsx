@@ -14,8 +14,8 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  amount: yup.number().required('required'),
-  description: yup.string().required('required'),
+  amount: yup.number().required('required').nullable(),
+  description: yup.string().required('required').nullable(),
 });
 
 const EditModal = ({

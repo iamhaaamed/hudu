@@ -162,6 +162,7 @@ export const useCancelBid = () => {
       onSuccess: (successData: any) => {
         if (successData?.bid_cancellBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
         }
       },
       onError: (errorData: any) => {

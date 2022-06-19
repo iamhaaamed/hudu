@@ -30,8 +30,8 @@ const SectionActiveBidsRoute = forwardRef(
         ref={ref}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        data={data}
         {...{
+          data,
           onScroll,
           contentContainerStyle,
           onMomentumScrollEnd,
