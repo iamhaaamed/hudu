@@ -10,6 +10,7 @@ import updateLocale from 'dayjs/plugin/updateLocale';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {CustomButton, CustomImage, EditModal} from '~/components';
 import {LocationIcon} from '~/assets/icons';
+import {useAddBid} from '~/hooks/bid';
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -46,6 +47,8 @@ const SectionDescriptionRoute = forwardRef(
     }: any,
     ref,
   ) => {
+    const {mutate: mutateAddBid, isLoading: addBidLoading} = useAddBid();
+
     const lowBid = useMemo(() => {
       let res = -1;
       if (data?.bids?.length > 0) {
@@ -65,8 +68,16 @@ const SectionDescriptionRoute = forwardRef(
       setEditModalVisible(false);
     };
 
-    const submitEditModal = () => {
-      setEditModalVisible(false);
+    const submitEditModal = (formData: any) => {
+      console.log({formData});
+      // mutateAddBid(
+      //   {},
+      //   {
+      //     onSuccess: (successData: any) => {},
+      //     onError: (errorData: any) => {},
+      //   },
+      // );
+      //setEditModalVisible(false);
     };
 
     const submitBidOnPress = () => {
@@ -174,6 +185,7 @@ const SectionDescriptionRoute = forwardRef(
           onClose={closeEditModal}
           onSubmit={submitEditModal}
           title="Bid details"
+          loading={addBidLoading}
         />
       </>
     );

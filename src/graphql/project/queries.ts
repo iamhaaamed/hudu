@@ -149,7 +149,8 @@ export const PROJECT_GET_QUESTIONS = gql`
           }
           userId
           parentId
-          parentQuestion {
+          childrenQuestions {
+            userId
             text
             user {
               userName

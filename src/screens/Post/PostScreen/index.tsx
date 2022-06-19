@@ -14,14 +14,11 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
+import {stateList} from '~/constants/mockData';
 
 const availabilityData = [
   {id: 0, title: 'Specific time', value: 'SPECIFIC_TIME'},
   {id: 1, title: 'Flexible', value: 'FLEXIBLE'},
-];
-const stateData = [
-  {id: 0, title: 'California', value: 'california'},
-  {id: 1, title: 'Texas', value: 'texas'},
 ];
 
 const schema = yup.object().shape({
@@ -130,11 +127,13 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 <Center flex={1}>
                   <CustomPicker
                     {...register('state')}
-                    data={stateData}
+                    data={stateList}
                     placeholder="State"
                     height={verticalScale(45)}
                     textStyle={styles.input}
                     isHorizontal
+                    valueKey="title"
+                    titleKey="title"
                   />
                 </Center>
               </HStack>

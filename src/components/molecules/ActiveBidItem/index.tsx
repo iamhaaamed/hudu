@@ -51,7 +51,7 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
               fontSize={scale(14)}
               fontFamily={fontFamily.medium}
               color={Colors.BLACK_1}>
-              {currentUser ? 'you' : item?.hudu?.userName}
+              {currentUser ? 'you' : item?.hudu?.userName ?? 'Hudur'}
             </Text>
             <VStack alignItems="center">
               <RatingStar

@@ -42,6 +42,8 @@ export default React.forwardRef(
       formState,
       isHorizontal = false,
       validation = false,
+      valueKey = 'value',
+      titleKey = 'title',
     }: {
       name: any;
       data: any;
@@ -68,6 +70,8 @@ export default React.forwardRef(
       formState?: any;
       isHorizontal?: boolean;
       validation?: boolean;
+      valueKey?: string;
+      titleKey?: string;
     },
     ref: any,
   ) => {
@@ -119,12 +123,12 @@ export default React.forwardRef(
 
     const getName = (value: string) => {
       const item = data.find((element: any) => element.value === value);
-      return item?.title;
+      return item?.[titleKey];
     };
 
     const itemOnPress = (item: any) => {
       setVisible(false);
-      field.onChange?.(item?.value);
+      field.onChange?.(item?.[valueKey]);
     };
 
     const borderColor = fieldState.error
@@ -136,7 +140,7 @@ export default React.forwardRef(
       : Colors.BORDER_COLOR;
 
     const renderItem = ({item, index}: {item: any; index: number}) => {
-      const isEnable = item?.value === field.value;
+      const isEnable = item?.[valueKey] === field.value;
       return (
         <Box
           key={index + 1}
@@ -145,11 +149,11 @@ export default React.forwardRef(
             activeOpacity={0.7}
             onPress={() => itemOnPress(item)}>
             <VStack p="2">
-              {item?.title && (
+              {item?.[titleKey] && (
                 <Text
                   style={textStyle}
                   color={isEnable ? Colors.WHITE : Colors.BLACK_2}>
-                  {item?.title}
+                  {item?.[titleKey]}
                 </Text>
               )}
               {item?.subtitle && (
