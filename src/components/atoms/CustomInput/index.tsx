@@ -25,6 +25,8 @@ export default React.forwardRef(
       validation = false,
       isHorizontal = false,
       height = verticalScale(45),
+      labelFontSize = scale(14),
+      fontSize = scale(14),
     }: {
       name: any;
       placeholder?: string;
@@ -56,6 +58,8 @@ export default React.forwardRef(
       validation?: boolean;
       height?: number;
       isHorizontal?: boolean;
+      labelFontSize?: number;
+      fontSize?: number;
     },
     ref: any,
   ) => {
@@ -101,7 +105,7 @@ export default React.forwardRef(
               zIndex={60}
               bg={Colors.WHITE}
               position="absolute"
-              fontSize={scale(14)}
+              fontSize={labelFontSize}
               fontFamily={fontFamily.regular}
               color={
                 field.value || fieldState.error || disabled
@@ -143,7 +147,7 @@ export default React.forwardRef(
                 {
                   paddingTop: textArea ? 15 : 0,
                   paddingBottom: textArea ? 15 : 0,
-                  fontSize: isFocused ? scale(12) : scale(14),
+                  fontSize: isFocused ? fontSize - 2 : fontSize,
                   textAlignVertical: textArea ? 'top' : 'center',
                   color: color,
                 },
@@ -159,7 +163,7 @@ export default React.forwardRef(
             )}
             {rightText && (
               <Text
-                fontSize={scale(14)}
+                fontSize={fontSize}
                 fontFamily={fontFamily.regular}
                 color={disabled ? Colors.DISABLE_COLOR : Colors.RIGHT_TEXT}>
                 {rightText}
