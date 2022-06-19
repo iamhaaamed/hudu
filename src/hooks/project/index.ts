@@ -56,6 +56,7 @@ import {
   PROJECT_UNLIKE,
 } from '~/graphql/project/mutations';
 import {showMessage} from 'react-native-flash-message';
+import {getResponseMessage} from '~/utils/helper';
 
 export const useGetProject = (options: any = {}) => {
   const res = useQuery<
@@ -283,6 +284,9 @@ export const useAddQuestion = () => {
         if (
           successData?.project_addQuestion?.status === ResponseStatus.Success
         ) {
+          showMessage(
+            getResponseMessage(successData?.project_addQuestion?.status),
+          );
           queryClient.invalidateQueries(queryKeys.questions);
         }
       },

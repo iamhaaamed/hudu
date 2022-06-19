@@ -4,11 +4,13 @@ import {Box, IconButton, VStack} from 'native-base';
 import Animated from 'react-native-reanimated';
 import * as yup from 'yup';
 import {Colors} from '~/styles';
-import {CustomInput, QuestionItem} from '~/components';
+import {CustomInput, QuestionItem, CustomLoading} from '~/components';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {SendIcon} from '~/assets/icons';
 import {authStore} from '~/stores';
+import {useAddQuestion} from '~/hooks/project';
+import {ResponseStatus} from '~/generated/graphql';
 
 const schema = yup.object().shape({
   message: yup.string(),
@@ -28,21 +30,42 @@ const SectionQuestionRoute = forwardRef(
       scrollEventThrottle,
       scrollIndicatorInsets,
       onScroll,
+      projectId,
     }: any,
     ref,
   ) => {
     const {isUserLoggedIn} = authStore(state => state);
+
+    const {mutate: mutateAddQuestion, isLoading: addQuestionLoading} =
+      useAddQuestion();
 
     const {...methods} = useForm<Record<string, any>, object>({
       resolver: yupResolver<yup.AnyObjectSchema>(schema),
       mode: 'onChange',
     });
 
-    console.log({data});
+    const {handleSubmit, register, watch, formState, setValue} = methods;
 
-    const {handleSubmit, register, watch, formState} = methods;
-
-    const sendOnPress = () => {};
+    const sendOnPress = (formData: any) => {
+      if (formData?.message?.length > 0) {
+        const input = {
+          text: formData?.message,
+          projectId,
+          parentId: null,
+        };
+        mutateAddQuestion(input, {
+          onSuccess: (successData: any) => {
+            if (
+              successData?.project_addQuestion?.status ===
+              ResponseStatus.Success
+            ) {
+              setValue('message', '');
+            }
+          },
+          onError: () => {},
+        });
+      }
+    };
 
     const keyExtractor = useCallback((_, index: number) => `key${index}`, []);
 
@@ -54,8 +77,11 @@ const SectionQuestionRoute = forwardRef(
 
     const messageText = watch('message');
 
+    const loading = addQuestionLoading;
+
     return (
       <VStack flex={1} pt={4} pb={6} bg={Colors.WHITE}>
+        {loading && <CustomLoading />}
         <AnimatedFlatList
           ref={ref}
           renderItem={renderItem}
@@ -82,7 +108,7 @@ const SectionQuestionRoute = forwardRef(
                 {...{formState}}
                 rightComponent={() => (
                   <IconButton
-                    onPress={sendOnPress}
+                    onPress={handleSubmit(sendOnPress)}
                     colorScheme={Colors.WHITE_RIPPLE_COLOR}
                     borderRadius="full"
                     icon={
