@@ -16,11 +16,7 @@ import {
 } from '~/components';
 import {useGetProfile, useUpdateProfile} from '~/hooks/user';
 import {useGetLocation} from '~/hooks/location';
-
-const stateData = [
-  {id: 0, title: 'California', value: 'california'},
-  {id: 1, title: 'Texas', value: 'texas'},
-];
+import {stateList} from '~/constants/mockData';
 
 const schema = yup.object().shape({
   imageAddress: yup.string().nullable(),
@@ -169,11 +165,13 @@ export default function EditProfileScreen() {
                 <CustomPicker
                   {...register('state')}
                   label="State"
-                  data={stateData}
+                  data={stateList}
                   placeholder="Select"
                   height={verticalScale(45)}
                   {...{formState}}
                   isHorizontal
+                  valueKey="title"
+                  titleKey="title"
                 />
               </VStack>
             </HStack>

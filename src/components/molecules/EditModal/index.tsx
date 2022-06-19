@@ -23,11 +23,13 @@ const EditModal = ({
   onClose,
   onSubmit,
   title,
+  loading,
 }: {
   visible: boolean;
   onClose: any;
   onSubmit: any;
   title: string;
+  loading?: boolean;
 }) => {
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
@@ -48,7 +50,8 @@ const EditModal = ({
     <ModalContainer
       isVisible={visible}
       onClose={onCloseHandler}
-      style={styles.modal}>
+      style={styles.modal}
+      loading={loading}>
       <FormProvider {...methods}>
         <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
           <ModalHeader text={title} />

@@ -1,11 +1,10 @@
 import React, {forwardRef, useCallback, memo} from 'react';
 import {FlatList} from 'react-native';
+import {Box, IconButton, VStack} from 'native-base';
 import Animated from 'react-native-reanimated';
-import {Box, HStack, IconButton, Text, VStack} from 'native-base';
 import * as yup from 'yup';
 import {Colors} from '~/styles';
-import {CustomInput} from '~/components';
-import {fontFamily, scale} from '~/utils/style';
+import {CustomInput, QuestionItem} from '~/components';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {SendIcon} from '~/assets/icons';
@@ -21,6 +20,7 @@ const SectionQuestionRoute = forwardRef(
   (
     {
       data,
+      listerId,
       contentContainerStyle,
       onMomentumScrollEnd,
       onScrollEndDrag,
@@ -43,25 +43,9 @@ const SectionQuestionRoute = forwardRef(
 
     const keyExtractor = useCallback((_, index: number) => `key${index}`, []);
 
-    const renderItem = ({item}: {item: any}) => {
-      return (
-        <HStack space="4" px="4">
-          <Text
-            fontSize={scale(14)}
-            fontFamily={fontFamily.medium}
-            color={Colors.BLACK_1}>
-            {item?.user?.name}:
-          </Text>
-          <Text
-            flex={1}
-            fontSize={scale(14)}
-            fontFamily={fontFamily.regular}
-            color={Colors.PLACEHOLDER}>
-            {item?.message}
-          </Text>
-        </HStack>
-      );
-    };
+    const renderItem = ({item}: {item: any}) => (
+      <QuestionItem {...{item, listerId}} />
+    );
 
     const ItemSeparatorComponent = () => <Box h="4" />;
 
