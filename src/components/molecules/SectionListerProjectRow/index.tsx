@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useMemo} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {HStack, Text, VStack, Center, Icon} from 'native-base';
 import {scale, fontFamily} from '~/utils/style';
@@ -15,6 +15,21 @@ import {navigate} from '~/navigation/Methods';
 
 const SectionListerProjectRow = ({item}: {item: any}) => {
   const swipeable = useRef<Swipeable>(null);
+
+  console.log({item});
+
+  const lowBid = useMemo(() => {
+    let res = -1;
+    if (item?.project?.bids?.length > 0) {
+      res = Math.min.apply(
+        Math,
+        item?.project?.bids?.map(function (object: any) {
+          return object?.amount;
+        }),
+      );
+    }
+    return res;
+  }, [item]);
 
   const deleteOnPress = () => {};
 
@@ -72,22 +87,20 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
       <Center
         px="2"
         py="2"
-        mx="1"
-        my="1"
+        mx="4"
+        my="3"
         flex={1}
         borderRadius="lg"
         bg={Colors.WHITE}
-        shadow="2">
+        shadow="4">
         <TouchableOpacity
           style={styles.item}
           activeOpacity={0.7}
           onPress={itemOnPress}>
           <HStack space="2">
             <CustomImage
-              local
-              imageSource={item?.image}
+              imageSource={item?.project?.projectImages?.[0]?.imageAddress}
               style={styles.image}
-              resizeMode="stretch"
             />
             <VStack flex={1} space="1">
               <HStack alignItems="center">
@@ -97,7 +110,7 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
                   fontSize={scale(16)}
                   fontFamily={fontFamily.medium}
                   color={Colors.BLACK_1}>
-                  {item?.title}
+                  {item?.project?.title}
                 </Text>
                 <SectionProjectLabel {...{item}} />
               </HStack>
@@ -107,23 +120,29 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
                 fontSize={scale(14)}
                 fontFamily={fontFamily.regular}
                 color={Colors.PLACEHOLDER}>
-                {item?.description}
+                {item?.project?.description}
               </Text>
               <HStack alignItems="center" justifyContent="space-between">
                 <Text
                   fontSize={scale(14)}
                   fontFamily={fontFamily.regular}
                   color={Colors.BLACK_1}>
-                  Current low bid
+                  {item?.project?.bids?.length > 0 && lowBid !== -1
+                    ? 'Current low bid'
+                    : 'Be the first bidder'}
                 </Text>
-                <Text
-                  fontSize={scale(16)}
-                  fontFamily={fontFamily.regular}
-                  color={Colors.INFO}>
-                  ${item?.lowBid}
-                </Text>
+                {item?.project?.bids?.length > 0 && lowBid !== -1 && (
+                  <Text
+                    fontSize={scale(16)}
+                    fontFamily={fontFamily.regular}
+                    color={Colors.INFO}>
+                    ${lowBid}
+                  </Text>
+                )}
               </HStack>
-              {item?.id === 1 && <SectionChooseHudur {...{item}} />}
+              {item?.project?.projectStatus === 'BIDDING' && (
+                <SectionChooseHudur {...{projectId: item?.project?.id}} />
+              )}
             </VStack>
           </HStack>
         </TouchableOpacity>
