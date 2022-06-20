@@ -6,86 +6,90 @@ import {Colors} from '~/styles';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {SectionSort, SectionListerProjectRow} from '~/components';
-import images from '~/assets/images';
+import {
+  SectionSort,
+  SectionListerProjectRow,
+  CustomContainer,
+  EmptyData,
+} from '~/components';
+import {useGetProjects} from '~/hooks/project';
+import {authStore, userDataStore} from '~/stores';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
 
-const projects = [
-  {
-    id: 0,
-    timeLeft: '3 Days',
-    title: 'Project 1',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 1,
-    timeLeft: '3 Days',
-    title: 'Project 2',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 2,
-    timeLeft: '3 Days',
-    title: 'Project 3',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-];
-
 const SectionListerProjects = () => {
+  const {isUserLoggedIn} = authStore(state => state);
+  const {userData} = userDataStore(state => state);
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
+  const options = isUserLoggedIn
+    ? {where: {project: {userId: {eq: userData?.id}}}}
+    : {enabled: false};
+
+  const {
+    isLoading: getProjectLoading,
+    data: getProjects,
+    fetchNextPage: fetchNextPageProjects,
+    hasNextPage: hasNextPageProjects,
+    refetch: refetchProjects,
+    isRefetching: isRefetchingProjects,
+  } = useGetProjects(options);
+
+  const projects = getProjects?.pages ?? [];
+
   const {register, watch} = methods;
 
   const sort = watch('sort');
 
-  const onLoadMore = () => {};
+  const onLoadMore = () => {
+    if (hasNextPageProjects) {
+      fetchNextPageProjects();
+    }
+  };
+
+  const loading = getProjectLoading;
 
   const renderItem = ({item}: {item: any}) => (
     <SectionListerProjectRow item={item} />
   );
 
-  const ItemSeparatorComponent = () => <Box h="2" />;
+  const ItemSeparatorComponent = () => <Box h="3" />;
 
   return (
     <Flex py="4" h="100%" bg={Colors.WHITE}>
-      <Flex flex={1} bg={Colors.WHITE}>
-        <FormProvider {...methods}>
-          <HStack px="4" justifyContent="flex-end" mb="2">
-            <Box flex={1} />
-            <Center w={scale(120)}>
-              <SectionSort {...register('sort')} />
-            </Center>
-          </HStack>
-        </FormProvider>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.contentContainerStyle}
-          data={projects}
-          renderItem={renderItem}
-          ItemSeparatorComponent={ItemSeparatorComponent}
-          keyExtractor={(_, index) => `key${index}`}
-          onEndReachedThreshold={0.5}
-          onEndReached={({distanceFromEnd}) => {
-            if (distanceFromEnd < 0) return;
-            onLoadMore();
-          }}
-        />
-      </Flex>
+      <CustomContainer isLoading={loading}>
+        <Flex flex={1} bg={Colors.WHITE}>
+          <FormProvider {...methods}>
+            <HStack px="4" justifyContent="flex-end" mb="2">
+              <Box flex={1} />
+              <Center w={scale(120)}>
+                <SectionSort {...register('sort')} />
+              </Center>
+            </HStack>
+          </FormProvider>
+          <FlatList
+            refreshing={isRefetchingProjects}
+            onRefresh={refetchProjects}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.contentContainerStyle}
+            data={projects}
+            ListEmptyComponent={EmptyData}
+            ItemSeparatorComponent={ItemSeparatorComponent}
+            renderItem={renderItem}
+            keyExtractor={(_, index) => `key${index}`}
+            onEndReachedThreshold={0.5}
+            onEndReached={({distanceFromEnd}) => {
+              if (distanceFromEnd < 0) return;
+              onLoadMore();
+            }}
+          />
+        </Flex>
+      </CustomContainer>
     </Flex>
   );
 };

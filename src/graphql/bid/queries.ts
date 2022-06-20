@@ -39,6 +39,19 @@ export const BID_GET_BIDS = gql`
             huduersWhoRatedToMeCount
             id
           }
+          project {
+            projectStatus
+            title
+            description
+            bids {
+              amount
+              id
+              huduId
+            }
+            projectImages {
+              imageAddress
+            }
+          }
         }
         pageInfo {
           hasNextPage

@@ -2,16 +2,36 @@ import React, {useState} from 'react';
 import {verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {CustomButton, ReviewModal} from '~/components';
-import {useAddFeedBack} from '~/hooks/project';
+import {useAddFeedBack, useFinishProject} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
+import {useQueryClient} from 'react-query';
+import queryKeys from '~/constants/queryKeys';
 
-const SectionLeaveReview = ({bidId}: {bidId?: number}) => {
+const SectionFinishProject = ({
+  projectId,
+  bidId,
+}: {
+  projectId: number;
+  bidId: number;
+}) => {
+  const queryClient = useQueryClient();
+  const {mutate: mutateFinishProject, isLoading: finishProjectLoading} =
+    useFinishProject();
   const {mutate: mutateAddFeedBack, isLoading: addFeedBackLoading} =
     useAddFeedBack();
+
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
 
-  const reviewOnPress = () => {
-    setReviewModalVisible(true);
+  const finishProjectOnPress = () => {
+    mutateFinishProject(projectId, {
+      onSuccess: (successData: any) => {
+        if (
+          successData?.project_finisheProject?.status === ResponseStatus.Success
+        ) {
+          setReviewModalVisible(true);
+        }
+      },
+    });
   };
 
   const onCloseReviewModal = () => {
@@ -21,8 +41,6 @@ const SectionLeaveReview = ({bidId}: {bidId?: number}) => {
   const onSubmitReviewModal = (formData: any) => {
     const input = {
       bidId,
-      hudusRate: formData?.rate,
-      hudusComment: formData?.review,
       listersRate: formData?.rate,
       listersComment: formData?.review,
     };
@@ -31,6 +49,8 @@ const SectionLeaveReview = ({bidId}: {bidId?: number}) => {
         if (
           successData?.project_addFeedBack?.status === ResponseStatus.Success
         ) {
+          queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.bids);
           setReviewModalVisible(false);
         }
       },
@@ -41,20 +61,22 @@ const SectionLeaveReview = ({bidId}: {bidId?: number}) => {
     <>
       <CustomButton
         outline
-        title="Leave a review"
-        onPress={reviewOnPress}
+        title="Finish project"
+        onPress={finishProjectOnPress}
         color={Colors.BLACK_3}
         height={verticalScale(35)}
+        loading={finishProjectLoading}
+        spinnerColor={Colors.BLACK_3}
       />
       <ReviewModal
         visible={reviewModalVisible}
         onClose={onCloseReviewModal}
         onSubmit={onSubmitReviewModal}
-        title={'Rate your lister'}
+        title={'Rate your HUDUr'}
         loading={addFeedBackLoading}
       />
     </>
   );
 };
 
-export default SectionLeaveReview;
+export default SectionFinishProject;

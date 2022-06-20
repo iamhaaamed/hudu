@@ -17,7 +17,7 @@ const FavoriteItem = ({item}: {item?: any}) => {
       );
     }
     return res;
-  }, []);
+  }, [item]);
 
   const onPressHandler = () => {};
 
@@ -31,7 +31,7 @@ const FavoriteItem = ({item}: {item?: any}) => {
       bg={Colors.WHITE}>
       <CustomImage
         local
-        imageSource={item?.image}
+        imageSource={item?.imageAddress}
         style={styles.image}
         resizeMode="stretch">
         <VStack flex={1} justifyContent="space-between">
