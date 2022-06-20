@@ -28,7 +28,6 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
   const {forgotPassword, loading: forgotLoading} = useForgotPasswordAuth();
 
   const onSend = (formData: any) => {
-    console.log({formData});
     forgotPassword(formData?.email);
   };
 

@@ -19,8 +19,6 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
 
   const {userData} = userDataStore(state => state);
 
-  console.log({item});
-
   const yourBid = useMemo(() => {
     const res = item?.project?.bids.find(
       (element: any) => element?.huduId === userData?.id,

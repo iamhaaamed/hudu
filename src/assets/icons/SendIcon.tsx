@@ -1,17 +1,18 @@
 import * as React from 'react';
 import Svg, {Path} from 'react-native-svg';
-import {scale} from '~/utils/style';
 import {Colors} from '~/styles';
 
 export default function SendIcon({
-  size = scale(16),
+  height = 15.52,
+  width = 16.5,
   fillColor = Colors.BLACK_1,
 }: {
-  size?: number;
+  height?: number;
+  width?: number;
   fillColor?: string;
 }) {
   return (
-    <Svg width="16.5" height="15.526" viewBox="0 0 16.5 15.526">
+    <Svg width={width} height={height} viewBox="0 0 16.5 15.526">
       <Path
         id="Path_938"
         data-name="Path 938"

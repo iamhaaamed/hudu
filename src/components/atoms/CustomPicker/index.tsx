@@ -122,7 +122,7 @@ export default React.forwardRef(
     };
 
     const getName = (value: string) => {
-      const item = data.find((element: any) => element.value === value);
+      const item = data.find((element: any) => element?.[valueKey] === value);
       return item?.[titleKey];
     };
 

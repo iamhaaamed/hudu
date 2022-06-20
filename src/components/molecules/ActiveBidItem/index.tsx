@@ -33,8 +33,6 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
     navigate('HudurProfile', {userId: item?.huduId});
   };
 
-  console.log({item});
-
   const cancelOnPress = () => {
     setCancelBidModalVisible(true);
   };
