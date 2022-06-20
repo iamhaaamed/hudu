@@ -20,6 +20,7 @@ import {Colors} from '~/styles';
 import {userDataStore} from '~/stores';
 import {useGetProfile} from '~/hooks/user';
 import {useGetBids} from '~/hooks/bid';
+import images from '~/assets/images';
 
 const HudurProfileScreen = ({navigation, route}: any) => {
   const {userData} = userDataStore(state => state);
@@ -98,6 +99,7 @@ const HudurProfileScreen = ({navigation, route}: any) => {
               style={styles.avatar}
               resizeMode="stretch"
               zoomable
+              errorImage={images.avatarErrorImage}
             />
           </Center>
           <VStack

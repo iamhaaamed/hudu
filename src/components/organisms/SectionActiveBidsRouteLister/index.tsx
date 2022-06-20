@@ -6,6 +6,7 @@ import {Colors} from '~/styles';
 import {navigate} from '~/navigation/Methods';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {CustomButton, CustomImage, RatingStar} from '~/components';
+import images from '~/assets/images';
 
 export const AnimatedFlatList: typeof FlatList =
   Animated.createAnimatedComponent(FlatList);
@@ -55,6 +56,7 @@ const SectionActiveBidsRouteLister = forwardRef(
                   imageSource={item?.image}
                   resizeMode="stretch"
                   style={styles.avatar}
+                  errorImage={images.avatarErrorImage}
                 />
                 <Text
                   flex={1}

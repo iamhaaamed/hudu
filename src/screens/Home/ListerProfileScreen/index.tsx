@@ -20,6 +20,7 @@ import {Colors} from '~/styles';
 import {userDataStore} from '~/stores';
 import {useGetProfile} from '~/hooks/user';
 import {useGetBids} from '~/hooks/bid';
+import images from '~/assets/images';
 
 const ListerProfileScreen = ({navigation, route}: any) => {
   const {userData} = userDataStore(state => state);
@@ -98,6 +99,7 @@ const ListerProfileScreen = ({navigation, route}: any) => {
               style={styles.avatar}
               imageSource={profile?.imageAddress}
               resizeMode="stretch"
+              errorImage={images.avatarErrorImage}
             />
           </Center>
           <VStack

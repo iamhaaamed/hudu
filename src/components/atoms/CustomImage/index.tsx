@@ -6,6 +6,7 @@ import {verticalScale, scale} from '~/utils/style';
 import {Colors} from '~/styles';
 import ModalContainer from '../ModalContainer';
 import FastImage from 'react-native-fast-image';
+import images from '~/assets/images';
 
 const CustomImage = ({
   imageSource,
@@ -16,6 +17,7 @@ const CustomImage = ({
   local = false,
   children,
   imageSourceArray,
+  errorImage = images.errorImage,
 }: {
   imageSource?: any;
   style?: any;
@@ -25,6 +27,7 @@ const CustomImage = ({
   local?: boolean;
   children?: any;
   imageSourceArray?: any;
+  errorImage?: any;
 }) => {
   const [imageZoom, setImageZoom] = useState<boolean>(false);
 
@@ -74,10 +77,12 @@ const CustomImage = ({
           source={
             local
               ? imageSource
-              : {
+              : imageSource && imageSource !== null
+              ? {
                   uri: imageSource,
                   priority: FastImage.priority.high,
                 }
+              : errorImage
           }
           resizeMode={resizeMode}>
           {children && children}
