@@ -10,22 +10,26 @@ import {
   SectionSort,
   SectionListerProjectRow,
   CustomContainer,
+  EmptyData,
 } from '~/components';
 import {useGetProjects} from '~/hooks/project';
-import {userDataStore} from '~/stores';
+import {authStore, userDataStore} from '~/stores';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
 
 const SectionListerProjects = () => {
+  const {isUserLoggedIn} = authStore(state => state);
   const {userData} = userDataStore(state => state);
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const options = {where: {project: {userId: {eq: userData?.id}}}};
+  const options = isUserLoggedIn
+    ? {where: {project: {userId: {eq: userData?.id}}}}
+    : {enabled: false};
 
   const {
     isLoading: getProjectLoading,
@@ -72,6 +76,7 @@ const SectionListerProjects = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.contentContainerStyle}
             data={projects}
+            ListEmptyComponent={EmptyData}
             renderItem={renderItem}
             keyExtractor={(_, index) => `key${index}`}
             onEndReachedThreshold={0.5}
@@ -91,6 +96,5 @@ export default React.memo(SectionListerProjects);
 const styles = StyleSheet.create({
   contentContainerStyle: {
     flexGrow: 1,
-    //paddingHorizontal: scale(12),
   },
 });
