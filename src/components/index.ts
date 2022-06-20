@@ -49,6 +49,7 @@ export {default as ActiveBidItem} from './molecules/ActiveBidItem';
 export {default as QuestionItem} from './molecules/QuestionItem';
 export {default as BidItem} from './molecules/BidItem';
 export {default as SectionFinishProject} from './molecules/SectionFinishProject';
+export {default as QuestionChildItem} from './molecules/QuestionChildItem';
 
 //organisms
 export {default as CustomTabBar} from './organisms/CustomTabBar';
