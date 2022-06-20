@@ -86,8 +86,8 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
       <Center
         px="2"
         py="2"
-        mx="4"
-        my="3"
+        mx="1"
+        my="1"
         flex={1}
         borderRadius="lg"
         bg={Colors.WHITE}

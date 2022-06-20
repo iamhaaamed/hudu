@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useMemo} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {HStack, Text, VStack, Center, Icon} from 'native-base';
 import {scale, fontFamily} from '~/utils/style';
@@ -12,9 +12,21 @@ import {
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {userDataStore} from '~/stores';
 
 const SectionHudurProjectRow = ({item}: {item: any}) => {
   const swipeable = useRef<Swipeable>(null);
+
+  const {userData} = userDataStore(state => state);
+
+  console.log({item});
+
+  const yourBid = useMemo(() => {
+    const res = item?.project?.bids.find(
+      (element: any) => element?.huduId === userData?.id,
+    );
+    return res?.amount ?? -1;
+  }, [item]);
 
   const [editModalVisible, setEditModalVisible] = useState(false);
 
@@ -87,7 +99,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
           flex={1}
           borderRadius="lg"
           bg={Colors.WHITE}
-          shadow="2">
+          shadow="4">
           <CustomImage
             local
             imageSource={item?.image}
@@ -102,7 +114,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
                 fontSize={scale(16)}
                 fontFamily={fontFamily.medium}
                 color={Colors.BLACK_1}>
-                {item?.title}
+                {item?.project?.title}
               </Text>
               <SectionProjectLabel {...{item}} />
             </HStack>
@@ -112,7 +124,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
               fontSize={scale(14)}
               fontFamily={fontFamily.regular}
               color={Colors.PLACEHOLDER}>
-              {item?.description}
+              {item?.project?.description}
             </Text>
             <HStack alignItems="center" justifyContent="space-between">
               <Text
@@ -121,15 +133,17 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
                 color={Colors.BLACK_1}>
                 Your bid
               </Text>
-              <Text
-                fontSize={scale(16)}
-                fontFamily={fontFamily.regular}
-                color={Colors.INFO}>
-                ${item?.lowBid}
-              </Text>
+              {item?.project?.bids?.length > 0 && yourBid !== -1 && (
+                <Text
+                  fontSize={scale(16)}
+                  fontFamily={fontFamily.regular}
+                  color={Colors.INFO}>
+                  ${yourBid}
+                </Text>
+              )}
             </HStack>
-            {item?.id === 1 && (
-              <SectionLeaveReview {...{item, type: 'hudur'}} />
+            {item?.project?.projectStatus === 'FINISHED' && (
+              <SectionLeaveReview {...{bidId: item?.id}} />
             )}
           </VStack>
         </HStack>

@@ -58,6 +58,8 @@ const SectionListerProjects = () => {
     <SectionListerProjectRow item={item} />
   );
 
+  const ItemSeparatorComponent = () => <Box h="3" />;
+
   return (
     <Flex py="4" h="100%" bg={Colors.WHITE}>
       <CustomContainer isLoading={loading}>
@@ -77,6 +79,7 @@ const SectionListerProjects = () => {
             contentContainerStyle={styles.contentContainerStyle}
             data={projects}
             ListEmptyComponent={EmptyData}
+            ItemSeparatorComponent={ItemSeparatorComponent}
             renderItem={renderItem}
             keyExtractor={(_, index) => `key${index}`}
             onEndReachedThreshold={0.5}
@@ -96,5 +99,6 @@ export default React.memo(SectionListerProjects);
 const styles = StyleSheet.create({
   contentContainerStyle: {
     flexGrow: 1,
+    paddingHorizontal: scale(12),
   },
 });
