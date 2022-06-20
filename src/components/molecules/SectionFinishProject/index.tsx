@@ -1,15 +1,37 @@
-import React, {useRef, useMemo, useState} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import {HStack} from 'native-base';
+import React, {useState} from 'react';
 import {verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {CustomButton, ReviewModal} from '~/components';
+import {useAddFeedBack, useFinishProject} from '~/hooks/project';
+import {ResponseStatus} from '~/generated/graphql';
+import {useQueryClient} from 'react-query';
+import queryKeys from '~/constants/queryKeys';
 
-const SectionFinishProject = ({projectId}: {projectId: number}) => {
+const SectionFinishProject = ({
+  projectId,
+  bidId,
+}: {
+  projectId: number;
+  bidId: number;
+}) => {
+  const queryClient = useQueryClient();
+  const {mutate: mutateFinishProject, isLoading: finishProjectLoading} =
+    useFinishProject();
+  const {mutate: mutateAddFeedBack, isLoading: addFeedBackLoading} =
+    useAddFeedBack();
+
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
 
   const finishProjectOnPress = () => {
-    setReviewModalVisible(true);
+    mutateFinishProject(projectId, {
+      onSuccess: (successData: any) => {
+        if (
+          successData?.project_finisheProject?.status === ResponseStatus.Success
+        ) {
+          setReviewModalVisible(true);
+        }
+      },
+    });
   };
 
   const onCloseReviewModal = () => {
@@ -17,7 +39,22 @@ const SectionFinishProject = ({projectId}: {projectId: number}) => {
   };
 
   const onSubmitReviewModal = (formData: any) => {
-    setReviewModalVisible(false);
+    const input = {
+      bidId,
+      listersRate: formData?.rate,
+      listersComment: formData?.review,
+    };
+    mutateAddFeedBack(input, {
+      onSuccess: (successData: any) => {
+        if (
+          successData?.project_addFeedBack?.status === ResponseStatus.Success
+        ) {
+          queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.bids);
+          setReviewModalVisible(false);
+        }
+      },
+    });
   };
 
   return (
@@ -28,12 +65,15 @@ const SectionFinishProject = ({projectId}: {projectId: number}) => {
         onPress={finishProjectOnPress}
         color={Colors.BLACK_3}
         height={verticalScale(35)}
+        loading={finishProjectLoading}
+        spinnerColor={Colors.BLACK_3}
       />
       <ReviewModal
         visible={reviewModalVisible}
         onClose={onCloseReviewModal}
         onSubmit={onSubmitReviewModal}
         title={'Rate your HUDUr'}
+        loading={addFeedBackLoading}
       />
     </>
   );

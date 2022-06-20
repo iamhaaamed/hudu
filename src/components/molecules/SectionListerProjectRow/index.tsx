@@ -7,6 +7,7 @@ import {
   SectionProjectLabel,
   CustomImage,
   SectionChooseHudur,
+  SectionFinishProject,
 } from '~/components';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
@@ -15,8 +16,6 @@ import {navigate} from '~/navigation/Methods';
 
 const SectionListerProjectRow = ({item}: {item: any}) => {
   const swipeable = useRef<Swipeable>(null);
-
-  console.log({item});
 
   const lowBid = useMemo(() => {
     let res = -1;
@@ -142,6 +141,11 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
               </HStack>
               {item?.project?.projectStatus === 'BIDDING' && (
                 <SectionChooseHudur {...{projectId: item?.project?.id}} />
+              )}
+              {item?.project?.projectStatus === 'IN_PROGRESS' && (
+                <SectionFinishProject
+                  {...{projectId: item?.project?.id, bidId: item?.id}}
+                />
               )}
             </VStack>
           </HStack>

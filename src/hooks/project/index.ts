@@ -377,7 +377,8 @@ export const useFinishProject = () => {
         if (
           successData?.project_finisheProject?.status === ResponseStatus.Success
         ) {
-          queryClient.invalidateQueries(queryKeys.projects);
+          // queryClient.invalidateQueries(queryKeys.projects);
+          // queryClient.invalidateQueries(queryKeys.bids);
         }
       },
       onError: (errorData: any) => {

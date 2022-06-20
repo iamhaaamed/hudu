@@ -11,48 +11,21 @@ import {
   SectionListerProjectRow,
   CustomContainer,
 } from '~/components';
-import images from '~/assets/images';
 import {useGetProjects} from '~/hooks/project';
+import {userDataStore} from '~/stores';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
 
-const projects1 = [
-  {
-    id: 0,
-    timeLeft: '3 Days',
-    title: 'Project 1',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 1,
-    timeLeft: '3 Days',
-    title: 'Project 2',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 2,
-    timeLeft: '3 Days',
-    title: 'Project 3',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-];
-
 const SectionListerProjects = () => {
+  const {userData} = userDataStore(state => state);
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
+
+  const options = {where: {project: {userId: {eq: userData?.id}}}};
 
   const {
     isLoading: getProjectLoading,
@@ -61,7 +34,7 @@ const SectionListerProjects = () => {
     hasNextPage: hasNextPageProjects,
     refetch: refetchProjects,
     isRefetching: isRefetchingProjects,
-  } = useGetProjects();
+  } = useGetProjects(options);
 
   const projects = getProjects?.pages ?? [];
 
