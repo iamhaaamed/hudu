@@ -46,7 +46,9 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
   const {projectId} = route?.params;
 
   const getBidsOption = {where: {projectId: {eq: projectId}}};
-  const getQuestionsOptions = {where: {projectId: {eq: projectId}}};
+  const getQuestionsOptions = {
+    where: {and: [{projectId: {eq: projectId}}, {parentId: {eq: null}}]},
+  };
 
   const {isLoading: getProjectLoading, data: getProject} = useGetProject({
     projectId,
