@@ -1,18 +1,25 @@
-import React, {useState, forwardRef, useCallback, memo, useMemo} from 'react';
+import React, {
+  useState,
+  forwardRef,
+  useCallback,
+  memo,
+  useMemo,
+  createRef,
+} from 'react';
 import {StyleSheet, FlatList} from 'react-native';
-import {HStack, Text, VStack} from 'native-base';
+import {Box, HStack, Text, VStack} from 'native-base';
 import Animated from 'react-native-reanimated';
 import dayjs from 'dayjs';
 import {Colors} from '~/styles';
-import images from '~/assets/images';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
-import {CustomButton, CustomImage, EditModal} from '~/components';
+import {CustomButton, EditModal} from '~/components';
 import {LocationIcon} from '~/assets/icons';
 import {useAddBid} from '~/hooks/bid';
 import {authStore} from '~/stores';
 import {navigate} from '~/navigation/Methods';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -50,6 +57,8 @@ const SectionDescriptionRoute = forwardRef(
     ref,
   ) => {
     const {isUserLoggedIn} = authStore(state => state);
+
+    const mapRef = createRef<MapView>();
 
     const {mutate: mutateAddBid, isLoading: addBidLoading} = useAddBid();
 
@@ -156,12 +165,30 @@ const SectionDescriptionRoute = forwardRef(
               {'12 minutes'}
             </Text>
           </HStack>
-          <CustomImage
-            local
-            imageSource={images.mapImage}
-            resizeMode="stretch"
-            style={styles.image}
-          />
+          <Box overflow="hidden" w="100%" borderRadius="lg">
+            <MapView
+              initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              region={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              ref={mapRef}
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              showsMyLocationButton={false}
+              showsUserLocation
+              zoomEnabled
+              scrollEnabled
+              showsScale
+            />
+          </Box>
           <CustomButton
             onPress={submitBidOnPress}
             title="Submit bid"
@@ -211,5 +238,12 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 12,
     height: verticalScale(130),
+  },
+  map: {
+    // ...StyleSheet.absoluteFillObject,
+    height: verticalScale(130),
+    borderRadius: 12,
+    width: '100%',
+    flex: 1,
   },
 });
