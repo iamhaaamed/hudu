@@ -3,7 +3,7 @@ import {useMutation} from 'react-query';
 
 export const useGetLocation = () => {
   return useMutation((zipCode: number) => getLocation(zipCode), {
-    onSuccess: (successData: any) => {
+    onSuccess: successData => {
       if (successData?.status === 1) {
       } else {
         showMessage({

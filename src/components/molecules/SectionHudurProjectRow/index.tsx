@@ -40,7 +40,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
 
   const deleteHandler = () => {
     mutateDeleteBid(item?.id, {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_deleteBid?.status === ResponseStatus.Success) {
           setQuestionModalVisible(false);
         }
@@ -65,7 +65,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
       description: formData?.description,
     };
     mutateEditBid(input, {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_editBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.projects);
           queryClient.invalidateQueries(queryKeys.bids);

@@ -199,7 +199,7 @@ export const useLogin = () => {
       return graphQLClient.request(USER_LOGIN);
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData.user_login?.status === ResponseStatus.Success) {
           setUserData(successData.user_login?.result);
           setIsUserLoggedIn(true);
@@ -234,7 +234,7 @@ export const useSignUp = () => {
       return graphQLClient.request(USER_SIGN_UP);
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData.user_signUp?.status === ResponseStatus.Success) {
           setIsUserLoggedIn(true);
           setUserData(successData.user_signUp?.result);
@@ -509,7 +509,7 @@ export const useUpdateProfile = () => {
       return graphQLClient.request(USER_UPDATE_PROFILE, {userInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.user_updateProfile?.status === ResponseStatus.Success
         ) {

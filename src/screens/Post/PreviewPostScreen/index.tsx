@@ -41,7 +41,7 @@ const PreviewPostScreen = ({navigation, route}: any) => {
           const long = parseFloat(success?.output?.[0]?.longitude);
           const input = {...params, point: [lat, long]};
           addProjectMutate(input, {
-            onSuccess: (successData: any) => {
+            onSuccess: successData => {
               if (
                 successData?.project_addProject?.status ===
                 ResponseStatus.Success

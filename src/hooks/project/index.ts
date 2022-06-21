@@ -250,7 +250,7 @@ export const useAddProject = () => {
       return graphQLClient.request(PROJECT_ADD_PROJECT, {addProjectInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.project_addProject?.status === ResponseStatus.Success
         ) {
@@ -313,7 +313,7 @@ export const useEditProject = () => {
       return graphQLClient.request(PROJECT_EDIT_PROJECT, {editProjectInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.project_editProject?.status === ResponseStatus.Success
         ) {
@@ -343,7 +343,7 @@ export const useFailProject = () => {
       return graphQLClient.request(PROJECT_FAILE_PROJECT, {projectId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.project_faileProject?.status === ResponseStatus.Success
         ) {
@@ -404,7 +404,7 @@ export const useProjectLike = () => {
       return graphQLClient.request(PROJECT_LIKE, {projectId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.project_like?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.projects);
           queryClient.invalidateQueries(queryKeys.project);
@@ -434,7 +434,7 @@ export const useReOpenProject = () => {
       return graphQLClient.request(PROJECT_REOPEN_PROJECT, {projectId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.project_reopenProject?.status === ResponseStatus.Success
         ) {
@@ -464,7 +464,7 @@ export const useProjectUnLike = () => {
       return graphQLClient.request(PROJECT_UNLIKE, input);
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.project_unlike?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.projects);
           queryClient.invalidateQueries(queryKeys.project);

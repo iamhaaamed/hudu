@@ -54,7 +54,7 @@ const SectionQuestionRoute = forwardRef(
           parentId: null,
         };
         mutateAddQuestion(input, {
-          onSuccess: (successData: any) => {
+          onSuccess: successData => {
             if (
               successData?.project_addQuestion?.status ===
               ResponseStatus.Success

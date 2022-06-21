@@ -94,8 +94,7 @@ export default function EditProfileScreen() {
             id: userData?.id,
           };
           mutateUpdate(input, {
-            onSuccess: (successData: any) => {},
-            onError: (errorData: any) => {},
+            onSuccess: () => {},
           });
         }
       },
