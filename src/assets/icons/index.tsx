@@ -15,3 +15,4 @@ export {default as StarIconFill} from './StarIconFill';
 export {default as AvatarIcon} from './AvatarIcon';
 export {default as SendIcon} from './SendIcon';
 export {default as LocationIcon} from './LocationIcon';
+export {default as MarkerIcon} from './MarkerIcon';
