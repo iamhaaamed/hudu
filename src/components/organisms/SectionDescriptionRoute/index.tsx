@@ -15,11 +15,11 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {CustomButton, EditModal} from '~/components';
-import {LocationIcon} from '~/assets/icons';
+import {LocationIcon, MarkerIcon} from '~/assets/icons';
 import {useAddBid} from '~/hooks/bid';
 import {authStore, userDataStore} from '~/stores';
 import {navigate} from '~/navigation/Methods';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -168,15 +168,9 @@ const SectionDescriptionRoute = forwardRef(
           </HStack>
           <Box overflow="hidden" w="100%" borderRadius="lg">
             <MapView
-              initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
               region={{
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: data?.latitude ?? 40.7128,
+                longitude: data?.longitude ?? 74.006,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}
@@ -187,8 +181,15 @@ const SectionDescriptionRoute = forwardRef(
               showsUserLocation
               zoomEnabled
               scrollEnabled
-              showsScale
-            />
+              showsScale>
+              <Marker
+                coordinate={{
+                  latitude: data?.latitude ?? 40.7128,
+                  longitude: data?.longitude ?? 74.006,
+                }}>
+                <MarkerIcon />
+              </Marker>
+            </MapView>
           </Box>
           {userData?.id !== data?.userId && (
             <CustomButton
