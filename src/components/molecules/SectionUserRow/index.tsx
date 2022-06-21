@@ -6,6 +6,7 @@ import {Colors} from '~/styles';
 import {CustomImage, RatingStar} from '~/components';
 import {BellIcon} from '~/assets/icons';
 import {navigate} from '~/navigation/Methods';
+import images from '~/assets/images';
 
 const SectionUserRow = ({data}: {data: any}) => {
   const notificationOnPress = () => navigate('Notification');
@@ -16,6 +17,7 @@ const SectionUserRow = ({data}: {data: any}) => {
         imageSource={data?.imageAddress}
         style={styles.image}
         resizeMode="stretch"
+        errorImage={images.avatarErrorImage}
       />
       <VStack flex={1}>
         <Text

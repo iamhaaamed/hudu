@@ -99,8 +99,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
           bg={Colors.WHITE}
           shadow="4">
           <CustomImage
-            local
-            imageSource={item?.image}
+            imageSource={item?.project?.imageAddress}
             style={styles.image}
             resizeMode="stretch"
           />

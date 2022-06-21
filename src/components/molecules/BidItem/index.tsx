@@ -5,6 +5,7 @@ import {CustomButton, RatingStar, CustomImage} from '~/components';
 import {scale, fontFamily, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {useAcceptBid, useRejectBid} from '~/hooks/bid';
+import images from '~/assets/images';
 
 const BidItem = ({item}: {item?: any}) => {
   const {mutate: mutateAcceptBid, isLoading: acceptBidLoading} = useAcceptBid();
@@ -36,10 +37,10 @@ const BidItem = ({item}: {item?: any}) => {
       <HStack alignItems="center" justifyContent="space-between">
         <HStack alignItems="center" space="2">
           <CustomImage
-            local
             imageSource={item?.hudu?.imageAddress}
             style={styles.avatar}
             resizeMode="stretch"
+            errorImage={images.avatarErrorImage}
           />
           <Text
             fontSize={scale(16)}

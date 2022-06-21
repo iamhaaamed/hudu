@@ -30,7 +30,6 @@ const FavoriteItem = ({item}: {item?: any}) => {
       borderRadius="md"
       bg={Colors.WHITE}>
       <CustomImage
-        local
         imageSource={item?.imageAddress}
         style={styles.image}
         resizeMode="stretch">

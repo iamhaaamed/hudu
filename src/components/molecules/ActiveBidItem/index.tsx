@@ -12,6 +12,7 @@ import {
 } from '~/components';
 import {userDataStore} from '~/stores';
 import {useCancelBid} from '~/hooks/bid';
+import images from '~/assets/images';
 
 const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
   const {userData} = userDataStore(state => state);
@@ -72,10 +73,10 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
           <VStack space="2">
             <HStack space="2" alignItems="center">
               <CustomImage
-                local
-                imageSource={item?.hudu?.image}
+                imageSource={item?.hudu?.imageAddress}
                 resizeMode="stretch"
                 style={styles.avatar}
+                errorImage={images.avatarErrorImage}
               />
               <Text
                 flex={1}

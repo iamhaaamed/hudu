@@ -4,6 +4,7 @@ import {Text, VStack} from 'native-base';
 import {Colors} from '~/styles';
 import {fontFamily, scale} from '~/utils/style';
 import {CustomImage, RatingStar} from '~/components';
+import images from '~/assets/images';
 
 export default function ProfileInfo({data}: {data: any}) {
   const totalReview = useMemo(() => {
@@ -24,6 +25,7 @@ export default function ProfileInfo({data}: {data: any}) {
         style={styles.avatar}
         imageSource={data?.imageAddress}
         resizeMode="stretch"
+        errorImage={images.avatarErrorImage}
       />
       <Text fontFamily={fontFamily.bold}>{data?.userName}</Text>
       <Text fontFamily={fontFamily.regular} color={Colors.GARY_3}>

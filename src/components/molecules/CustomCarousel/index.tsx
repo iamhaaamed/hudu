@@ -22,7 +22,6 @@ export default function CustomCarousel(props: {
   const _renderItem = ({item}: {item: any}) => {
     return (
       <CustomImage
-        local
         style={[styles.image, {height}]}
         imageSource={item}
         resizeMode="stretch"
@@ -47,7 +46,15 @@ export default function CustomCarousel(props: {
     );
   }
 
-  return <></>;
+  return (
+    <CustomImage
+      style={[styles.image, {height}]}
+      imageSource={null}
+      resizeMode="stretch"
+      zoomable
+      imageSourceArray={data}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
