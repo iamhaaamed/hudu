@@ -26,7 +26,7 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
   }, [item]);
 
   const itemOnPress = () => {
-    navigate('ProjectDetailsLister');
+    navigate('ProjectDetailsHudur', {projectId: item?.id});
   };
 
   return (

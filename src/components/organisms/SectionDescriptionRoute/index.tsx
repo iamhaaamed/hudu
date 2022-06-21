@@ -17,7 +17,7 @@ import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {CustomButton, EditModal} from '~/components';
 import {LocationIcon} from '~/assets/icons';
 import {useAddBid} from '~/hooks/bid';
-import {authStore} from '~/stores';
+import {authStore, userDataStore} from '~/stores';
 import {navigate} from '~/navigation/Methods';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 dayjs.extend(relativeTime);
@@ -57,6 +57,7 @@ const SectionDescriptionRoute = forwardRef(
     ref,
   ) => {
     const {isUserLoggedIn} = authStore(state => state);
+    const {userData} = userDataStore(state => state);
 
     const mapRef = createRef<MapView>();
 
@@ -189,11 +190,13 @@ const SectionDescriptionRoute = forwardRef(
               showsScale
             />
           </Box>
-          <CustomButton
-            onPress={submitBidOnPress}
-            title="Submit bid"
-            height={verticalScale(45)}
-          />
+          {userData?.id !== data?.userId && (
+            <CustomButton
+              onPress={submitBidOnPress}
+              title="Submit bid"
+              height={verticalScale(45)}
+            />
+          )}
         </VStack>
       ),
       [data],

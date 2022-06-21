@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Center, HStack, Text, VStack} from 'native-base';
 import {Colors} from '~/styles';
 import {navigate} from '~/navigation/Methods';
-import {fontFamily, scale} from '~/utils/style';
+import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {
   CustomButton,
   CustomImage,
@@ -11,15 +11,20 @@ import {
   QuestionModal,
 } from '~/components';
 import {userDataStore} from '~/stores';
-import {useCancelBid} from '~/hooks/bid';
+import {useAcceptBid, useCancelBid, useRejectBid} from '~/hooks/bid';
 import images from '~/assets/images';
+import {ResponseStatus} from '~/generated/graphql';
 
 const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
   const {userData} = userDataStore(state => state);
   const {mutate: mutateCancelBid, isLoading: cancelBidLoading} = useCancelBid();
+  const {mutate: mutateRejectBid, isLoading: rejectBidLoading} = useRejectBid();
+  const {mutate: mutateAcceptBid, isLoading: acceptBidLoading} = useAcceptBid();
 
   const [cancelBidModalVisible, setCancelBidModalVisible] =
     useState<boolean>(false);
+  const [awardModalVisible, setAwardModalVisible] = useState<boolean>(false);
+  const [rejectModalVisible, setRejectModalVisible] = useState<boolean>(false);
 
   const totalReview = useMemo(() => {
     const listerCounts = item?.hudu?.listersWhoRatedToMeCount;
@@ -42,15 +47,50 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
     setCancelBidModalVisible(false);
   };
 
+  const onCloseAwardModal = () => {
+    setAwardModalVisible(false);
+  };
+
+  const onCloseRejectModal = () => {
+    setRejectModalVisible(false);
+  };
+
   const onAcceptCancelBidModal = async () => {
     mutateCancelBid(item?.id, {
-      onSuccess: () => {
-        setCancelBidModalVisible(false);
-      },
-      onError: () => {
-        setCancelBidModalVisible(false);
+      onSuccess: successData => {
+        if (successData?.bid_cancellBid?.status === ResponseStatus.Success) {
+          setCancelBidModalVisible(false);
+        }
       },
     });
+  };
+
+  const onAcceptAwardModal = async () => {
+    mutateAcceptBid(item?.id, {
+      onSuccess: successData => {
+        if (successData?.bid_acceptBid?.status === ResponseStatus.Success) {
+          setAwardModalVisible(false);
+        }
+      },
+    });
+  };
+
+  const onAcceptRejectModal = async () => {
+    mutateRejectBid(item?.id, {
+      onSuccess: successData => {
+        if (successData?.bid_rejectBid?.status === ResponseStatus.Success) {
+          setRejectModalVisible(false);
+        }
+      },
+    });
+  };
+
+  const awardOnPress = () => {
+    setAwardModalVisible(true);
+  };
+
+  const rejectOnPress = () => {
+    setRejectModalVisible(true);
   };
 
   const isCancelled = item?.bidStatus === 'CANCELL';
@@ -133,6 +173,26 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
                 onPress={cancelOnPress}
               />
             )}
+            {item?.bidStatus === 'WAITING' && (
+              <HStack space="4">
+                <Center flex={1}>
+                  <CustomButton
+                    title="Award"
+                    onPress={awardOnPress}
+                    height={verticalScale(35)}
+                  />
+                </Center>
+                <Center flex={1}>
+                  <CustomButton
+                    color={Colors.BLACK_3}
+                    outline
+                    title="Reject"
+                    onPress={rejectOnPress}
+                    height={verticalScale(35)}
+                  />
+                </Center>
+              </HStack>
+            )}
           </VStack>
         </TouchableOpacity>
       </Center>
@@ -145,6 +205,26 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
         option1OnPress={onCloseCancelBidModal}
         option2OnPress={onAcceptCancelBidModal}
         loading={cancelBidLoading}
+      />
+      <QuestionModal
+        visible={awardModalVisible}
+        onClose={onCloseAwardModal}
+        title="Are you sur you want award this bid?"
+        option1="No"
+        option2="Yes"
+        option1OnPress={onCloseAwardModal}
+        option2OnPress={onAcceptAwardModal}
+        loading={acceptBidLoading}
+      />
+      <QuestionModal
+        visible={rejectModalVisible}
+        onClose={onCloseRejectModal}
+        title="Are you sur you want reject this bid?"
+        option1="No"
+        option2="Yes"
+        option1OnPress={onCloseRejectModal}
+        option2OnPress={onAcceptRejectModal}
+        loading={rejectBidLoading}
       />
     </>
   );
