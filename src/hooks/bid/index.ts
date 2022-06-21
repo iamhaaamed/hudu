@@ -81,6 +81,8 @@ export const useAcceptBid = () => {
       onSuccess: (successData: any) => {
         if (successData?.bid_acceptBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+        } else {
+          showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
         }
       },
       onError: (errorData: any) => {
@@ -109,6 +111,8 @@ export const useRejectBid = () => {
       onSuccess: (successData: any) => {
         if (successData?.bid_rejectBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+        } else {
+          showMessage(getResponseMessage(successData?.bid_rejectBid?.status));
         }
       },
       onError: (errorData: any) => {
@@ -133,6 +137,8 @@ export const useAddBid = () => {
       onSuccess: (successData: any) => {
         if (successData?.bid_addBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_addBid?.status));
+        } else {
           showMessage(getResponseMessage(successData?.bid_addBid?.status));
         }
       },
@@ -163,6 +169,8 @@ export const useCancelBid = () => {
         if (successData?.bid_cancellBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
           showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
+        } else {
+          showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
         }
       },
       onError: (errorData: any) => {
@@ -191,6 +199,10 @@ export const useDeleteBid = () => {
       onSuccess: (successData: any) => {
         if (successData?.bid_DeleteBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.projects);
+          showMessage(getResponseMessage(successData?.bid_DeleteBid?.status));
+        } else {
+          showMessage(getResponseMessage(successData?.bid_DeleteBid?.status));
         }
       },
       onError: (errorData: any) => {
@@ -208,13 +220,17 @@ export const useDeleteBid = () => {
 export const useEditBid = () => {
   const queryClient = useQueryClient();
   return useMutation<Bid_EditBidMutation, any, Bid_EditBidMutationVariables>(
-    async (bidId: any) => {
-      return graphQLClient.request(BID_EDIT_BID, {bidId});
+    async (editBidInput: any) => {
+      return graphQLClient.request(BID_EDIT_BID, {editBidInput});
     },
     {
       onSuccess: (successData: any) => {
         if (successData?.bid_editBid?.status === ResponseStatus.Success) {
+          showMessage(getResponseMessage(successData?.bid_editBid?.status));
           queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.projects);
+        } else {
+          showMessage(getResponseMessage(successData?.bid_editBid?.status));
         }
       },
       onError: (errorData: any) => {

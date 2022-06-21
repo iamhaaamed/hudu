@@ -11,11 +11,11 @@ import {goBack, navigate} from '~/navigation/Methods';
 import {Colors} from '~/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
-import images from '~/assets/images';
+import assetsImages from '~/assets/images';
 
 export const PHOTO_SIZE = 120;
 
-const Header = ({title, images: imageData, user, isLiked, projectId}: any) => {
+const Header = ({title, images, user, isLiked, projectId}: any) => {
   const totalReview = useMemo(() => {
     const listerCounts = user?.listersWhoRatedToMeCount;
     const hudurCounts = user?.huduersWhoRatedToMeCount;
@@ -52,7 +52,7 @@ const Header = ({title, images: imageData, user, isLiked, projectId}: any) => {
           />
           <ProjectFavoriteIcon {...{isLiked, projectId, size: 24}} />
         </HStack>
-        <CustomCarousel height={verticalScale(302)} data={imageData} />
+        <CustomCarousel height={verticalScale(302)} data={images} />
       </VStack>
       <Box
         bg={Colors.WHITE}
@@ -87,7 +87,7 @@ const Header = ({title, images: imageData, user, isLiked, projectId}: any) => {
                   imageSource={user?.imageAddress}
                   style={styles.avatar}
                   resizeMode="stretch"
-                  errorImage={images.avatarErrorImage}
+                  errorImage={assetsImages.avatarErrorImage}
                 />
                 <Text
                   flex={1}

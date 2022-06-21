@@ -4,8 +4,6 @@ import {Colors} from '~/styles';
 import {CustomButton, ReviewModal} from '~/components';
 import {useAddFeedBack, useFinishProject} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
-import {useQueryClient} from 'react-query';
-import queryKeys from '~/constants/queryKeys';
 
 const SectionFinishProject = ({
   projectId,
@@ -14,7 +12,6 @@ const SectionFinishProject = ({
   projectId: number;
   bidId: number;
 }) => {
-  const queryClient = useQueryClient();
   const {mutate: mutateFinishProject, isLoading: finishProjectLoading} =
     useFinishProject();
   const {mutate: mutateAddFeedBack, isLoading: addFeedBackLoading} =
@@ -49,8 +46,6 @@ const SectionFinishProject = ({
         if (
           successData?.project_addFeedBack?.status === ResponseStatus.Success
         ) {
-          queryClient.invalidateQueries(queryKeys.projects);
-          queryClient.invalidateQueries(queryKeys.bids);
           setReviewModalVisible(false);
         }
       },
