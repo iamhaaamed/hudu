@@ -3,13 +3,14 @@ import {StyleSheet, TextInput} from 'react-native';
 import {Box, HStack, IconButton, Spinner, Text, VStack} from 'native-base';
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
-import {userDataStore} from '~/stores';
+import {authStore, userDataStore} from '~/stores';
 import {SendIcon} from '~/assets/icons';
 import {useAddQuestion} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
 import {QuestionChildItem} from '~/components';
 
 const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
+  const {isUserLoggedIn} = authStore(state => state);
   const {userData} = userDataStore(state => state);
 
   const currentUser = userData?.id === item?.userId;
@@ -62,46 +63,49 @@ const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
           {item?.text}
         </Text>
       </HStack>
-      {item?.childrenQuestions?.length < 1 && currentUserIsLister && !isLister && (
-        <HStack space="4">
-          <Box flex={0.2} />
-          <HStack
-            space="1"
-            flex={0.7}
-            alignItems="center"
-            borderBottomColor={Colors.PLACEHOLDER}
-            borderBottomWidth="1">
-            <TextInput
-              value={replyText}
-              autoCapitalize="none"
-              placeholder="Reply to HUDUr"
-              onChangeText={setReplyText}
-              multiline={false}
-              placeholderTextColor={Colors.PLACEHOLDER}
-              style={styles.input}
-            />
-            {replyText?.length > 0 && (
-              <IconButton
-                onPress={sendOnPress}
-                colorScheme={Colors.WHITE_RIPPLE_COLOR}
-                borderRadius="full"
-                icon={
-                  addQuestionLoading ? (
-                    <Spinner size={12} color={Colors.PRIMARY} />
-                  ) : (
-                    <SendIcon
-                      height={12}
-                      width={12}
-                      fillColor={Colors.PRIMARY}
-                    />
-                  )
-                }
+      {isUserLoggedIn &&
+        item?.childrenQuestions?.length < 1 &&
+        currentUserIsLister &&
+        !isLister && (
+          <HStack space="4">
+            <Box flex={0.2} />
+            <HStack
+              space="1"
+              flex={0.7}
+              alignItems="center"
+              borderBottomColor={Colors.PLACEHOLDER}
+              borderBottomWidth="1">
+              <TextInput
+                value={replyText}
+                autoCapitalize="none"
+                placeholder="Reply to HUDUr"
+                onChangeText={setReplyText}
+                multiline={false}
+                placeholderTextColor={Colors.PLACEHOLDER}
+                style={styles.input}
               />
-            )}
+              {replyText?.length > 0 && (
+                <IconButton
+                  onPress={sendOnPress}
+                  colorScheme={Colors.WHITE_RIPPLE_COLOR}
+                  borderRadius="full"
+                  icon={
+                    addQuestionLoading ? (
+                      <Spinner size={12} color={Colors.PRIMARY} />
+                    ) : (
+                      <SendIcon
+                        height={12}
+                        width={12}
+                        fillColor={Colors.PRIMARY}
+                      />
+                    )
+                  }
+                />
+              )}
+            </HStack>
+            <Box flex={0.15} />
           </HStack>
-          <Box flex={0.15} />
-        </HStack>
-      )}
+        )}
       {item?.childrenQuestions?.map((element: any, indx: number) => (
         <QuestionChildItem key={indx} {...{item: element, listerId}} />
       ))}

@@ -8,7 +8,7 @@ import {CustomInput, QuestionItem, CustomLoading} from '~/components';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {SendIcon} from '~/assets/icons';
-import {authStore} from '~/stores';
+import {authStore, userDataStore} from '~/stores';
 import {useAddQuestion} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
 
@@ -35,6 +35,7 @@ const SectionQuestionRoute = forwardRef(
     ref,
   ) => {
     const {isUserLoggedIn} = authStore(state => state);
+    const {userData} = userDataStore(state => state);
 
     const {mutate: mutateAddQuestion, isLoading: addQuestionLoading} =
       useAddQuestion();
@@ -98,7 +99,7 @@ const SectionQuestionRoute = forwardRef(
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={ItemSeparatorComponent}
         />
-        {isUserLoggedIn && (
+        {isUserLoggedIn && userData?.id !== listerId && (
           <VStack px="4" py="4">
             <FormProvider {...methods}>
               <CustomInput

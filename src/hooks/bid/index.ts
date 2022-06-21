@@ -81,6 +81,7 @@ export const useAcceptBid = () => {
       onSuccess: successData => {
         if (successData?.bid_acceptBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
         }
@@ -111,6 +112,7 @@ export const useRejectBid = () => {
       onSuccess: successData => {
         if (successData?.bid_rejectBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_rejectBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_rejectBid?.status));
         }

@@ -17,6 +17,7 @@ import {useDeleteBid, useEditBid} from '~/hooks/bid';
 import {ResponseStatus} from '~/generated/graphql';
 import {useQueryClient} from 'react-query';
 import queryKeys from '~/constants/queryKeys';
+import {navigate} from '~/navigation/Methods';
 
 const SectionHudurProjectRow = ({item}: {item: any}) => {
   const swipeable = useRef<Swipeable>(null);
@@ -27,6 +28,10 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
     useState<boolean>(false);
   const {mutate: mutateEditBid, isLoading: editBidLoading} = useEditBid();
   const {mutate: mutateDeleteBid, isLoading: deleteBidLoading} = useDeleteBid();
+
+  const itemOnPress = () => {
+    navigate('ProjectDetailsHudur', {projectId: item?.id});
+  };
 
   const deleteOnPress = () => {
     if (item?.bidStatus === 'WAITING') {
@@ -121,60 +126,66 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
         ref={swipeable}
         renderRightActions={renderRightActions}
         renderLeftActions={renderLeftActions}>
-        <HStack
+        <Center
           px="2"
           py="2"
-          space="2"
           mx="1"
           my="1"
           flex={1}
           borderRadius="lg"
           bg={Colors.WHITE}
           shadow="4">
-          <CustomImage
-            imageSource={item?.project?.projectImages?.[0]?.imageAddress}
-            style={styles.image}
-            resizeMode="stretch"
-          />
-          <VStack flex={1} space="1">
-            <HStack alignItems="center">
-              <Text
-                flex={1}
-                numberOfLines={1}
-                fontSize={scale(16)}
-                fontFamily={fontFamily.medium}
-                color={Colors.BLACK_1}>
-                {item?.project?.title}
-              </Text>
-              <SectionBidLabel {...{item}} />
+          <TouchableOpacity
+            style={styles.item}
+            activeOpacity={0.7}
+            onPress={itemOnPress}>
+            <HStack space="2">
+              <CustomImage
+                imageSource={item?.project?.projectImages?.[0]?.imageAddress}
+                style={styles.image}
+                resizeMode="stretch"
+              />
+              <VStack flex={1} space="1">
+                <HStack alignItems="center">
+                  <Text
+                    flex={1}
+                    numberOfLines={1}
+                    fontSize={scale(16)}
+                    fontFamily={fontFamily.medium}
+                    color={Colors.BLACK_1}>
+                    {item?.project?.title}
+                  </Text>
+                  <SectionBidLabel {...{item}} />
+                </HStack>
+                <Text
+                  flex={1}
+                  numberOfLines={3}
+                  fontSize={scale(14)}
+                  fontFamily={fontFamily.regular}
+                  color={Colors.PLACEHOLDER}>
+                  {item?.description}
+                </Text>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <Text
+                    fontSize={scale(14)}
+                    fontFamily={fontFamily.regular}
+                    color={Colors.BLACK_1}>
+                    Your bid
+                  </Text>
+                  <Text
+                    fontSize={scale(16)}
+                    fontFamily={fontFamily.regular}
+                    color={Colors.INFO}>
+                    ${item?.amount}
+                  </Text>
+                </HStack>
+                {item?.bidStatus === 'FINISHED' && (
+                  <SectionLeaveReview {...{bidId: item?.id}} />
+                )}
+              </VStack>
             </HStack>
-            <Text
-              flex={1}
-              numberOfLines={3}
-              fontSize={scale(14)}
-              fontFamily={fontFamily.regular}
-              color={Colors.PLACEHOLDER}>
-              {item?.description}
-            </Text>
-            <HStack alignItems="center" justifyContent="space-between">
-              <Text
-                fontSize={scale(14)}
-                fontFamily={fontFamily.regular}
-                color={Colors.BLACK_1}>
-                Your bid
-              </Text>
-              <Text
-                fontSize={scale(16)}
-                fontFamily={fontFamily.regular}
-                color={Colors.INFO}>
-                ${item?.amount}
-              </Text>
-            </HStack>
-            {item?.bidStatus === 'FINISHED' && (
-              <SectionLeaveReview {...{bidId: item?.id}} />
-            )}
-          </VStack>
-        </HStack>
+          </TouchableOpacity>
+        </Center>
       </Swipeable>
       <EditModal
         visible={editModalVisible}
@@ -204,5 +215,9 @@ const styles = StyleSheet.create({
     height: '100%',
     width: scale(107),
     borderRadius: 10,
+  },
+  item: {
+    width: '100%',
+    flex: 1,
   },
 });
