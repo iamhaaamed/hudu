@@ -26,6 +26,7 @@ export {default as CustomLoading} from './atoms/CustomLoading';
 export {default as ProfileLinks} from './atoms/ProfileLinks';
 export {default as ProfileInfo} from './atoms/ProfileInfo';
 export {default as ProfileRating} from './atoms/ProfileRating';
+export {default as SectionBidLabel} from './atoms/SectionBidLabel';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';

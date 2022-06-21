@@ -53,7 +53,7 @@ const SectionProjects = ({
           data={data || []}
           renderItem={renderItem}
           keyExtractor={(_, index) => `key${index}`}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.9}
           onEndReached={({distanceFromEnd}) => {
             if (distanceFromEnd < 0) return;
             onLoadMore?.();

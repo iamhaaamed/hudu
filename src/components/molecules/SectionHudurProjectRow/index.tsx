@@ -1,37 +1,57 @@
-import React, {useRef, useState, useMemo} from 'react';
+import React, {useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {HStack, Text, VStack, Center, Icon} from 'native-base';
 import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
 import {
-  SectionProjectLabel,
+  SectionBidLabel,
   CustomImage,
   SectionLeaveReview,
   EditModal,
+  QuestionModal,
 } from '~/components';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {userDataStore} from '~/stores';
+import {useDeleteBid, useEditBid} from '~/hooks/bid';
+import {ResponseStatus} from '~/generated/graphql';
+import {useQueryClient} from 'react-query';
+import queryKeys from '~/constants/queryKeys';
 
 const SectionHudurProjectRow = ({item}: {item: any}) => {
   const swipeable = useRef<Swipeable>(null);
+  const queryClient = useQueryClient();
 
-  const {userData} = userDataStore(state => state);
+  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [questionModalVisible, setQuestionModalVisible] =
+    useState<boolean>(false);
+  const {mutate: mutateEditBid, isLoading: editBidLoading} = useEditBid();
+  const {mutate: mutateDeleteBid, isLoading: deleteBidLoading} = useDeleteBid();
 
-  const yourBid = useMemo(() => {
-    const res = item?.project?.bids.find(
-      (element: any) => element?.huduId === userData?.id,
-    );
-    return res?.amount ?? -1;
-  }, [item]);
+  const deleteOnPress = () => {
+    if (item?.bidStatus === 'WAITING') {
+      setQuestionModalVisible(true);
+    }
+  };
 
-  const [editModalVisible, setEditModalVisible] = useState(false);
+  const onCloseQuestionModal = () => {
+    setQuestionModalVisible(false);
+  };
 
-  const deleteOnPress = () => {};
+  const deleteHandler = () => {
+    mutateDeleteBid(item?.id, {
+      onSuccess: (successData: any) => {
+        if (successData?.bid_deleteBid?.status === ResponseStatus.Success) {
+          setQuestionModalVisible(false);
+        }
+      },
+    });
+  };
 
   const editOnPress = () => {
-    setEditModalVisible(true);
+    if (item?.bidStatus === 'WAITING') {
+      setEditModalVisible(true);
+    }
   };
 
   const closeEditModal = () => {
@@ -39,7 +59,20 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   };
 
   const submitEditModal = (formData: any) => {
-    setEditModalVisible(false);
+    const input = {
+      id: item?.id,
+      amount: formData?.amount,
+      description: formData?.description,
+    };
+    mutateEditBid(input, {
+      onSuccess: (successData: any) => {
+        if (successData?.bid_editBid?.status === ResponseStatus.Success) {
+          queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.bids);
+          setEditModalVisible(false);
+        }
+      },
+    });
   };
 
   const renderRightActions = () => {
@@ -99,7 +132,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
           bg={Colors.WHITE}
           shadow="4">
           <CustomImage
-            imageSource={item?.project?.imageAddress}
+            imageSource={item?.project?.projectImages?.[0]?.imageAddress}
             style={styles.image}
             resizeMode="stretch"
           />
@@ -113,7 +146,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
                 color={Colors.BLACK_1}>
                 {item?.project?.title}
               </Text>
-              <SectionProjectLabel {...{item}} />
+              <SectionBidLabel {...{item}} />
             </HStack>
             <Text
               flex={1}
@@ -121,7 +154,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
               fontSize={scale(14)}
               fontFamily={fontFamily.regular}
               color={Colors.PLACEHOLDER}>
-              {item?.project?.description}
+              {item?.description}
             </Text>
             <HStack alignItems="center" justifyContent="space-between">
               <Text
@@ -130,16 +163,14 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
                 color={Colors.BLACK_1}>
                 Your bid
               </Text>
-              {item?.project?.bids?.length > 0 && yourBid !== -1 && (
-                <Text
-                  fontSize={scale(16)}
-                  fontFamily={fontFamily.regular}
-                  color={Colors.INFO}>
-                  ${yourBid}
-                </Text>
-              )}
+              <Text
+                fontSize={scale(16)}
+                fontFamily={fontFamily.regular}
+                color={Colors.INFO}>
+                ${item?.amount}
+              </Text>
             </HStack>
-            {item?.project?.projectStatus === 'FINISHED' && (
+            {item?.bidStatus === 'FINISHED' && (
               <SectionLeaveReview {...{bidId: item?.id}} />
             )}
           </VStack>
@@ -150,6 +181,17 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
         onClose={closeEditModal}
         onSubmit={submitEditModal}
         title="Bid details"
+        loading={editBidLoading}
+      />
+      <QuestionModal
+        visible={questionModalVisible}
+        onClose={onCloseQuestionModal}
+        title="Are you sure you want delete this bid?"
+        option1="Cancel"
+        option2="Delete"
+        option1OnPress={onCloseQuestionModal}
+        option2OnPress={deleteHandler}
+        loading={deleteBidLoading}
       />
     </>
   );

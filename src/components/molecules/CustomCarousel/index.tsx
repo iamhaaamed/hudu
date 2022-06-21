@@ -23,7 +23,7 @@ export default function CustomCarousel(props: {
     return (
       <CustomImage
         style={[styles.image, {height}]}
-        imageSource={item}
+        imageSource={item?.imageAddress}
         resizeMode="stretch"
         zoomable
         imageSourceArray={data}

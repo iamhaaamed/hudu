@@ -6,6 +6,7 @@ import {
   ModalHeader,
   BidItem,
   CustomLoading,
+  EmptyData,
 } from '~/components';
 import {scale} from '~/utils/style';
 import {Colors} from '~/styles';
@@ -64,6 +65,7 @@ const ChooseHudurModal = ({
             showsVerticalScrollIndicator={false}
             data={bids}
             renderItem={renderItem}
+            ListEmptyComponent={EmptyData}
             keyExtractor={(_, index) => `key${index}`}
             onEndReachedThreshold={0.9}
             onEndReached={({distanceFromEnd}) => {

@@ -54,7 +54,7 @@ const EditModal = ({
       loading={loading}>
       <FormProvider {...methods}>
         <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
-          <ModalHeader text={title} />
+          <ModalHeader text={title} onPress={onCloseHandler} />
           <CustomInput
             autoFocus
             {...register('amount')}
