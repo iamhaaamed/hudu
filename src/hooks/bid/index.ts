@@ -78,7 +78,7 @@ export const useAcceptBid = () => {
       return graphQLClient.request(BID_ACCEPT_BID, {bidId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_acceptBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
         } else {
@@ -108,7 +108,7 @@ export const useRejectBid = () => {
       return graphQLClient.request(BID_REJECT_BID, {bidId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_rejectBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
         } else {
@@ -134,7 +134,7 @@ export const useAddBid = () => {
       return graphQLClient.request(BID_ADD_BID, {bidInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_addBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
           showMessage(getResponseMessage(successData?.bid_addBid?.status));
@@ -165,7 +165,7 @@ export const useCancelBid = () => {
       return graphQLClient.request(BID_CANCELL_BID, {bidId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_cancellBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
           showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
@@ -196,7 +196,7 @@ export const useDeleteBid = () => {
       return graphQLClient.request(BID_DELETE_BID, {bidId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_DeleteBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
           queryClient.invalidateQueries(queryKeys.projects);
@@ -224,7 +224,7 @@ export const useEditBid = () => {
       return graphQLClient.request(BID_EDIT_BID, {editBidInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_editBid?.status === ResponseStatus.Success) {
           showMessage(getResponseMessage(successData?.bid_editBid?.status));
           queryClient.invalidateQueries(queryKeys.bids);

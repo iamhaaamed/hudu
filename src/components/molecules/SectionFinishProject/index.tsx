@@ -21,7 +21,7 @@ const SectionFinishProject = ({
 
   const finishProjectOnPress = () => {
     mutateFinishProject(projectId, {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.project_finisheProject?.status === ResponseStatus.Success
         ) {
@@ -42,7 +42,7 @@ const SectionFinishProject = ({
       listersComment: formData?.review,
     };
     mutateAddFeedBack(input, {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.project_addFeedBack?.status === ResponseStatus.Success
         ) {

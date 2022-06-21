@@ -113,7 +113,7 @@ export const useCreateMessage = () => {
       return graphQLClient.request(MESSAGE_CREATE_MESSAGE, {messageInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.message_createMessage?.status === ResponseStatus.Success
         ) {
@@ -143,7 +143,7 @@ export const useDeleteMessage = () => {
       return graphQLClient.request(MESSAGE_DELETE_MESSAGE, {messageId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.message_deleteMessage?.status === ResponseStatus.Success
         ) {
@@ -175,7 +175,7 @@ export const useRemoveConversation = () => {
       });
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.message_removeConversation?.status ===
           ResponseStatus.Success

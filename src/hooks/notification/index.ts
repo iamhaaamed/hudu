@@ -71,7 +71,7 @@ export const useAddNotification = () => {
       });
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.notification_addNotification?.status ===
           ResponseStatus.Success
@@ -104,7 +104,7 @@ export const useReadNotification = () => {
       });
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.notification_readNotification?.status ===
           ResponseStatus.Success

@@ -27,14 +27,13 @@ const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
         parentId: item?.id,
       };
       mutateAddQuestion(input, {
-        onSuccess: (successData: any) => {
+        onSuccess: successData => {
           if (
             successData?.project_addQuestion?.status === ResponseStatus.Success
           ) {
             setReplyText('');
           }
         },
-        onError: () => {},
       });
     }
   };
