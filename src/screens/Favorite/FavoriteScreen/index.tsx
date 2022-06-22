@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {Text, VStack, HStack, Center} from 'native-base';
 import {
@@ -10,44 +10,16 @@ import {
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import images from '~/assets/images';
 import {fontFamily, scale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {useGetUserLikeProjects} from '~/hooks/project';
 import {authStore} from '~/stores';
+import Geolocation from 'react-native-geolocation-service';
+import {requestLocationPermission} from '~/utils/getPermissions';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
-
-const favorites = [
-  {
-    id: 0,
-    timeLeft: '3 Days',
-    title: 'Project 1',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 1,
-    timeLeft: '3 Days',
-    title: 'Project 2',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    image: images.testImage1,
-  },
-  {
-    id: 2,
-    timeLeft: '3 Days',
-    title: 'Project 3',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-];
 
 const FavoriteScreen = () => {
   const {isUserLoggedIn} = authStore(state => state);
@@ -56,6 +28,11 @@ const FavoriteScreen = () => {
     mode: 'onChange',
   });
 
+  const [options, setOptions] = useState({location: [12, 12]});
+
+  const options2 = isUserLoggedIn ? options : {enabled: isUserLoggedIn};
+  const [currentLocation, setCurrentLocation] = useState({location: [12, 12]});
+
   const {
     isLoading: getUserLikeProjectsLoading,
     data: getUserLikeProjects,
@@ -63,13 +40,51 @@ const FavoriteScreen = () => {
     hasNextPage: hasNextPageUserLikeProjects,
     refetch: refetchUserLikeProjects,
     isRefetching: isRefetchingUserLikeProjects,
-  } = useGetUserLikeProjects({enabled: isUserLoggedIn});
+  } = useGetUserLikeProjects(options2);
 
   const userLikeProjects = getUserLikeProjects?.pages ?? [];
 
   const {register, watch} = methods;
 
   const sort = watch('sort');
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  const getCurrentLocation = async () => {
+    if (await requestLocationPermission()) {
+      Geolocation.getCurrentPosition(
+        position => {
+          console.log(position);
+          const {latitude, longitude} = position.coords;
+          setCurrentLocation({
+            latitude,
+            longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.091,
+          });
+        },
+        (error: any) => {
+          showMessage({
+            message: JSON.stringify(error),
+            type: 'danger',
+            icon: 'danger',
+          });
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (sort) {
+      setOptions({
+        projectFilter: sort,
+        location: [currentLocation?.latitude, currentLocation?.longitude],
+      });
+    }
+  }, [sort]);
 
   const onLoadMore = () => {
     if (hasNextPageUserLikeProjects) {
@@ -98,6 +113,8 @@ const FavoriteScreen = () => {
             </Center>
           </HStack>
           <FlatList
+            onRefresh={refetchUserLikeProjects}
+            refreshing={isRefetchingUserLikeProjects}
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={styles.columnWrapperStyle}
             contentContainerStyle={styles.contentContainerStyle}

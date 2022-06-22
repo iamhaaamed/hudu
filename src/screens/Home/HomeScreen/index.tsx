@@ -28,7 +28,9 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   return (
     <CustomContainer>
       <VStack space="3" py="2" flex={1}>
-        {isUserLoggedIn && <SectionUserRow data={profile} />}
+        {isUserLoggedIn && (
+          <SectionUserRow {...{data: profile, loading: getProfileLoading}} />
+        )}
         <SectionSearchBox />
         <SectionProjects />
       </VStack>
