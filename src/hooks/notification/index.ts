@@ -127,8 +127,13 @@ export const useReadNotification = () => {
   );
 };
 
-export const useNotificationSubscription = ({userId}: {userId: number}) => {
-  const queryClient = useQueryClient();
+export const useNotificationSubscription = ({
+  userId,
+  callback,
+}: {
+  userId: number;
+  callback: () => void;
+}) => {
   useEffect(() => {
     const ws = new WebSocket(Config.API_URL, 'graphql-ws');
     ws.onopen = () => {
@@ -145,24 +150,7 @@ export const useNotificationSubscription = ({userId}: {userId: number}) => {
       };
       ws.send(JSON.stringify(notification));
     };
-    ws.onmessage = event => {
-      const notif = JSON.parse(event.data);
-      if (notif?.type !== 'ka') {
-        console.log({notif});
-      }
-      // if (msg.type == 'data') {
-      //     const data = msg.payload.data.productAdded;
-      //     queryClient.setQueriesData<Message_GetConversationQuery>(
-      //         queryKeys.getConversations,
-      //         (oldData: Message_GetConversationQuery) => {
-      //             return {
-      //                 ...oldData,
-      //                 getLastProducts: [...oldData.getLastProducts, data],
-      //             };
-      //         },
-      //     );
-      // }
-    };
+    ws.onmessage = callback;
     return () => {
       // Unsubscribe before exit
       ws.send(JSON.stringify({id: '1', type: 'stop'}));
