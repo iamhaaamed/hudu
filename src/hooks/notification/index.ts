@@ -1,8 +1,10 @@
+import {useEffect} from 'react';
 import {useInfiniteQuery, useMutation, useQueryClient} from 'react-query';
 import {PAGE_SIZE} from '~/constants/pagination';
 import graphQLClient from '~/graphql/graphQLClient';
 import queryKeys from '~/constants/queryKeys';
 import {NOTIFICATION_GET_NOTIFICATIONS} from '~/graphql/notification/queries';
+import {NOTIFICATION_ADDED} from '~/graphql/notification/subscriptions';
 import {
   NOTIFICATION_ADD_NOTIFICATION,
   NOTIFICATION_READ_NOTIFICATION,
@@ -17,6 +19,7 @@ import {
   ResponseStatus,
 } from '~/generated/graphql';
 import {showMessage} from 'react-native-flash-message';
+import {Config} from 'react-native-config';
 
 export const useGetNotifications = (options: any = {}) => {
   return useInfiniteQuery<
@@ -122,4 +125,48 @@ export const useReadNotification = () => {
       },
     },
   );
+};
+
+export const useNotificationSubscription = ({userId}: {userId: number}) => {
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const ws = new WebSocket(Config.API_URL, 'graphql-ws');
+    ws.onopen = () => {
+      console.log('connected');
+      const notification = {
+        id: '1',
+        type: 'start',
+        payload: {
+          variables: {userId: userId},
+          extensions: {},
+          operationName: null,
+          query: NOTIFICATION_ADDED,
+        },
+      };
+      ws.send(JSON.stringify(notification));
+    };
+    ws.onmessage = event => {
+      const notif = JSON.parse(event.data);
+      if (notif?.type !== 'ka') {
+        console.log({notif});
+      }
+      // if (msg.type == 'data') {
+      //     const data = msg.payload.data.productAdded;
+      //     queryClient.setQueriesData<Message_GetConversationQuery>(
+      //         queryKeys.getConversations,
+      //         (oldData: Message_GetConversationQuery) => {
+      //             return {
+      //                 ...oldData,
+      //                 getLastProducts: [...oldData.getLastProducts, data],
+      //             };
+      //         },
+      //     );
+      // }
+    };
+    return () => {
+      // Unsubscribe before exit
+      ws.send(JSON.stringify({id: '1', type: 'stop'}));
+      ws.close();
+    };
+  }, []);
 };
