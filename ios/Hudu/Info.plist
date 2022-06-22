@@ -20,6 +20,22 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.854018447373-1su9uefjusok97luepkpeci6jvk8vlpp</string>
+				<string>fb1284604992070625</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>1284604992070625</string>
+	<key>FacebookClientToken</key>
+	<string>396f5045e4ad76047e00f95e46b39c4f</string>
+	<key>FacebookDisplayName</key>
+	<string>Hudu</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>

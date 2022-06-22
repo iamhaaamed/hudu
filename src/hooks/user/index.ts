@@ -2,8 +2,11 @@ import React, {useState} from 'react';
 import Config from 'react-native-config';
 import auth from '@react-native-firebase/auth';
 import queryKeys from '~/constants/queryKeys';
+import {getResponseMessage} from '~/utils/helper';
+import {authStore, userDataStore} from '~/stores';
 import graphQLClient from '~/graphql/graphQLClient';
 import {showMessage} from 'react-native-flash-message';
+import {resetRoot, goBack} from '~/navigation/Methods';
 import {USER_GET_PROFILE} from '~/graphql/user/queries';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import {
@@ -37,9 +40,6 @@ import {
   LoginManager,
   GraphRequestManager,
 } from 'react-native-fbsdk-next';
-import {getResponseMessage} from '~/utils/helper';
-import {authStore, userDataStore} from '~/stores';
-import {resetRoot, goBack} from '~/navigation/Methods';
 
 GoogleSignin.configure({
   scopes: ['profile', 'email'], // what API you want to access on behalf of the user, default is email and profile
