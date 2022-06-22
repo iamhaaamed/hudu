@@ -1,17 +1,35 @@
 import React from 'react';
 import {CustomPicker} from '~/components';
+import {authStore} from '~/stores';
 import {scale} from '~/utils/style';
 
-const sortData = [
-  {id: 0, title: 'Low to high bids', value: 'lth'},
-  {id: 1, title: 'High to low bids', value: 'htl'},
-  {id: 2, title: 'Closet to current location', value: 'ctc'},
-  {id: 3, title: 'My zip code', value: 'mzc'},
-  {id: 4, title: 'Newest to oldest', value: 'nto'},
-  {id: 5, title: 'Oldest to newest', value: 'otn'},
-];
-
 export default React.forwardRef(({name}: {name: any}, ref: any) => {
+  const {isUserLoggedIn} = authStore(state => state);
+
+  const sortData = isUserLoggedIn
+    ? [
+        {id: 0, title: 'Low to high bids', value: 'LOW_TO_HIGH_BIDS'},
+        {id: 1, title: 'High to low bids', value: 'HIGH_TO_LOW_BIDS'},
+        {
+          id: 2,
+          title: 'Closet to current location',
+          value: 'CLOSET_TO_CURRENT_LOCATION',
+        },
+        {id: 3, title: 'My zip code', value: 'MY_ZIP_CODE'},
+        {id: 4, title: 'Newest to oldest', value: 'NEWEST_TO_OLDEST'},
+        {id: 5, title: 'Oldest to newest', value: 'OLDEST_TO_NEWEST'},
+      ]
+    : [
+        {id: 0, title: 'Low to high bids', value: 'LOW_TO_HIGH_BIDS'},
+        {id: 1, title: 'High to low bids', value: 'HIGH_TO_LOW_BIDS'},
+        {
+          id: 2,
+          title: 'Closet to current location',
+          value: 'CLOSET_TO_CURRENT_LOCATION',
+        },
+        {id: 3, title: 'My zip code', value: 'MY_ZIP_CODE'},
+      ];
+
   return (
     <CustomPicker
       name={name}

@@ -1,27 +1,26 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {HStack, VStack, Box, Center} from 'native-base';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {SectionSort, ProjectItem, EmptyData} from '~/components';
+import {
+  SectionSort,
+  ProjectItem,
+  EmptyData,
+  CustomContainer,
+} from '~/components';
 import {scale} from '~/utils/style';
+import {useGetProjects} from '~/hooks/project';
+import {requestLocationPermission} from '~/utils/getPermissions';
+import {showMessage} from 'react-native-flash-message';
+import Geolocation from 'react-native-geolocation-service';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
 
-const SectionProjects = ({
-  data,
-  onLoadMore,
-  reload,
-  isRefetching,
-}: {
-  data: any;
-  onLoadMore?: any;
-  reload?: any;
-  isRefetching?: any;
-}) => {
+const SectionProjects = () => {
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
@@ -31,36 +30,96 @@ const SectionProjects = ({
 
   const sort = watch('sort');
 
+  const [options, setOptions] = useState({location: [12, 12]});
+  const [currentLocation, setCurrentLocation] = useState({location: [12, 12]});
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  const getCurrentLocation = async () => {
+    if (await requestLocationPermission()) {
+      Geolocation.getCurrentPosition(
+        position => {
+          console.log(position);
+          const {latitude, longitude} = position.coords;
+          setCurrentLocation({
+            latitude,
+            longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.091,
+          });
+        },
+        (error: any) => {
+          showMessage({
+            message: JSON.stringify(error),
+            type: 'danger',
+            icon: 'danger',
+          });
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (sort) {
+      setOptions({
+        projectFilter: sort,
+        location: [currentLocation?.latitude, currentLocation?.longitude],
+      });
+    }
+  }, [sort]);
+
+  const {
+    isLoading: getProjectLoading,
+    data: getProjects,
+    fetchNextPage: fetchNextPageProjects,
+    hasNextPage: hasNextPageProjects,
+    refetch: refetchProjects,
+    isRefetching: isRefetchingProjects,
+  } = useGetProjects(options);
+
+  const projects = getProjects?.pages ?? [];
+
+  const onLoadMore = () => {
+    if (hasNextPageProjects) {
+      fetchNextPageProjects();
+    }
+  };
+
   const renderItem = ({item}: {item: any}) => <ProjectItem item={item} />;
 
   return (
-    <FormProvider {...methods}>
-      <VStack space="3" flex={1}>
-        <HStack px="4" justifyContent="flex-end">
-          <Box flex={1} />
-          <Center w={scale(120)}>
-            <SectionSort {...register('sort')} />
-          </Center>
-        </HStack>
-        <FlatList
-          onRefresh={reload}
-          refreshing={isRefetching}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={styles.columnWrapperStyle}
-          contentContainerStyle={styles.contentContainerStyle}
-          ListEmptyComponent={EmptyData}
-          numColumns={2}
-          data={data || []}
-          renderItem={renderItem}
-          keyExtractor={(_, index) => `key${index}`}
-          onEndReachedThreshold={0.9}
-          onEndReached={({distanceFromEnd}) => {
-            if (distanceFromEnd < 0) return;
-            onLoadMore?.();
-          }}
-        />
-      </VStack>
-    </FormProvider>
+    <CustomContainer isLoading={getProjectLoading}>
+      <FormProvider {...methods}>
+        <VStack space="3" flex={1}>
+          <HStack px="4" justifyContent="flex-end">
+            <Box flex={1} />
+            <Center w={scale(120)}>
+              <SectionSort {...register('sort')} />
+            </Center>
+          </HStack>
+          <FlatList
+            onRefresh={refetchProjects}
+            refreshing={isRefetchingProjects}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={styles.columnWrapperStyle}
+            contentContainerStyle={styles.contentContainerStyle}
+            ListEmptyComponent={EmptyData}
+            numColumns={2}
+            data={projects}
+            renderItem={renderItem}
+            keyExtractor={(_, index) => `key${index}`}
+            onEndReachedThreshold={0.9}
+            onEndReached={({distanceFromEnd}) => {
+              if (distanceFromEnd < 0) return;
+              onLoadMore?.();
+            }}
+          />
+        </VStack>
+      </FormProvider>
+    </CustomContainer>
   );
 };
 

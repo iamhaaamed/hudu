@@ -30,7 +30,7 @@ const FavoriteItem = ({item}: {item?: any}) => {
       borderRadius="md"
       bg={Colors.WHITE}>
       <CustomImage
-        imageSource={item?.imageAddress}
+        imageSource={item?.project?.projectImages?.[0]?.imageAddress}
         style={styles.image}
         resizeMode="stretch">
         <VStack flex={1} justifyContent="space-between">

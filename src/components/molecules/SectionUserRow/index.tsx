@@ -12,7 +12,7 @@ import {userDataStore} from '~/stores';
 import {useQueryClient} from 'react-query';
 import queryKeys from '~/constants/queryKeys';
 
-const SectionUserRow = ({data}: {data: any}) => {
+const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
   const queryClient = useQueryClient();
   const {userData} = userDataStore(state => state);
 
