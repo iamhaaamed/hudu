@@ -40,6 +40,7 @@ import {
   LoginManager,
   GraphRequestManager,
 } from 'react-native-fbsdk-next';
+import appleAuth from '@invertase/react-native-apple-authentication';
 
 GoogleSignin.configure({
   scopes: ['profile', 'email'], // what API you want to access on behalf of the user, default is email and profile
@@ -462,6 +463,56 @@ export const useFacebookAuth = () => {
   };
 
   return {signInWithFacebook};
+};
+
+export const useAppleAuth = () => {
+  const {signOut} = useSignOutAuth();
+
+  const signInWithApple = async () => {
+    try {
+      signOut();
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+      if (!appleAuthRequestResponse.identityToken) {
+        return {
+          data: null,
+          success: false,
+          loading: false,
+          error: 'Apple Sign-In failed - no identify token returned',
+        };
+      }
+      const fullResult = appleAuthRequestResponse;
+      const idToken = appleAuthRequestResponse.identityToken;
+      const nonce = appleAuthRequestResponse.nonce;
+      const appleCredential = auth.AppleAuthProvider.credential(idToken, nonce);
+
+      await auth().signInWithCredential(appleCredential);
+      const currentUser = auth().currentUser;
+      const fbIdToken = await currentUser?.getIdToken();
+      console.log({fbIdToken});
+      graphQLClient.setHeader('authorization', 'Bearer ' + fbIdToken);
+      return {
+        data: {
+          fbIdToken,
+          fullResult,
+        },
+        success: true,
+        loading: false,
+        error: false,
+      };
+    } catch (err: any) {
+      return {
+        data: null,
+        success: false,
+        loading: false,
+        error: err,
+      };
+    }
+  };
+
+  return {signInWithApple};
 };
 
 export const useSignOutAuth = () => {

@@ -8,6 +8,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Box, Button, Flex, HStack, Text, VStack} from 'native-base';
 import {
+  useAppleAuth,
   useFacebookAuth,
   useGoogleAuth,
   useSignUp,
@@ -47,6 +48,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
   const {mutate: signUpMutate} = useSignUp();
   const {signInWithGoogle} = useGoogleAuth();
   const {signInWithFacebook} = useFacebookAuth();
+  const {signInWithApple} = useAppleAuth();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -82,6 +84,16 @@ export default function SignUpScreen({navigation}: NavigationProp) {
   const facebookOnPress = async () => {
     setLoading(true);
     const res = await signInWithFacebook();
+    if (res?.data) {
+      completeSignUp();
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const appleOnPress = async () => {
+    setLoading(true);
+    const res = await signInWithApple();
     if (res?.data) {
       completeSignUp();
     } else {
@@ -145,7 +157,9 @@ export default function SignUpScreen({navigation}: NavigationProp) {
                 onPress={handleSubmit(signUpOnPress)}
               />
             </Box>
-            <SectionRowSocial {...{googleOnPress, facebookOnPress}} />
+            <SectionRowSocial
+              {...{googleOnPress, facebookOnPress, appleOnPress}}
+            />
             <HStack alignItems="center" justifyContent="center">
               <Text fontSize="md">Already have an account?</Text>
               <Button px={1} variant="link" onPress={signInOnPress}>
