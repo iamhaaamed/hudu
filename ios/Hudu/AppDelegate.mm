@@ -1,5 +1,10 @@
-#import <Firebase.h>
+#import <Firebase.h> // <- FIREBASE
 #import "AppDelegate.h"
+
+#import <RNGoogleSignin/RNGoogleSignin.h> // <- GOOGLE
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h> // <- FACEBOOK
+#import <React/RCTLinkingManager.h> // <- FACEBOOK
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -28,13 +33,19 @@
 
 @implementation AppDelegate
 
+ // <- FACEBOOK
+- (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<NSString *,id> *)options {
+  return [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options] || [RNGoogleSignin application:application openURL:url options:options];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  // Add this  --- \/
+  // <- FIREBASE \/
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }
-  // Add me --- /\
+  // <- FIREBASE --- /\
+  
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
@@ -60,6 +71,11 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
+  // <- FACEBOOK
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                         didFinishLaunchingWithOptions:launchOptions];
+
   return YES;
 }
 
