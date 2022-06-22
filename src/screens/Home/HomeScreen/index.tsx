@@ -11,7 +11,6 @@ import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {authStore} from '~/stores';
 import {useGetProfile} from '~/hooks/user';
-import {useGetProjects} from '~/hooks/project';
 
 const HomeScreen = ({navigation}: {navigation: any}) => {
   const {isUserLoggedIn} = authStore(state => state);
@@ -20,47 +19,18 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
     enabled: isUserLoggedIn,
   });
 
-  const {
-    isLoading: getProjectLoading,
-    data: getProjects,
-    fetchNextPage: fetchNextPageProjects,
-    hasNextPage: hasNextPageProjects,
-    refetch: refetchProjects,
-    isRefetching: isRefetchingProjects,
-  } = useGetProjects({location: [12, 12]});
-
   const profile = getProfile?.user_getProfile?.result ?? {};
-  const projects = getProjects?.pages ?? [];
-
-  const onLoadMore = () => {
-    if (hasNextPageProjects) {
-      fetchNextPageProjects();
-    }
-  };
-
-  const reLoad = () => {
-    refetchProjects();
-  };
 
   const questionHandler = () => {
     navigation.navigate('AuthStack', {screen: 'Support'});
   };
 
-  const loading = getProfileLoading || getProjectLoading;
-
   return (
-    <CustomContainer isLoading={loading}>
+    <CustomContainer>
       <VStack space="3" py="2" flex={1}>
         {isUserLoggedIn && <SectionUserRow data={profile} />}
         <SectionSearchBox />
-        <SectionProjects
-          {...{
-            data: projects,
-            onLoadMore,
-            reLoad,
-            isRefetching: isRefetchingProjects,
-          }}
-        />
+        <SectionProjects />
       </VStack>
       <TouchableOpacity
         activeOpacity={0.7}
