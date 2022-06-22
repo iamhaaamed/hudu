@@ -325,11 +325,18 @@ type Query {
   user_getAdminDashboard: ResponseBaseOfAdminDashboardDto
   message_getConversation(conversationId: Int!): ListResponseBaseOfMessages
   message_getUserMessages: ListResponseBaseOfConversationDto
+  message_getConversationForUser(otherUserId: Int!): ResponseBaseOfConversations
   notification_getNotifications: ListResponseBaseOfNotification
   project_getProject(projectId: Int!): ResponseBaseOfProjectDto
-  project_getProjects: ListResponseBaseOfProjectDto
+  project_getProjects(
+    projectFilter: ProjectFilter
+    location: Position
+  ): ListResponseBaseOfProjectDto
   project_getUserLikeProject(projectId: Int!): ResponseBaseOfProjectDto
-  project_getUserLikeProjects: ListResponseBaseOfProjectDto
+  project_getUserLikeProjects(
+    projectFilter: ProjectFilter
+    location: Position
+  ): ListResponseBaseOfProjectDto
   project_getQuestions: ListResponseBaseOfQuestion
   bid_getBids: ListResponseBaseOfBid
 }
@@ -339,6 +346,7 @@ type Mutation {
   user_updateProfile(userInput: UserInput): ResponseBaseOfUsers
   user_activationUser(isActive: Boolean!, userId: Int!): ResponseBaseOfUsers
   user_UpdateLastSeen: ResponseBaseOfUsers
+  user_sendEmail(email: EmailInput): ResponseStatus!
   message_createMessage(messageInput: MessageInput): ResponseBaseOfMessages
   message_removeConversation(conversationId: Int!): ResponseBase
   message_deleteMessage(messageId: Int!): ResponseBaseOfMessages
@@ -372,6 +380,7 @@ type Mutation {
 
 type Subscription {
   messageAdded(userId: Int!): Messages
+  notificationAdded(userId: Int!): Notification
 }
 
 type Bid {
@@ -412,6 +421,8 @@ type Conversations {
 }
 
 type Messages {
+  messageType: MessageTypes!
+  photoUrl: String
   createdAt: DateTime!
   conversationId: Int!
   conversation: Conversations
@@ -548,6 +559,9 @@ type AdminDashboardDto {
 }
 
 type ConversationDto {
+  userEmail: String
+  userFirstName: String
+  userLastName: String
   subject: String
   conversationId: Int!
   user: Users
@@ -558,6 +572,7 @@ type ConversationDto {
 type ProjectDto {
   project: Project
   isLiked: Boolean!
+  bids: [Bid]
 }
 
 """
@@ -583,6 +598,14 @@ enum BidStatus {
 The `DateTime` scalar represents an ISO-8601 compliant date time type.
 """
 scalar DateTime
+
+enum MessageTypes {
+  TEXT
+  PHOTO
+  VIDEO
+  VOICE
+  FILE
+}
 
 enum NotificationType {
   NEW_BID_GIVEN
@@ -615,24 +638,6 @@ enum UserTypes {
   USER
 }
 
-input AddProjectInput {
-  title: String!
-  description: String!
-  duration: Int
-  availability: Availability!
-  streetAddress: String!
-  city: String!
-  state: String!
-  point: Position!
-  zipCode: String!
-  projectImages: [ProjectImagesInput]
-}
-
-type ResponseBaseOfProject {
-  result: Project
-  status: ResponseStatus!
-}
-
 type ResponseBaseOfNotification {
   result: Notification
   status: ResponseStatus!
@@ -650,9 +655,8 @@ type ResponseBase {
 
 input MessageInput {
   subject: String
-  programId: Int
-  careerId: Int
-  isChatWithCareer: Boolean!
+  messageType: MessageTypes!
+  photoUrl: String
   conversationId: Int
   receiverId: Int
   text: String
@@ -661,6 +665,42 @@ input MessageInput {
 type ResponseBaseOfMessages {
   result: Messages
   status: ResponseStatus!
+}
+
+input EmailInput {
+  to: String
+  subject: String
+  plainTextContent: String
+  htmlContent: String
+}
+
+enum ResponseStatus {
+  SUCCESS
+  NOT_FOUND
+  UNKNOWN_ERROR
+  NOT_ENOUGH_DATA
+  AUTHENTICATION_FAILED
+  USER_NOT_FOUND
+  ALREADY_EXIST
+  SELF_MESSAGE_NOT_ALLOWED
+  ALREADY_REMOVED
+  NOT_ALLOWED
+  ALREADY_FOLLOWED
+  SAME_ID
+  POST_NOT_FOUND
+  COMMENT_NOT_FOUND
+  INVALID_TIME_RANGE
+  TIME_CONFLICT
+  INVALID_TIME_SYNTAX
+  DIFFRENET_IDS
+  HOST_NOT_FOUND
+  ACCESS_DENIED
+  FAILED
+  USERNAME_ALREADY_EXIST
+  DURATION_IS_REQUIRED
+  ACTIVE_BIDS_EXIST
+  IN_PROGRESS_BID_EXIST
+  SELF_BID_NOT_ALLOWED
 }
 
 input UserInput {
@@ -697,6 +737,15 @@ type ListResponseBaseOfQuestion {
   status: ResponseStatus!
 }
 
+enum ProjectFilter {
+  LOW_TO_HIGH_BIDS
+  HIGH_TO_LOW_BIDS
+  CLOSET_TO_CURRENT_LOCATION
+  MY_ZIP_CODE
+  NEWEST_TO_OLDEST
+  OLDEST_TO_NEWEST
+}
+
 type ListResponseBaseOfProjectDto {
   result(
     skip: Int
@@ -719,6 +768,11 @@ type ListResponseBaseOfNotification {
     where: NotificationFilterInput
     order: [NotificationSortInput!]
   ): NotificationCollectionSegment
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfConversations {
+  result: Conversations
   status: ResponseStatus!
 }
 
@@ -760,6 +814,24 @@ type ListResponseBaseOfUsers {
 type ResponseBaseOfUsers {
   result: Users
   status: ResponseStatus!
+}
+
+type ResponseBaseOfProject {
+  result: Project
+  status: ResponseStatus!
+}
+
+input AddProjectInput {
+  title: String!
+  description: String!
+  duration: Int
+  availability: Availability!
+  streetAddress: String!
+  city: String!
+  state: String!
+  point: Position!
+  zipCode: String!
+  projectImages: [ProjectImagesInput]
 }
 
 input EditProjectInput {
@@ -921,6 +993,7 @@ input ProjectDtoFilterInput {
   or: [ProjectDtoFilterInput!]
   project: ProjectFilterInput
   isLiked: BooleanOperationFilterInput
+  bids: ListFilterInputTypeOfBidFilterInput
 }
 
 input ProjectDtoSortInput {
@@ -977,6 +1050,9 @@ type NotificationCollectionSegment {
 input ConversationDtoFilterInput {
   and: [ConversationDtoFilterInput!]
   or: [ConversationDtoFilterInput!]
+  userEmail: StringOperationFilterInput
+  userFirstName: StringOperationFilterInput
+  userLastName: StringOperationFilterInput
   subject: StringOperationFilterInput
   conversationId: ComparableInt32OperationFilterInput
   user: UsersFilterInput
@@ -985,6 +1061,9 @@ input ConversationDtoFilterInput {
 }
 
 input ConversationDtoSortInput {
+  userEmail: SortEnumType
+  userFirstName: SortEnumType
+  userLastName: SortEnumType
   subject: SortEnumType
   conversationId: SortEnumType
   user: UsersSortInput
@@ -1005,6 +1084,8 @@ type ConversationDtoCollectionSegment {
 input MessagesFilterInput {
   and: [MessagesFilterInput!]
   or: [MessagesFilterInput!]
+  messageType: MessageTypesOperationFilterInput
+  photoUrl: StringOperationFilterInput
   createdAt: ComparableDateTimeOperationFilterInput
   conversationId: ComparableInt32OperationFilterInput
   conversation: ConversationsFilterInput
@@ -1017,6 +1098,8 @@ input MessagesFilterInput {
 }
 
 input MessagesSortInput {
+  messageType: SortEnumType
+  photoUrl: SortEnumType
   createdAt: SortEnumType
   conversationId: SortEnumType
   conversation: ConversationsSortInput
@@ -1278,11 +1361,25 @@ input ListFilterInputTypeOfQuestionFilterInput {
   any: Boolean
 }
 
+input ListFilterInputTypeOfBidFilterInput {
+  all: BidFilterInput
+  none: BidFilterInput
+  some: BidFilterInput
+  any: Boolean
+}
+
 input NotificationTypeOperationFilterInput {
   eq: NotificationType
   neq: NotificationType
   in: [NotificationType!]
   nin: [NotificationType!]
+}
+
+input MessageTypesOperationFilterInput {
+  eq: MessageTypes
+  neq: MessageTypes
+  in: [MessageTypes!]
+  nin: [MessageTypes!]
 }
 
 input ConversationsFilterInput {
@@ -1341,13 +1438,6 @@ input ListFilterInputTypeOfNotificationFilterInput {
   all: NotificationFilterInput
   none: NotificationFilterInput
   some: NotificationFilterInput
-  any: Boolean
-}
-
-input ListFilterInputTypeOfBidFilterInput {
-  all: BidFilterInput
-  none: BidFilterInput
-  some: BidFilterInput
   any: Boolean
 }
 
@@ -1416,35 +1506,6 @@ input ProjectImagesFilterInput {
   id: ComparableInt32OperationFilterInput
   isDeleted: BooleanOperationFilterInput
   createdDate: ComparableDateTimeOperationFilterInput
-}
-
-enum ResponseStatus {
-  SUCCESS
-  NOT_FOUND
-  UNKNOWN_ERROR
-  NOT_ENOUGH_DATA
-  AUTHENTICATION_FAILED
-  USER_NOT_FOUND
-  ALREADY_EXIST
-  SELF_MESSAGE_NOT_ALLOWED
-  ALREADY_REMOVED
-  NOT_ALLOWED
-  ALREADY_FOLLOWED
-  SAME_ID
-  POST_NOT_FOUND
-  COMMENT_NOT_FOUND
-  INVALID_TIME_RANGE
-  TIME_CONFLICT
-  INVALID_TIME_SYNTAX
-  DIFFRENET_IDS
-  HOST_NOT_FOUND
-  ACCESS_DENIED
-  FAILED
-  USERNAME_ALREADY_EXIST
-  DURATION_IS_REQUIRED
-  ACTIVE_BIDS_EXIST
-  IN_PROGRESS_BID_EXIST
-  SELF_BID_NOT_ALLOWED
 }
 
 input ProjectImagesInput {

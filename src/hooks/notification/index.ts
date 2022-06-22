@@ -1,8 +1,10 @@
+import {useEffect} from 'react';
 import {useInfiniteQuery, useMutation, useQueryClient} from 'react-query';
 import {PAGE_SIZE} from '~/constants/pagination';
 import graphQLClient from '~/graphql/graphQLClient';
 import queryKeys from '~/constants/queryKeys';
 import {NOTIFICATION_GET_NOTIFICATIONS} from '~/graphql/notification/queries';
+import {NOTIFICATION_ADDED} from '~/graphql/notification/subscriptions';
 import {
   NOTIFICATION_ADD_NOTIFICATION,
   NOTIFICATION_READ_NOTIFICATION,
@@ -17,6 +19,7 @@ import {
   ResponseStatus,
 } from '~/generated/graphql';
 import {showMessage} from 'react-native-flash-message';
+import {Config} from 'react-native-config';
 
 export const useGetNotifications = (options: any = {}) => {
   return useInfiniteQuery<
@@ -109,7 +112,7 @@ export const useReadNotification = () => {
           successData?.notification_readNotification?.status ===
           ResponseStatus.Success
         ) {
-          queryClient.invalidateQueries(queryKeys.notifications);
+          //queryClient.invalidateQueries(queryKeys.notifications);
         }
       },
       onError: (errorData: any) => {
@@ -122,4 +125,36 @@ export const useReadNotification = () => {
       },
     },
   );
+};
+
+export const useNotificationSubscription = ({
+  userId,
+  callback,
+}: {
+  userId: number;
+  callback: () => void;
+}) => {
+  useEffect(() => {
+    const ws = new WebSocket(Config.API_URL, 'graphql-ws');
+    ws.onopen = () => {
+      console.log('connected');
+      const notification = {
+        id: '1',
+        type: 'start',
+        payload: {
+          variables: {userId: userId},
+          extensions: {},
+          operationName: null,
+          query: NOTIFICATION_ADDED,
+        },
+      };
+      ws.send(JSON.stringify(notification));
+    };
+    ws.onmessage = callback;
+    return () => {
+      // Unsubscribe before exit
+      ws.send(JSON.stringify({id: '1', type: 'stop'}));
+      ws.close();
+    };
+  }, []);
 };

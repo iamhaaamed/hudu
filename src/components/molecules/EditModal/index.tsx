@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {VStack} from 'native-base';
 import {
@@ -24,19 +24,27 @@ const EditModal = ({
   onSubmit,
   title,
   loading,
+  defaultData,
 }: {
   visible: boolean;
   onClose: any;
   onSubmit: any;
   title: string;
   loading?: boolean;
+  defaultData?: any;
 }) => {
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, formState} = methods;
+  const {handleSubmit, register, formState, setValue} = methods;
+
+  useEffect(() => {
+    defaultData?.amount && setValue('amount', String(defaultData?.amount));
+    defaultData?.description &&
+      setValue('description', defaultData?.description);
+  }, [defaultData]);
 
   const onCloseHandler = () => {
     onClose?.();

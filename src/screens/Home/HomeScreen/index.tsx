@@ -19,6 +19,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   const {isLoading: getProfileLoading, data: getProfile} = useGetProfile({
     enabled: isUserLoggedIn,
   });
+
   const {
     isLoading: getProjectLoading,
     data: getProjects,
@@ -26,7 +27,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
     hasNextPage: hasNextPageProjects,
     refetch: refetchProjects,
     isRefetching: isRefetchingProjects,
-  } = useGetProjects();
+  } = useGetProjects({location: [12, 12]});
 
   const profile = getProfile?.user_getProfile?.result ?? {};
   const projects = getProjects?.pages ?? [];
