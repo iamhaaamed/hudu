@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {Colors} from '~/styles';
 import {CustomContainer, EmptyData} from '~/components';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Text, Badge, HStack, FlatList, IconButton} from 'native-base';
-import {useGetNotifications} from '~/hooks/notification';
+import {useGetNotifications, useReadNotification} from '~/hooks/notification';
 
 export default function NotificationScreen() {
   const {
@@ -56,6 +56,16 @@ const styles = StyleSheet.create({
 });
 
 const NotificationItem = ({item}: {item: any}) => {
+  const {mutate: mutateReadNotification, isLoading: readNotificationLoading} =
+    useReadNotification();
+
+  useEffect(() => {
+    mutateReadNotification(item?.id, {
+      onSuccess: () => {},
+      onError: () => {},
+    });
+  }, []);
+
   const deleteOnPress = () => {};
 
   return (

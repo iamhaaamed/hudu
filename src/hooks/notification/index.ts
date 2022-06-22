@@ -112,7 +112,7 @@ export const useReadNotification = () => {
           successData?.notification_readNotification?.status ===
           ResponseStatus.Success
         ) {
-          queryClient.invalidateQueries(queryKeys.notifications);
+          //queryClient.invalidateQueries(queryKeys.notifications);
         }
       },
       onError: (errorData: any) => {
