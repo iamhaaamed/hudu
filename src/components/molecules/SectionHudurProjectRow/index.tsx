@@ -193,6 +193,10 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
         onSubmit={submitEditModal}
         title="Bid details"
         loading={editBidLoading}
+        defaultData={{
+          amount: item?.amount,
+          description: item?.description,
+        }}
       />
       <QuestionModal
         visible={questionModalVisible}
