@@ -28,7 +28,7 @@ const SectionListerProjects = () => {
   });
 
   const options = isUserLoggedIn
-    ? {where: {project: {userId: {eq: userData?.id}}}}
+    ? {location: [12, 12], where: {project: {userId: {eq: userData?.id}}}}
     : {enabled: false};
 
   const {

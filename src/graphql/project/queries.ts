@@ -80,8 +80,10 @@ export const PROJECT_GET_PROJECTS = gql`
     $take: Int
     $where: ProjectDtoFilterInput
     $order: [ProjectDtoSortInput!]
+    $projectFilter: ProjectFilter
+    $location: Position
   ) {
-    project_getProjects {
+    project_getProjects(projectFilter: $projectFilter, location: $location) {
       result(skip: $skip, take: $take, where: $where, order: $order) {
         items {
           project {
@@ -211,8 +213,13 @@ export const PROJECT_GET_USER_LIKE_PROJECTS = gql`
     $take: Int
     $where: ProjectDtoFilterInput
     $order: [ProjectDtoSortInput!]
+    $projectFilter: ProjectFilter
+    $location: Position
   ) {
-    project_getUserLikeProjects {
+    project_getUserLikeProjects(
+      projectFilter: $projectFilter
+      location: $location
+    ) {
       result(skip: $skip, take: $take, where: $where, order: $order) {
         items {
           isLiked
