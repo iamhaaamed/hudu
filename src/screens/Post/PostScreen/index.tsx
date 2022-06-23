@@ -55,9 +55,15 @@ const PostScreen = ({navigation}: NavigationProp) => {
   const previewOnPress = (formData: any) => {
     if (availability !== 'SPECIFIC_TIME') {
       const input = {...formData, duration: 0};
-      navigation.navigate('PreviewPost', {params: input});
+      navigation.navigate('PreviewPost', {
+        params: input,
+        availability: 'Flexible',
+      });
     } else {
-      navigation.navigate('PreviewPost', {params: formData});
+      navigation.navigate('PreviewPost', {
+        params: formData,
+        availability: 'Specific time',
+      });
     }
   };
 

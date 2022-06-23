@@ -15,7 +15,7 @@ import {ResponseStatus} from '~/generated/graphql';
 import {useGetLocation} from '~/hooks/location';
 
 const PreviewPostScreen = ({navigation, route}: any) => {
-  const {params} = route?.params;
+  const {params, availability} = route?.params;
 
   const {mutate: addProjectMutate, isLoading: addProjectLoading} =
     useAddProject();
@@ -40,8 +40,10 @@ const PreviewPostScreen = ({navigation, route}: any) => {
           const lat = parseFloat(success?.output?.[0]?.latitude);
           const long = parseFloat(success?.output?.[0]?.longitude);
           const input = {...params, point: [lat, long]};
+          console.log(input);
           addProjectMutate(input, {
             onSuccess: successData => {
+              console.log({successData});
               if (
                 successData?.project_addProject?.status ===
                 ResponseStatus.Success
@@ -51,6 +53,9 @@ const PreviewPostScreen = ({navigation, route}: any) => {
             },
           });
         }
+      },
+      onError: error => {
+        console.log({error});
       },
     });
   };
@@ -127,13 +132,13 @@ const PreviewPostScreen = ({navigation, route}: any) => {
                 fontSize={scale(16)}
                 fontFamily={fontFamily.regular}
                 color={Colors.BLACK_1}>
-                Expectation
+                Availability to complete project
               </Text>
               <Text
                 fontSize={scale(16)}
                 fontFamily={fontFamily.regular}
                 color={Colors.BLACK_1}>
-                {params?.availability}
+                {availability ?? ''}
               </Text>
             </HStack>
             <Text

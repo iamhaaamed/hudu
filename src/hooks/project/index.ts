@@ -226,7 +226,12 @@ export const useAddFeedBack = () => {
       return graphQLClient.request(PROJECT_ADD_FEED_BACK, {feedbackInput});
     },
     {
-      onSuccess: () => {},
+      onSuccess: data => {
+        if (data?.project_addFeedBack?.status === ResponseStatus.Success) {
+        } else {
+          showMessage(getResponseMessage(data?.project_addFeedBack?.status));
+        }
+      },
       onError: (errorData: any) => {
         console.log('project_addFeedBackError=>', errorData);
         showMessage({
@@ -255,6 +260,10 @@ export const useAddProject = () => {
           successData?.project_addProject?.status === ResponseStatus.Success
         ) {
           queryClient.invalidateQueries(queryKeys.projects);
+        } else {
+          showMessage(
+            getResponseMessage(successData?.project_addProject?.status),
+          );
         }
       },
       onError: (errorData: any) => {
@@ -318,6 +327,10 @@ export const useEditProject = () => {
           successData?.project_editProject?.status === ResponseStatus.Success
         ) {
           queryClient.invalidateQueries(queryKeys.projects);
+        } else {
+          showMessage(
+            getResponseMessage(successData?.project_editProject?.status),
+          );
         }
       },
       onError: (errorData: any) => {
@@ -348,6 +361,10 @@ export const useFailProject = () => {
           successData?.project_faileProject?.status === ResponseStatus.Success
         ) {
           queryClient.invalidateQueries(queryKeys.projects);
+        } else {
+          showMessage(
+            getResponseMessage(successData?.project_faileProject?.status),
+          );
         }
       },
       onError: (errorData: any) => {
@@ -363,7 +380,6 @@ export const useFailProject = () => {
 };
 
 export const useFinishProject = () => {
-  const queryClient = useQueryClient();
   return useMutation<
     Project_FinisheProjectMutation,
     any,
@@ -377,8 +393,10 @@ export const useFinishProject = () => {
         if (
           successData?.project_finisheProject?.status === ResponseStatus.Success
         ) {
-          // queryClient.invalidateQueries(queryKeys.projects);
-          // queryClient.invalidateQueries(queryKeys.bids);
+        } else {
+          showMessage(
+            getResponseMessage(successData?.project_finisheProject?.status),
+          );
         }
       },
       onError: (errorData: any) => {
@@ -409,6 +427,8 @@ export const useProjectLike = () => {
           queryClient.invalidateQueries(queryKeys.projects);
           queryClient.invalidateQueries(queryKeys.project);
           queryClient.invalidateQueries(queryKeys.userLikeProjects);
+        } else {
+          showMessage(getResponseMessage(successData?.project_like?.status));
         }
       },
       onError: (errorData: any) => {
@@ -439,6 +459,10 @@ export const useReOpenProject = () => {
           successData?.project_reopenProject?.status === ResponseStatus.Success
         ) {
           queryClient.invalidateQueries(queryKeys.projects);
+        } else {
+          showMessage(
+            getResponseMessage(successData?.project_reopenProject?.status),
+          );
         }
       },
       onError: (errorData: any) => {
@@ -469,6 +493,8 @@ export const useProjectUnLike = () => {
           queryClient.invalidateQueries(queryKeys.projects);
           queryClient.invalidateQueries(queryKeys.project);
           queryClient.invalidateQueries(queryKeys.userLikeProjects);
+        } else {
+          showMessage(getResponseMessage(successData?.project_unlike?.status));
         }
       },
       onError: (errorData: any) => {
