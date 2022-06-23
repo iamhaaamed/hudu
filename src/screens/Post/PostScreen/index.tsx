@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {StyleSheet} from 'react-native';
 import {VStack, Center, HStack} from 'native-base';
 import {
@@ -8,6 +8,7 @@ import {
   CustomPicker,
   CustomButton,
   SectionProjectImages,
+  CustomSwitch,
 } from '~/components';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -15,10 +16,17 @@ import * as yup from 'yup';
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {stateList} from '~/constants/mockData';
+import {userDataStore} from '~/stores';
+import {showMessage} from 'react-native-flash-message';
 
 const availabilityData = [
   {id: 0, title: 'Specific time', value: 'SPECIFIC_TIME'},
   {id: 1, title: 'Flexible', value: 'FLEXIBLE'},
+];
+
+const locationData = [
+  {title: 'Current location', value: 'CURRENT_LOCATION'},
+  {title: 'New address', value: 'NEW_ADDRESS'},
 ];
 
 const schema = yup.object().shape({
@@ -30,41 +38,139 @@ const schema = yup.object().shape({
     is: 'SPECIFIC_TIME',
     then: yup.number().required('required').nullable(),
   }),
-  streetAddress: yup.string().required('required').nullable(),
-  city: yup.string().required('required').nullable(),
-  state: yup.string().required('required').nullable(),
-  zipCode: yup
-    .string()
-    .required('required')
-    .matches(/^[0-9]+$/, 'Must be only digits')
-    .min(5, 'Must be exactly 5 digits')
-    .max(5, 'Must be exactly 5 digits')
-    .nullable(),
+  location: yup.string().nullable(),
+  streetAddress: yup.string().when('location', {
+    is: 'NEW_ADDRESS',
+    then: yup.string().required('required').nullable(),
+  }),
+  city: yup.string().when('location', {
+    is: 'NEW_ADDRESS',
+    then: yup.string().required('required').nullable(),
+  }),
+  state: yup.string().when('location', {
+    is: 'NEW_ADDRESS',
+    then: yup.string().required('required').nullable(),
+  }),
+  zipCode: yup.string().when('location', {
+    is: 'NEW_ADDRESS',
+    then: yup
+      .string()
+      .required('required')
+      .matches(/^[0-9]+$/, 'Must be only digits')
+      .min(5, 'Must be exactly 5 digits')
+      .max(5, 'Must be exactly 5 digits')
+      .nullable(),
+  }),
 });
 
 const PostScreen = ({navigation}: NavigationProp) => {
+  const {userData} = userDataStore(state => state);
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
+    defaultValues: {
+      location: 'NEW_ADDRESS',
+    },
   });
 
   const {handleSubmit, register, watch, formState} = methods;
 
   const availability = watch('availability');
+  const location = watch('location');
 
   const previewOnPress = (formData: any) => {
     if (availability !== 'SPECIFIC_TIME') {
-      const input = {...formData, duration: 0};
-      navigation.navigate('PreviewPost', {
-        params: input,
-        availability: 'Flexible',
-      });
+      let input = {};
+      if (location === 'NEW_ADDRESS') {
+        input = {
+          duration: formData?.duration,
+          projectImages: formData?.projectImages,
+          title: formData?.title,
+          description: formData?.description,
+          availability: formData?.availability,
+          streetAddress: formData?.streetAddress,
+          city: formData?.city,
+          state: formData?.state,
+          zipCode: formData?.zipCode,
+        };
+        goToNext(input, 'Flexible');
+      } else {
+        if (
+          userData?.streetAddress &&
+          userData?.city &&
+          userData?.state &&
+          userData?.zipCode
+        ) {
+          input = {
+            duration: formData?.duration,
+            projectImages: formData?.projectImages,
+            title: formData?.title,
+            description: formData?.description,
+            availability: formData?.availability,
+            streetAddress: userData?.streetAddress,
+            city: userData?.city,
+            state: userData?.state,
+            zipCode: userData?.zipCode,
+          };
+          goToNext(input, 'Flexible');
+        } else {
+          showMessage({
+            message: 'Please complete your profile',
+            type: 'info',
+            icon: 'info',
+          });
+        }
+      }
     } else {
-      navigation.navigate('PreviewPost', {
-        params: formData,
-        availability: 'Specific time',
-      });
+      let input = {};
+      if (location === 'NEW_ADDRESS') {
+        input = {
+          duration: 0,
+          projectImages: formData?.projectImages,
+          title: formData?.title,
+          description: formData?.description,
+          availability: formData?.availability,
+          streetAddress: formData?.streetAddress,
+          city: formData?.city,
+          state: formData?.state,
+          zipCode: formData?.zipCode,
+        };
+        goToNext(input, 'Specific time');
+      } else {
+        if (
+          userData?.streetAddress &&
+          userData?.city &&
+          userData?.state &&
+          userData?.zipCode
+        ) {
+          input = {
+            duration: 0,
+            projectImages: formData?.projectImages,
+            title: formData?.title,
+            description: formData?.description,
+            availability: formData?.availability,
+            streetAddress: userData?.streetAddress,
+            city: userData?.city,
+            state: userData?.state,
+            zipCode: userData?.zipCode,
+          };
+          goToNext(input, 'Specific time');
+        } else {
+          showMessage({
+            message: 'Please complete your profile',
+            type: 'info',
+            icon: 'info',
+          });
+        }
+      }
     }
+  };
+
+  const goToNext = (input: any, availabilityInput: string) => {
+    navigation.navigate('PreviewPost', {
+      params: input,
+      availability: availabilityInput,
+    });
   };
 
   return (
@@ -112,46 +218,51 @@ const PostScreen = ({navigation}: NavigationProp) => {
                   {...{formState}}
                 />
               )}
-              <CustomInput
-                {...register('streetAddress')}
-                placeholder="Street Address"
-                backgroundColor={Colors.WHITE}
-                inputStyle={styles.input}
-                {...{formState}}
-              />
-              <HStack alignItems="center" space="2">
-                <Center flex={1}>
+              <CustomSwitch {...register('location')} data={locationData} />
+              {location === 'NEW_ADDRESS' && (
+                <>
                   <CustomInput
-                    {...register('city')}
-                    label="City"
-                    placeholder="City"
+                    {...register('streetAddress')}
+                    placeholder="Street Address"
+                    backgroundColor={Colors.WHITE}
+                    inputStyle={styles.input}
                     {...{formState}}
-                    height={verticalScale(45)}
-                    isHorizontal
                   />
-                </Center>
-                <Center flex={1}>
-                  <CustomPicker
-                    {...register('state')}
-                    data={stateList}
-                    placeholder="State"
-                    height={verticalScale(45)}
-                    textStyle={styles.input}
-                    isHorizontal
-                    valueKey="title"
-                    titleKey="title"
+                  <HStack alignItems="center" space="2">
+                    <Center flex={1}>
+                      <CustomInput
+                        {...register('city')}
+                        label="City"
+                        placeholder="City"
+                        {...{formState}}
+                        height={verticalScale(45)}
+                        isHorizontal
+                      />
+                    </Center>
+                    <Center flex={1}>
+                      <CustomPicker
+                        {...register('state')}
+                        data={stateList}
+                        placeholder="State"
+                        height={verticalScale(45)}
+                        textStyle={styles.input}
+                        isHorizontal
+                        valueKey="title"
+                        titleKey="title"
+                      />
+                    </Center>
+                  </HStack>
+                  <CustomInput
+                    {...register('zipCode')}
+                    placeholder="Zip code"
+                    keyboardType="numeric"
+                    backgroundColor={Colors.WHITE}
+                    inputStyle={styles.input}
+                    {...{formState}}
+                    validation
                   />
-                </Center>
-              </HStack>
-              <CustomInput
-                {...register('zipCode')}
-                placeholder="Zip code"
-                keyboardType="numeric"
-                backgroundColor={Colors.WHITE}
-                inputStyle={styles.input}
-                {...{formState}}
-                validation
-              />
+                </>
+              )}
               <CustomButton
                 title="Preview"
                 onPress={handleSubmit(previewOnPress)}
