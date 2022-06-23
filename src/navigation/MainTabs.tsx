@@ -27,11 +27,6 @@ const screens = [
     component: FavoriteStack,
     options: publicScreenOption,
   },
-  {
-    name: 'PostStack',
-    component: PostStack,
-    options: publicScreenOption,
-  },
 ];
 
 const MainTabs = () => {
@@ -42,6 +37,11 @@ const MainTabs = () => {
         //@ts-ignore
         <Tab.Screen key={screen.name} {...screen} />
       ))}
+      <Tab.Screen
+        name="PostStack"
+        component={isUserLoggedIn ? PostStack : AuthScreen}
+        options={publicScreenOption}
+      />
       <Tab.Screen
         name="ProjectsStack"
         component={isUserLoggedIn ? ProjectsStack : AuthScreen}
