@@ -114,19 +114,19 @@ export default function EditProfileScreen() {
             <CustomInput
               {...register('firstName')}
               label="First name"
-              placeholder="Olive"
+              placeholder="First name"
               {...{formState}}
             />
             <CustomInput
               {...register('lastName')}
               label="Last name"
-              placeholder="Anderson"
+              placeholder="Last name"
               {...{formState}}
             />
             <CustomInput
               {...register('userName')}
               label="User name"
-              placeholder="Olivia.anderson"
+              placeholder="User name"
               {...{formState}}
             />
             <CustomInput

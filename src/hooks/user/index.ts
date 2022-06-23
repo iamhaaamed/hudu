@@ -560,15 +560,19 @@ export const useUpdateProfile = () => {
       return graphQLClient.request(USER_UPDATE_PROFILE, {userInput});
     },
     {
-      onSuccess: successData => {
+      onSuccess: async successData => {
         if (
           successData?.user_updateProfile?.status === ResponseStatus.Success
         ) {
-          queryClient.invalidateQueries(queryKeys.userProfile);
+          await queryClient.invalidateQueries(queryKeys.userProfile);
           showMessage(
             getResponseMessage(successData.user_updateProfile?.status),
           );
           goBack();
+        } else {
+          showMessage(
+            getResponseMessage(successData?.user_updateProfile?.status),
+          );
         }
       },
       onError: (errorData: any) => {

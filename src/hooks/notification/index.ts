@@ -95,7 +95,6 @@ export const useAddNotification = () => {
 };
 
 export const useReadNotification = () => {
-  const queryClient = useQueryClient();
   return useMutation<
     Notification_ReadNotificationMutation,
     any,
@@ -112,7 +111,6 @@ export const useReadNotification = () => {
           successData?.notification_readNotification?.status ===
           ResponseStatus.Success
         ) {
-          //queryClient.invalidateQueries(queryKeys.notifications);
         }
       },
       onError: (errorData: any) => {

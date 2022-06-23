@@ -1,3 +1,4 @@
+import {useIsFocused} from '@react-navigation/native';
 import {Box} from 'native-base';
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
@@ -7,11 +8,22 @@ import {authStore} from '~/stores';
 import {Colors} from '~/styles';
 
 const ProfileScreen = () => {
+  const isFocused = useIsFocused();
   const {isUserLoggedIn} = authStore(state => state);
 
-  const {isLoading: getProfileLoading, data: getProfile} = useGetProfile({
+  const {
+    isLoading: getProfileLoading,
+    data: getProfile,
+    refetch,
+  } = useGetProfile({
     enabled: isUserLoggedIn,
   });
+
+  React.useLayoutEffect(() => {
+    setTimeout(() => {
+      refetch();
+    }, 300);
+  }, [isFocused]);
 
   const profile = getProfile?.user_getProfile?.result ?? {};
 
