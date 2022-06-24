@@ -5,6 +5,7 @@ import React, {
   memo,
   useMemo,
   createRef,
+  useEffect,
 } from 'react';
 import {StyleSheet, FlatList} from 'react-native';
 import {Box, HStack, Text, VStack} from 'native-base';
@@ -16,10 +17,12 @@ import updateLocale from 'dayjs/plugin/updateLocale';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {CustomButton, EditModal} from '~/components';
 import {LocationIcon, MarkerIcon} from '~/assets/icons';
-import {useAddBid} from '~/hooks/bid';
+import {useAddBid, useGetBids} from '~/hooks/bid';
 import {authStore, userDataStore} from '~/stores';
 import {navigate} from '~/navigation/Methods';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import {getLocationFromState, getStateNameFromShortName} from '~/utils/helper';
+import {useGetLocation} from '~/hooks/location';
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -61,7 +64,41 @@ const SectionDescriptionRoute = forwardRef(
 
     const mapRef = createRef<MapView>();
 
+    const [zipCodeLocation, setZipCodeLocation] = useState({});
+    const [locationData, setLocationData] = useState();
+    const getBidsOption = {
+      where: {
+        and: [
+          {projectId: {eq: data?.id}},
+          {huduId: {eq: userData?.id}},
+          {bidStatus: {eq: 'IN_PROGRESS'}},
+        ],
+      },
+    };
     const {mutate: mutateAddBid, isLoading: addBidLoading} = useAddBid();
+    const {mutate: getLocationMutate, isLoading: getLocationLoading} =
+      useGetLocation();
+    const {isLoading: getBidsLoading, data: getBids} =
+      useGetBids(getBidsOption);
+
+    const bids = getBids?.pages ?? [];
+
+    useEffect(() => {
+      if (data?.zipCode) {
+        getLocationMutate(data?.zipCode, {
+          onSuccess: (success: any) => {
+            if (success?.status === 1) {
+              const lat = parseFloat(success?.output?.[0]?.latitude);
+              const long = parseFloat(success?.output?.[0]?.longitude);
+              setZipCodeLocation({
+                Latitude: lat,
+                Longitude: long,
+              });
+            }
+          },
+        });
+      }
+    }, [data]);
 
     const lowBid = useMemo(() => {
       let res = -1;
@@ -75,6 +112,15 @@ const SectionDescriptionRoute = forwardRef(
       }
       return res;
     }, []);
+
+    useEffect(() => {
+      if (userData?.id === data?.userId || bids?.length > 0) {
+        setLocationData(zipCodeLocation);
+      } else {
+        const locationItem = getLocationFromState(data?.state);
+        setLocationData(locationItem);
+      }
+    }, [data, zipCodeLocation]);
 
     const [editModalVisible, setEditModalVisible] = useState(false);
 
@@ -156,7 +202,13 @@ const SectionDescriptionRoute = forwardRef(
                 fontSize={scale(16)}
                 fontFamily={fontFamily.regular}
                 color={Colors.PRIMARY}>
-                {data?.state}, {data?.city}
+                {getStateNameFromShortName(data?.state) !== -1
+                  ? getStateNameFromShortName(data?.state)
+                  : ''}
+                , {data?.city}
+                {userData?.id === data?.userId || bids?.length > 0
+                  ? data?.streetAddress
+                  : ''}
               </Text>
             </HStack>
             <Text
@@ -169,23 +221,30 @@ const SectionDescriptionRoute = forwardRef(
           <Box overflow="hidden" w="100%" borderRadius="lg">
             <MapView
               region={{
-                latitude: data?.latitude ?? 40.7128,
-                longitude: data?.longitude ?? 74.006,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitude: locationData?.Latitude || 40.7128,
+                longitude: locationData?.Longitude || 74.006,
+                latitudeDelta: 0.99,
+                longitudeDelta: 0.99,
+              }}
+              onRegionChange={e => {
+                const coordinate = e;
+                setLocationData({
+                  Latitude: coordinate?.latitude,
+                  Longitude: coordinate?.longitude,
+                });
               }}
               ref={mapRef}
               provider={PROVIDER_GOOGLE}
               style={styles.map}
               showsMyLocationButton={false}
-              showsUserLocation
+              showsUserLocation={false}
               zoomEnabled
               scrollEnabled
               showsScale>
               <Marker
                 coordinate={{
-                  latitude: data?.latitude ?? 40.7128,
-                  longitude: data?.longitude ?? 74.006,
+                  latitude: locationData?.Latitude || 40.7128,
+                  longitude: locationData?.Longitude || 74.006,
                 }}>
                 <MarkerIcon />
               </Marker>
@@ -245,7 +304,7 @@ const styles = StyleSheet.create({
   },
   map: {
     // ...StyleSheet.absoluteFillObject,
-    height: verticalScale(130),
+    height: verticalScale(190),
     borderRadius: 12,
     width: '100%',
     flex: 1,

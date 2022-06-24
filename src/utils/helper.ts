@@ -1,3 +1,4 @@
+import {stateList} from '~/constants/mockData';
 import {ResponseStatus} from '~/generated/graphql';
 
 export const getResponseMessage = (response: string = '') => {
@@ -79,4 +80,18 @@ export const getResponseMessage = (response: string = '') => {
     default:
       return {type: 'danger', message: 'Unknown Error', icon: 'danger'};
   }
+};
+
+export const getLocationFromState = (state: string = '') => {
+  const res = stateList.find(
+    (stateElement: any) => stateElement?.value === state,
+  );
+  return res;
+};
+
+export const getStateNameFromShortName = (state: string = '') => {
+  const res = stateList.find(
+    (stateElement: any) => stateElement?.value === state,
+  );
+  return res?.title ?? -1;
 };

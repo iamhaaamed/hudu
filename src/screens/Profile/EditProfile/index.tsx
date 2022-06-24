@@ -169,7 +169,7 @@ export default function EditProfileScreen() {
                   height={verticalScale(45)}
                   {...{formState}}
                   isHorizontal
-                  valueKey="title"
+                  valueKey="value"
                   titleKey="title"
                 />
               </VStack>

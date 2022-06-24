@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, Platform} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,28 +30,6 @@ const CustomImage = ({
   errorImage?: any;
 }) => {
   const [imageZoom, setImageZoom] = useState<boolean>(false);
-
-  const imageArray = useMemo(() => {
-    let imageItems = [];
-    if (imageSourceArray?.length > 0) {
-      imageSourceArray?.map((imageObject: any) => {
-        if (local) {
-          imageItems.push({
-            url: '',
-            props: {
-              source: imageObject,
-            },
-          });
-        } else {
-          imageItems.push({
-            uri: imageObject,
-            priority: FastImage.priority.high,
-          });
-        }
-      });
-    }
-    return imageItems;
-  }, [imageSourceArray]);
 
   const onPressHandler = () => {
     setImageZoom(true);
@@ -108,7 +86,7 @@ const CustomImage = ({
           enableSwipeDown
           imageUrls={
             imageSourceArray
-              ? imageArray
+              ? imageSourceArray
               : [
                   local
                     ? {

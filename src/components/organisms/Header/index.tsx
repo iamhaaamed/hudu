@@ -100,6 +100,7 @@ const Header = ({title, images, user, isLiked, projectId}: any) => {
                   rate={user?.averageRate}
                   showRating="right"
                   total={totalReview}
+                  disabled
                 />
               </HStack>
             </TouchableOpacity>
