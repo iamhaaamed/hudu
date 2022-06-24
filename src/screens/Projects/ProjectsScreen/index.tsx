@@ -5,13 +5,13 @@ import {
   CustomContainer,
   SectionListerProjects,
   SectionHuduUrProjects,
+  CustomIconButton,
 } from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import PagerView from 'react-native-pager-view';
 import {authStore} from '~/stores';
 import {navigate} from '~/navigation/Methods';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 const tabData = ['As lister', 'As HUDUr'];
 
@@ -86,17 +86,11 @@ const ProjectsScreen = () => {
               color={Colors.BLACK_3}>
               Log in to use the app features
             </Text>
-            <TouchableOpacity activeOpacity={0.7} onPress={loginHandler}>
-              <HStack space="1" alignItems="center">
-                <Icon size={24} color={Colors.PRIMARY} name="log-in-outline" />
-                <Text
-                  fontSize={scale(16)}
-                  fontFamily={fontFamily.medium}
-                  color={Colors.PRIMARY}>
-                  Log in
-                </Text>
-              </HStack>
-            </TouchableOpacity>
+            <CustomIconButton
+              name="log-in-outline"
+              title="Log in"
+              onPress={loginHandler}
+            />
           </VStack>
         )}
       </PagerView>

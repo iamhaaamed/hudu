@@ -3,6 +3,7 @@ import {Colors} from '~/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Box, HStack, Text} from 'native-base';
 import {StyleSheet, TouchableOpacity} from 'react-native';
+import {fontFamily, scale} from '~/utils/style';
 
 interface LinkItemProps {
   title: string;
@@ -22,11 +23,15 @@ const LinkItem = (props: LinkItemProps) => {
               name="log-out-outline"
             />
           )}
-          <Text flex={1} fontSize={16}>
+          <Text flex={1} fontSize={scale(16)} fontFamily={fontFamily.regular}>
             {props.title}
           </Text>
           {!props.last && (
-            <Icon size={16} name="chevron-forward" color={Colors.BLACK_3} />
+            <Icon
+              size={scale(16)}
+              name="chevron-forward"
+              color={Colors.BLACK_3}
+            />
           )}
         </HStack>
       </TouchableOpacity>
