@@ -221,8 +221,8 @@ const SectionDescriptionRoute = forwardRef(
           <Box overflow="hidden" w="100%" borderRadius="lg">
             <MapView
               region={{
-                latitude: locationData?.Latitude || 35.7219,
-                longitude: locationData?.Longitude || 51.3347,
+                latitude: locationData?.Latitude || 40.7128,
+                longitude: locationData?.Longitude || 74.006,
                 latitudeDelta: 0.99,
                 longitudeDelta: 0.99,
               }}
@@ -243,8 +243,8 @@ const SectionDescriptionRoute = forwardRef(
               showsScale>
               <Marker
                 coordinate={{
-                  latitude: locationData?.Latitude || 35.7219,
-                  longitude: locationData?.Longitude || 51.3347,
+                  latitude: locationData?.Latitude || 40.7128,
+                  longitude: locationData?.Longitude || 74.006,
                 }}>
                 <MarkerIcon />
               </Marker>
