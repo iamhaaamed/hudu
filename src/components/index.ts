@@ -28,6 +28,7 @@ export {default as ProfileInfo} from './atoms/ProfileInfo';
 export {default as ProfileRating} from './atoms/ProfileRating';
 export {default as SectionBidLabel} from './atoms/SectionBidLabel';
 export {default as CustomSwitch} from './atoms/CustomSwitch';
+export {default as CustomIconButton} from './atoms/CustomIconButton';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';
@@ -53,6 +54,7 @@ export {default as BidItem} from './molecules/BidItem';
 export {default as SectionFinishProject} from './molecules/SectionFinishProject';
 export {default as QuestionChildItem} from './molecules/QuestionChildItem';
 export {default as LinkItem} from './molecules/LinkItem';
+export {default as AuthProfileLinks} from './molecules/AuthProfileLinks';
 
 //organisms
 export {default as CustomTabBar} from './organisms/CustomTabBar';
