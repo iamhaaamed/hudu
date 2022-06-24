@@ -7,7 +7,7 @@ import FavoriteStack from './FavoriteStack';
 import PostStack from './PostStack';
 import ProjectsStack from './ProjectsStack';
 import {authStore} from '~/stores';
-import {AuthScreen, ProfileScreen} from '~/screens';
+import {AuthScreen, ProfileScreen, AuthProfileScreen} from '~/screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,12 +44,12 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="ProjectsStack"
-        component={isUserLoggedIn ? ProjectsStack : AuthScreen}
+        component={ProjectsStack}
         options={publicScreenOption}
       />
       <Tab.Screen
         name="ProfileStack"
-        component={isUserLoggedIn ? ProfileScreen : AuthScreen}
+        component={isUserLoggedIn ? ProfileScreen : AuthProfileScreen}
         options={publicScreenOption}
       />
     </Tab.Navigator>

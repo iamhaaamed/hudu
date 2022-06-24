@@ -3,7 +3,7 @@ import {Colors} from '~/styles';
 import {VStack} from 'native-base';
 import images from '~/assets/images';
 import {StyleSheet} from 'react-native';
-import {verticalScale} from '~/utils/style';
+import {scale, verticalScale} from '~/utils/style';
 import {CustomButton, CustomContainer, CustomImage} from '~/components';
 
 export default function AuthScreen({navigation}: NavigationProp) {
@@ -11,6 +11,7 @@ export default function AuthScreen({navigation}: NavigationProp) {
     <CustomContainer>
       <VStack
         flex={1}
+        px="4"
         bg={Colors.WHITE}
         alignItems="center"
         justifyContent="space-evenly">
@@ -18,10 +19,10 @@ export default function AuthScreen({navigation}: NavigationProp) {
           local
           style={styles.image}
           resizeMode="stretch"
-          imageSource={images.huduLogo}
+          imageSource={images.huduLogo1}
           backgroundColor={Colors.TRANSPARENT}
         />
-        <VStack width="full" px="4" space="6">
+        <VStack width="full" space="6">
           <CustomButton
             title="Create account"
             onPress={() =>
@@ -42,8 +43,7 @@ export default function AuthScreen({navigation}: NavigationProp) {
 
 const styles = StyleSheet.create({
   image: {
-    borderRadius: 15,
-    height: verticalScale(195),
-    width: verticalScale(195),
+    height: verticalScale(61),
+    width: scale(275),
   },
 });
