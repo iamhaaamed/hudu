@@ -12,43 +12,12 @@ import {
   CustomContainer,
   EmptyData,
 } from '~/components';
-import images from '~/assets/images';
 import {useGetBids} from '~/hooks/bid';
 import {authStore, userDataStore} from '~/stores';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
-
-const projects1 = [
-  {
-    id: 0,
-    timeLeft: '3 Days',
-    title: 'Project 1',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 1,
-    timeLeft: '3 Days',
-    title: 'Project 2',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 2,
-    timeLeft: '3 Days',
-    title: 'Project 3',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-];
 
 const SectionHuduUrProjects = () => {
   const {userData} = userDataStore(state => state);
