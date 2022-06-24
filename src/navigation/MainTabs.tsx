@@ -44,7 +44,7 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="ProjectsStack"
-        component={isUserLoggedIn ? ProjectsStack : AuthScreen}
+        component={ProjectsStack}
         options={publicScreenOption}
       />
       <Tab.Screen

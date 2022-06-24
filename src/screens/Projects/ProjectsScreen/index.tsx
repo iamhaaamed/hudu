@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Center, HStack, Text} from 'native-base';
+import {Center, HStack, Text, VStack} from 'native-base';
 import {
   CustomContainer,
   SectionListerProjects,
@@ -9,15 +9,23 @@ import {
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import PagerView from 'react-native-pager-view';
+import {authStore} from '~/stores';
+import {navigate} from '~/navigation/Methods';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const tabData = ['As lister', 'As HUDUr'];
 
 const ProjectsScreen = () => {
+  const {isUserLoggedIn} = authStore(state => state);
   const [page, setPage] = useState<number>(0);
   const viewPager = useRef(null);
 
   const move = (currentPage: number) => {
     viewPager.current.setPage(currentPage);
+  };
+
+  const loginHandler = () => {
+    navigate('AuthStack');
   };
 
   return (
@@ -57,16 +65,40 @@ const ProjectsScreen = () => {
         initialPage={0}
         scrollEnabled={false}
         onPageSelected={e => setPage(e.nativeEvent.position)}>
-        {tabData.map((item: any, index: number) => {
-          switch (item) {
-            case 'As lister':
-              return <SectionListerProjects key={index + 1} />;
-            case 'As HUDUr':
-              return <SectionHuduUrProjects key={index + 2} />;
-            default:
-              return;
-          }
-        })}
+        {isUserLoggedIn ? (
+          <>
+            {tabData.map((item: any, index: number) => {
+              switch (item) {
+                case 'As lister':
+                  return <SectionListerProjects key={index + 1} />;
+                case 'As HUDUr':
+                  return <SectionHuduUrProjects key={index + 2} />;
+                default:
+                  return;
+              }
+            })}
+          </>
+        ) : (
+          <VStack space="3" alignItems="center" justifyContent="center">
+            <Text
+              fontSize={scale(16)}
+              fontFamily={fontFamily.medium}
+              color={Colors.BLACK_3}>
+              Log in to use the app features
+            </Text>
+            <TouchableOpacity activeOpacity={0.7} onPress={loginHandler}>
+              <HStack space="1" alignItems="center">
+                <Icon size={24} color={Colors.PRIMARY} name="log-in-outline" />
+                <Text
+                  fontSize={scale(16)}
+                  fontFamily={fontFamily.medium}
+                  color={Colors.PRIMARY}>
+                  Log in
+                </Text>
+              </HStack>
+            </TouchableOpacity>
+          </VStack>
+        )}
       </PagerView>
     </CustomContainer>
   );

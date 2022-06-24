@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
-import {Colors} from '~/styles';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {Box, HStack, Text, VStack} from 'native-base';
-import {Linking, StyleSheet, TouchableOpacity} from 'react-native';
+import {VStack} from 'native-base';
+import {Linking} from 'react-native';
 import {navigate} from '~/navigation/Methods';
 import {authStore, userDataStore} from '~/stores';
-import {QuestionModal} from '~/components';
+import {QuestionModal, LinkItem} from '~/components';
 import {useSignOutAuth} from '~/hooks/user';
 
 const LINKS = [
@@ -99,7 +97,7 @@ export default function ProfileLinks() {
           <LinkItem
             key={item.id}
             title={item.title}
-            onPress={onItemPressHandler.bind(null, item)}
+            onPress={() => onItemPressHandler(item)}
           />
         ))}
         <LinkItem last title="Log out" onPress={onLogOutPressHandler} />
@@ -117,43 +115,3 @@ export default function ProfileLinks() {
     </>
   );
 }
-
-interface LinkItemProps {
-  title: string;
-  last?: boolean;
-  onPress: () => void;
-}
-function LinkItem(props: LinkItemProps) {
-  return (
-    <Box mt={props.last ? '6' : '2'}>
-      <TouchableOpacity activeOpacity={0.5} onPress={props.onPress}>
-        <HStack alignItems="center" p={2}>
-          {props.last && (
-            <Icon
-              size={24}
-              style={styles.icon}
-              color={Colors.BLACK_3}
-              name="log-out-outline"
-            />
-          )}
-          <Text flex={1} fontSize={16}>
-            {props.title}
-          </Text>
-          {!props.last && (
-            <Icon size={16} name="chevron-forward" color={Colors.BLACK_3} />
-          )}
-        </HStack>
-      </TouchableOpacity>
-      {!props.last && (
-        <Box borderBottomWidth={0.7} borderColor={Colors.GARY_3} />
-      )}
-    </Box>
-  );
-}
-
-const styles = StyleSheet.create({
-  icon: {
-    marginRight: 8,
-    transform: [{rotateY: '180deg'}],
-  },
-});
