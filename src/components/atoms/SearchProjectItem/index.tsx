@@ -27,7 +27,7 @@ const SearchProjectItem = ({
   }, []);
 
   const onPressHandler = () => {
-    navigate('ProjectDetailsHudur');
+    navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
   };
 
   const getHighlightedText = (

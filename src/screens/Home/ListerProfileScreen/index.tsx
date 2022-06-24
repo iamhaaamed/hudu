@@ -13,6 +13,7 @@ import {
   CustomCollapseText,
   CustomContainer,
   CustomImage,
+  EmptyData,
   RatingStar,
 } from '~/components';
 import {scale, fontFamily} from '~/utils/style';
@@ -33,7 +34,7 @@ const ListerProfileScreen = ({navigation, route}: any) => {
     useGetProfile(options);
 
   const hudurReviewOption = {
-    where: {bidStatus: {eq: 'FINISHED'}, huduId: {eq: userData?.id}},
+    where: {bidStatus: {eq: 'FINISHED'}, listerId: {eq: userId}},
   };
 
   const {
@@ -100,6 +101,7 @@ const ListerProfileScreen = ({navigation, route}: any) => {
               imageSource={profile?.imageAddress}
               resizeMode="stretch"
               errorImage={images.avatarErrorImage}
+              zoomable
             />
           </Center>
           <VStack
@@ -146,7 +148,7 @@ const ListerProfileScreen = ({navigation, route}: any) => {
           color={Colors.BLACK_1}>
           Reviews
         </Text>
-        {hudurReviews?.length > 0 && (
+        {hudurReviews?.length > 0 ? (
           <VStack
             space="2"
             m="4"
@@ -190,6 +192,8 @@ const ListerProfileScreen = ({navigation, route}: any) => {
               );
             })}
           </VStack>
+        ) : (
+          <EmptyData />
         )}
       </ScrollView>
     </CustomContainer>
