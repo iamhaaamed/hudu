@@ -4,6 +4,7 @@ import {Text, Box, VStack, HStack} from 'native-base';
 import {Colors} from '~/styles';
 import {CustomImage, FavoriteIcon} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
+import {navigate} from '~/navigation/Methods';
 
 const FavoriteItem = ({item}: {item?: any}) => {
   const lowBid = useMemo(() => {
@@ -19,7 +20,9 @@ const FavoriteItem = ({item}: {item?: any}) => {
     return res;
   }, [item]);
 
-  const onPressHandler = () => {};
+  const onPressHandler = () => {
+    navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
+  };
 
   return (
     <Box
