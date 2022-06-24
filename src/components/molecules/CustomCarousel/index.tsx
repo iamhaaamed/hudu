@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {verticalScale} from '~/utils/style';
@@ -19,6 +19,10 @@ export default function CustomCarousel(props: {
     firstItem = 0,
   } = props;
 
+  const imageArrayData = useMemo(() => {
+    return data?.map((imageItem: any) => ({url: imageItem?.imageAddress}));
+  }, [data]);
+
   const _renderItem = ({item}: {item: any}) => {
     return (
       <CustomImage
@@ -26,7 +30,7 @@ export default function CustomCarousel(props: {
         imageSource={item?.imageAddress}
         resizeMode="stretch"
         zoomable
-        imageSourceArray={data}
+        imageSourceArray={imageArrayData}
       />
     );
   };
