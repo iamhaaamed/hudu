@@ -34,7 +34,7 @@ export default React.forwardRef(
               const isActive = field.value === item?.value;
               return (
                 <TouchableOpacity
-                  key={index + 1}
+                  key={item?.value}
                   onPress={() => onPressHandler(item)}
                   activeOpacity={0.7}
                   style={styles.item}>

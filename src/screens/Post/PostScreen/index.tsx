@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
 import {VStack, Center, HStack} from 'native-base';
 import {
@@ -208,13 +208,12 @@ const PostScreen = ({navigation}: NavigationProp) => {
               {availability && availability === 'SPECIFIC_TIME' && (
                 <CustomInput
                   {...register('duration')}
-                  //placeholder="Please list what days and times the project can be completed"
-                  placeholder="Duration"
+                  placeholder="what times the project can be completed"
                   keyboardType="numeric"
                   backgroundColor={Colors.WHITE}
                   inputStyle={styles.input}
-                  //fontSize={scale(10)}
-                  //labelFontSize={scale(10)}
+                  fontSize={scale(12)}
+                  labelFontSize={scale(12)}
                   {...{formState}}
                 />
               )}
@@ -247,7 +246,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
                         height={verticalScale(45)}
                         textStyle={styles.input}
                         isHorizontal
-                        valueKey="title"
+                        valueKey="value"
                         titleKey="title"
                       />
                     </Center>
