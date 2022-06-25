@@ -24,7 +24,7 @@ const SearchProjectItem = ({
       );
     }
     return res;
-  }, []);
+  }, [item]);
 
   const onPressHandler = () => {
     navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
