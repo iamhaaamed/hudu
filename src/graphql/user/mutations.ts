@@ -126,8 +126,6 @@ export const USER_UPDATE_PROFILE = gql`
 
 export const USER_SEND_EMAIL = gql`
   mutation user_sendEmail($email: EmailInput) {
-    user_sendEmail(email: $email) {
-      status
-    }
+    user_sendEmail(email: $email)
   }
 `;
