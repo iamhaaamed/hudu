@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, FlatList} from 'react-native';
 import {HStack, Center, Box, Flex} from 'native-base';
 import {scale} from '~/utils/style';
@@ -13,23 +13,70 @@ import {
   EmptyData,
 } from '~/components';
 import {useGetProjects} from '~/hooks/project';
-import {authStore, userDataStore} from '~/stores';
+import {userDataStore} from '~/stores';
+import {requestLocationPermission} from '~/utils/getPermissions';
+import {showMessage} from 'react-native-flash-message';
+import Geolocation from 'react-native-geolocation-service';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
 
 const SectionListerProjects = () => {
-  const {isUserLoggedIn} = authStore(state => state);
   const {userData} = userDataStore(state => state);
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const options = isUserLoggedIn
-    ? {location: [12, 12], where: {project: {userId: {eq: userData?.id}}}}
-    : {enabled: false};
+  const {register, watch} = methods;
+
+  const sort = watch('sort');
+
+  const [options, setOptions] = useState({
+    location: [12, 12],
+    where: {project: {userId: {eq: userData?.id}}},
+  });
+  const [currentLocation, setCurrentLocation] = useState({location: [12, 12]});
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  const getCurrentLocation = async () => {
+    if (await requestLocationPermission()) {
+      Geolocation.getCurrentPosition(
+        position => {
+          console.log(position);
+          const {latitude, longitude} = position.coords;
+          setCurrentLocation({
+            latitude,
+            longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.091,
+          });
+        },
+        (error: any) => {
+          showMessage({
+            message: JSON.stringify(error),
+            type: 'danger',
+            icon: 'danger',
+          });
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (sort) {
+      setOptions({
+        projectFilter: sort,
+        location: [currentLocation?.latitude, currentLocation?.longitude],
+        where: {project: {userId: {eq: userData?.id}}},
+      });
+    }
+  }, [sort]);
 
   const {
     isLoading: getProjectLoading,
@@ -41,10 +88,6 @@ const SectionListerProjects = () => {
   } = useGetProjects(options);
 
   const projects = getProjects?.pages ?? [];
-
-  const {register, watch} = methods;
-
-  const sort = watch('sort');
 
   const onLoadMore = () => {
     if (hasNextPageProjects) {

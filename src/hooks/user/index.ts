@@ -179,9 +179,9 @@ export const useGetProfile = (options: any = {}) => {
     User_GetProfileQueryVariables,
     any
   >(
-    [queryKeys.userProfile, options],
+    [queryKeys.userProfile],
     async () => {
-      return graphQLClient.request(USER_GET_PROFILE);
+      return graphQLClient.request(USER_GET_PROFILE, options);
     },
     {
       ...options,

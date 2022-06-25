@@ -57,6 +57,7 @@ export const PROJECT_GET_PROJECT = gql`
             }
           }
           user {
+            id
             email
             userName
             imageAddress
