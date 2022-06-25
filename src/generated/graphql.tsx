@@ -23,6 +23,15 @@ export type Scalars = {
   Position: any;
 };
 
+export type ActiveUsers = {
+  __typename?: 'ActiveUsers';
+  activeUserCount: Scalars['Int'];
+  activeUsersId?: Maybe<Scalars['String']>;
+  createdDate: Scalars['DateTime'];
+  id: Scalars['Int'];
+  isDeleted: Scalars['Boolean'];
+};
+
 export type AddProjectInput = {
   availability: Availability;
   city: Scalars['String'];
@@ -40,6 +49,7 @@ export type AdminDashboardDto = {
   __typename?: 'AdminDashboardDto';
   activeBidsCount: Scalars['Int'];
   activeProjectsCount: Scalars['Int'];
+  activeUsers?: Maybe<Array<Maybe<ActiveUsers>>>;
   activeUsersCount: Scalars['Int'];
   balance: Scalars['Float'];
 };
@@ -327,6 +337,7 @@ export type ConversationsSortInput = {
 
 export type EditBidInput = {
   amount?: InputMaybe<Scalars['Float']>;
+  bidStatus: BidStatus;
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['Int'];
 };
@@ -745,6 +756,7 @@ export type Mutation = {
   message_deleteMessage?: Maybe<ResponseBaseOfMessages>;
   message_removeConversation?: Maybe<ResponseBase>;
   notification_addNotification?: Maybe<ListResponseBaseOfNotification>;
+  notification_deleteNotification?: Maybe<ResponseBaseOfNotification>;
   notification_readNotification?: Maybe<ResponseBaseOfNotification>;
   project_addFeedBack?: Maybe<ResponseBaseOfBid>;
   project_addImageToProject?: Maybe<ResponseBaseOfProjectImages>;
@@ -802,6 +814,10 @@ export type MutationMessage_RemoveConversationArgs = {
 
 export type MutationNotification_AddNotificationArgs = {
   notifications?: InputMaybe<Array<InputMaybe<NotificationInputsInput>>>;
+};
+
+export type MutationNotification_DeleteNotificationArgs = {
+  notificationId: Scalars['Int'];
 };
 
 export type MutationNotification_ReadNotificationArgs = {
@@ -871,6 +887,7 @@ export type Notification = {
   __typename?: 'Notification';
   createdDate: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  entityId?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
   isDeleted: Scalars['Boolean'];
   isReaded: Scalars['Boolean'];
@@ -892,6 +909,7 @@ export type NotificationFilterInput = {
   and?: InputMaybe<Array<NotificationFilterInput>>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
+  entityId?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
   isReaded?: InputMaybe<BooleanOperationFilterInput>;
@@ -911,6 +929,7 @@ export type NotificationInputsInput = {
 export type NotificationSortInput = {
   createdDate?: InputMaybe<SortEnumType>;
   description?: InputMaybe<SortEnumType>;
+  entityId?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
   isReaded?: InputMaybe<SortEnumType>;
@@ -1125,7 +1144,7 @@ export type Query = {
   message_getConversationForUser?: Maybe<ResponseBaseOfConversations>;
   message_getUserMessages?: Maybe<ListResponseBaseOfConversationDto>;
   notification_getNotifications?: Maybe<ListResponseBaseOfNotification>;
-  project_getProject?: Maybe<ResponseBaseOfProjectDto>;
+  project_getProject?: Maybe<SingleResponseBaseOfProjectDto>;
   project_getProjects?: Maybe<ListResponseBaseOfProjectDto>;
   project_getQuestions?: Maybe<ListResponseBaseOfQuestion>;
   project_getUserLikeProject?: Maybe<ResponseBaseOfProjectDto>;
@@ -1317,12 +1336,20 @@ export enum ResponseStatus {
   SameId = 'SAME_ID',
   SelfBidNotAllowed = 'SELF_BID_NOT_ALLOWED',
   SelfMessageNotAllowed = 'SELF_MESSAGE_NOT_ALLOWED',
+  SessionNotFound = 'SESSION_NOT_FOUND',
   Success = 'SUCCESS',
   TimeConflict = 'TIME_CONFLICT',
   UnknownError = 'UNKNOWN_ERROR',
   UsernameAlreadyExist = 'USERNAME_ALREADY_EXIST',
+  UserIsNotActive = 'USER_IS_NOT_ACTIVE',
   UserNotFound = 'USER_NOT_FOUND',
 }
+
+export type SingleResponseBaseOfProjectDto = {
+  __typename?: 'SingleResponseBaseOfProjectDto';
+  result?: Maybe<ProjectDto>;
+  status: ResponseStatus;
+};
 
 export enum SortEnumType {
   Asc = 'ASC',
@@ -2568,6 +2595,57 @@ export type Notification_ReadNotificationMutation = {
   } | null;
 };
 
+export type Notification_DeleteNotificationMutationVariables = Exact<{
+  notificationId: Scalars['Int'];
+}>;
+
+export type Notification_DeleteNotificationMutation = {
+  __typename?: 'Mutation';
+  notification_deleteNotification?: {
+    __typename?: 'ResponseBaseOfNotification';
+    status: ResponseStatus;
+    result?: {
+      __typename?: 'Notification';
+      title?: string | null;
+      description?: string | null;
+      isReaded: boolean;
+      notificationType: NotificationType;
+      entityId?: number | null;
+      userId: number;
+      id: number;
+      isDeleted: boolean;
+      createdDate: any;
+      user?: {
+        __typename?: 'Users';
+        email?: string | null;
+        userName?: string | null;
+        lastSeen: any;
+        userTypes: UserTypes;
+        imageAddress?: string | null;
+        firstName?: string | null;
+        lastName?: string | null;
+        bio?: string | null;
+        streetAddress?: string | null;
+        city?: string | null;
+        state?: string | null;
+        isActive: boolean;
+        longitude: number;
+        latitude: number;
+        zipCode?: string | null;
+        asHuduRates: number;
+        listersWhoRatedToMeCount: number;
+        asListerRates: number;
+        huduersWhoRatedToMeCount: number;
+        averageRate: number;
+        externalId?: string | null;
+        id: number;
+        isDeleted: boolean;
+        createdDate: any;
+      } | null;
+    } | null;
+  } | null;
+};
+
 export type Notification_GetNotificationsQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -2615,6 +2693,7 @@ export type NotificationAddedSubscription = {
     description?: string | null;
     isReaded: boolean;
     notificationType: NotificationType;
+    entityId?: number | null;
     userId: number;
     id: number;
     isDeleted: boolean;
@@ -2690,6 +2769,7 @@ export type NotificationAddedSubscription = {
         description?: string | null;
         isReaded: boolean;
         notificationType: NotificationType;
+        entityId?: number | null;
         userId: number;
         id: number;
         isDeleted: boolean;
@@ -3638,7 +3718,7 @@ export type Project_GetProjectQueryVariables = Exact<{
 export type Project_GetProjectQuery = {
   __typename?: 'Query';
   project_getProject?: {
-    __typename?: 'ResponseBaseOfProjectDto';
+    __typename?: 'SingleResponseBaseOfProjectDto';
     status: ResponseStatus;
     result?: {
       __typename?: 'ProjectDto';
@@ -3703,6 +3783,7 @@ export type Project_GetProjectQuery = {
         } | null> | null;
         user?: {
           __typename?: 'Users';
+          id: number;
           email?: string | null;
           userName?: string | null;
           imageAddress?: string | null;
@@ -4065,6 +4146,15 @@ export type User_UpdateProfileMutation = {
       createdDate: any;
     } | null;
   } | null;
+};
+
+export type User_SendEmailMutationVariables = Exact<{
+  email?: InputMaybe<EmailInput>;
+}>;
+
+export type User_SendEmailMutation = {
+  __typename?: 'Mutation';
+  user_sendEmail: ResponseStatus;
 };
 
 export type User_GetProfileQueryVariables = Exact<{
