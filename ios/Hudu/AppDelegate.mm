@@ -1,7 +1,7 @@
 #import <Firebase.h> // <- FIREBASE
 #import "AppDelegate.h"
-
-#import <RNGoogleSignin/RNGoogleSignin.h> // <- GOOGLE
+#import <GoogleMaps/GoogleMaps.h> // <- GOOGLE MAPS
+#import <RNGoogleSignin/RNGoogleSignin.h> // <- GOOGLE SIGNIN
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h> // <- FACEBOOK
 #import <React/RCTLinkingManager.h> // <- FACEBOOK
@@ -40,6 +40,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyB4MfDPM7eiAftxCK2EFMI_tRzsy4rK90Y"];  // <- GOOGLE MAPS
+
   // <- FIREBASE \/
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
