@@ -22,14 +22,13 @@ import {useGetProfile} from '~/hooks/user';
 import {useGetBids} from '~/hooks/bid';
 import images from '~/assets/images';
 
-const HudurProfileScreen = ({navigation, route}: any) => {
-  const {userData} = userDataStore(state => state);
-
+const HudurProfileScreen = ({route}: any) => {
   const {userId} = route?.params;
+  const {userData} = userDataStore(state => state);
 
   const options = userId === userData?.id ? {} : {userId};
   const listerReviewOption = {
-    where: {bidStatus: {eq: 'FINISHED'}, listerId: {eq: userData?.id}},
+    where: {bidStatus: {eq: 'FINISHED'}, huduId: {eq: userId}},
   };
 
   const {isLoading: getProfileLoading, data: getProfile} =

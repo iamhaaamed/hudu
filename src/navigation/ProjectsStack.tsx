@@ -14,7 +14,7 @@ import ProjectDetailsHudurScreen from './../screens/Home/ProjectDetailsHudurScre
 const Stack = createNativeStackNavigator();
 
 export type ProjectStackParamList = {
-  Projects: undefined;
+  Projects: {pageNumber?: number};
   ProjectDetailsLister: undefined;
   ProjectDetailsHudur: {projectId?: number};
   ListerProfile: {userId?: number};
@@ -32,6 +32,7 @@ const screens = [
     name: 'Projects',
     component: ProjectsScreen,
     options: publicScreenOption,
+    initialParams: {pageNumber: 0},
   },
   {
     name: 'ProjectDetailsLister',

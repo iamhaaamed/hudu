@@ -34,6 +34,7 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
   }, [item]);
 
   const currentUser = userData?.id === item?.huduId;
+  const isLister = userData?.id === item?.listerId;
 
   const onPressHandler = () => {
     navigate('HudurProfile', {userId: item?.huduId});
@@ -173,7 +174,7 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
                 onPress={cancelOnPress}
               />
             )}
-            {item?.bidStatus === 'WAITING' && (
+            {item?.bidStatus === 'WAITING' && isLister && (
               <HStack space="4">
                 <Center flex={1}>
                   <CustomButton

@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Center, HStack, Text, VStack} from 'native-base';
 import {
@@ -15,10 +15,15 @@ import {navigate} from '~/navigation/Methods';
 
 const tabData = ['As lister', 'As HUDUr'];
 
-const ProjectsScreen = () => {
+const ProjectsScreen = ({route}: {route: any}) => {
+  const {pageNumber} = route?.params;
   const {isUserLoggedIn} = authStore(state => state);
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(pageNumber);
   const viewPager = useRef(null);
+
+  useEffect(() => {
+    setPage(pageNumber);
+  }, [pageNumber]);
 
   const move = (currentPage: number) => {
     viewPager.current.setPage(currentPage);

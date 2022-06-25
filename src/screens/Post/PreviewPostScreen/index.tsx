@@ -13,6 +13,7 @@ import {resetRoot} from '~/navigation/Methods';
 import {useAddProject} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
 import {useGetLocation} from '~/hooks/location';
+import {NavigationActions, StackActions} from 'react-navigation';
 
 const PreviewPostScreen = ({navigation, route}: any) => {
   const {params, availability} = route?.params;
@@ -43,7 +44,6 @@ const PreviewPostScreen = ({navigation, route}: any) => {
           console.log(input);
           addProjectMutate(input, {
             onSuccess: successData => {
-              console.log({successData});
               if (
                 successData?.project_addProject?.status ===
                 ResponseStatus.Success
@@ -69,7 +69,10 @@ const PreviewPostScreen = ({navigation, route}: any) => {
   };
   const option2OnPress = () => {
     setQuestionModalVisible(false);
-    navigation.navigate('ProjectsStack');
+    navigation.navigate('ProjectsStack', {
+      screen: 'Projects',
+      params: {pageNumber: 1},
+    });
   };
 
   const renderItem = ({item, index}: {item: any; index: number}) => (
