@@ -46,8 +46,8 @@ const LINKS = [
   {
     id: 7,
     title: 'Manage payment account',
-    navLink: 'PaymentAccount',
-    url: null,
+    navLink: null, // TODO : rollback to this string => 'PaymentAccount',
+    url: 'https://heyhudu.com',
   },
   {
     id: 8,
@@ -68,7 +68,8 @@ export default function ProfileLinks() {
   const onItemPressHandler = (item: any) => {
     item.url
       ? Linking.openURL(item.url)
-      : navigate('AuthStack', {
+      : // @ts-ignore
+        navigate('AuthStack', {
           screen: item.navLink,
         });
   };
@@ -103,14 +104,14 @@ export default function ProfileLinks() {
         <LinkItem last title="Log out" onPress={onLogOutPressHandler} />
       </VStack>
       <QuestionModal
-        visible={logoutModalVisible}
-        onClose={onCloseLogoutModal}
-        title="Are you sur you want log out?"
         option1="Cancel"
         option2="Log out"
+        loading={loading}
+        visible={logoutModalVisible}
+        onClose={onCloseLogoutModal}
         option1OnPress={onCloseLogoutModal}
         option2OnPress={onAcceptLogoutModal}
-        loading={loading}
+        title="Are you sure you want log out?"
       />
     </>
   );

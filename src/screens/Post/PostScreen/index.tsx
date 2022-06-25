@@ -99,6 +99,8 @@ const PostScreen = ({navigation}: NavigationProp) => {
         };
         goToNext(input, 'Flexible');
       } else {
+        console.log(userData);
+
         if (
           userData?.streetAddress &&
           userData?.city &&
