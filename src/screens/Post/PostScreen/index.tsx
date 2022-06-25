@@ -36,7 +36,11 @@ const schema = yup.object().shape({
   availability: yup.string().required('required').nullable(),
   duration: yup.number().when('availability', {
     is: 'SPECIFIC_TIME',
-    then: yup.number().required('required').nullable(),
+    then: yup
+      .number()
+      .typeError('you must specify a number')
+      .required('required')
+      .nullable(),
   }),
   location: yup.string().nullable(),
   streetAddress: yup.string().when('location', {
