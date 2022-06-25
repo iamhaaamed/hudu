@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Box, VStack, HStack} from 'native-base';
 import {Colors} from '~/styles';
-import {CustomImage, ProjectFavoriteIcon} from '~/components';
+import {CustomImage, ProjectFavoriteIcon, TimeLeftLabel} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {navigate} from '~/navigation/Methods';
 
@@ -19,6 +19,8 @@ const ProjectItem = ({item}: {item?: any}) => {
     }
     return res;
   }, []);
+
+  console.log({item});
 
   const onPressHandler = () => {
     navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
@@ -42,23 +44,7 @@ const ProjectItem = ({item}: {item?: any}) => {
               {...{isLiked: item?.isLiked, projectId: item?.project?.id}}
             />
           </HStack>
-          <HStack alignItems="center" w="100%" h={verticalScale(24)}>
-            <Box
-              w="100%"
-              h="100%"
-              position="absolute"
-              bg={Colors.BLACK_1}
-              opacity={0.75}
-            />
-            <Text
-              mx="2"
-              zIndex={10}
-              color={Colors.WHITE}
-              fontSize={scale(11)}
-              fontFamily={fontFamily.medium}>
-              Time left: {item?.timeLeft}
-            </Text>
-          </HStack>
+          <TimeLeftLabel {...{time: item?.project?.projectDeadLine}} />
         </VStack>
       </CustomImage>
       <TouchableOpacity

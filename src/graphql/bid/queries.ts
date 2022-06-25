@@ -40,6 +40,7 @@ export const BID_GET_BIDS = gql`
             id
           }
           project {
+            projectDeadLine
             projectStatus
             title
             description

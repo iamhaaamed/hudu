@@ -113,6 +113,8 @@ const SectionDescriptionRoute = forwardRef(
       return res;
     }, []);
 
+    const projectDeadLine = dayjs().diff(data?.projectDeadLine, 'day');
+
     useEffect(() => {
       if (userData?.id === data?.userId || bids?.length > 0) {
         setLocationData(zipCodeLocation);
@@ -192,7 +194,7 @@ const SectionDescriptionRoute = forwardRef(
               fontSize={scale(16)}
               fontFamily={fontFamily.regular}
               color={Colors.BLACK_3}>
-              {dayjs('2022-01-01').toNow(true)}
+              {`${projectDeadLine} Days`}
             </Text>
           </HStack>
           <HStack alignItems="center" justifyContent="space-between">
@@ -207,7 +209,7 @@ const SectionDescriptionRoute = forwardRef(
                   : ''}
                 , {data?.city}
                 {userData?.id === data?.userId || bids?.length > 0
-                  ? data?.streetAddress
+                  ? `, ${data?.streetAddress}`
                   : ''}
               </Text>
             </HStack>
