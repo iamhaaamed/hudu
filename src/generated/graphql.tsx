@@ -3711,6 +3711,37 @@ export type Project_UnlikeMutation = {
   } | null;
 };
 
+export type Project_DeleteProjectMutationVariables = Exact<{
+  projectId: Scalars['Int'];
+}>;
+
+export type Project_DeleteProjectMutation = {
+  __typename?: 'Mutation';
+  project_deleteProject?: {
+    __typename?: 'ResponseBaseOfProject';
+    status: ResponseStatus;
+    result?: {
+      __typename?: 'Project';
+      projectStatus: ProjectStatus;
+      title?: string | null;
+      description?: string | null;
+      duration: number;
+      availability: Availability;
+      streetAddress?: string | null;
+      city?: string | null;
+      state?: string | null;
+      projectDeadLine: any;
+      longitude: number;
+      latitude: number;
+      zipCode?: string | null;
+      userId: number;
+      id: number;
+      isDeleted: boolean;
+      createdDate: any;
+    } | null;
+  } | null;
+};
+
 export type Project_GetProjectQueryVariables = Exact<{
   projectId: Scalars['Int'];
 }>;
@@ -4192,14 +4223,6 @@ export type User_GetProfileQuery = {
       id: number;
       isDeleted: boolean;
       createdDate: any;
-      userLikeProjects?: Array<{
-        __typename?: 'UserLikeProject';
-        projectId: number;
-        userId: number;
-        id: number;
-        isDeleted: boolean;
-        createdDate: any;
-      } | null> | null;
     } | null;
   } | null;
 };
