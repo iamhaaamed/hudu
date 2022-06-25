@@ -8,6 +8,7 @@ import {NOTIFICATION_ADDED} from '~/graphql/notification/subscriptions';
 import {
   NOTIFICATION_ADD_NOTIFICATION,
   NOTIFICATION_READ_NOTIFICATION,
+  NOTIFICATION_DELETE_NOTIFICATION,
 } from '~/graphql/notification/mutations';
 import {
   Notification_AddNotificationMutation,
@@ -16,10 +17,13 @@ import {
   Notification_GetNotificationsQueryVariables,
   Notification_ReadNotificationMutation,
   Notification_ReadNotificationMutationVariables,
+  Notification_DeleteNotificationMutationVariables,
+  Notification_DeleteNotificationMutation,
   ResponseStatus,
 } from '~/generated/graphql';
 import {showMessage} from 'react-native-flash-message';
 import {Config} from 'react-native-config';
+import {getResponseMessage} from '~/utils/helper';
 
 export const useGetNotifications = (options: any = {}) => {
   return useInfiniteQuery<
@@ -115,6 +119,51 @@ export const useReadNotification = () => {
       },
       onError: (errorData: any) => {
         console.log('notification_readNotificationError=>', errorData);
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
+      },
+    },
+  );
+};
+
+export const useDeleteNotification = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Notification_DeleteNotificationMutation,
+    any,
+    Notification_DeleteNotificationMutationVariables
+  >(
+    async (notificationId: any) => {
+      return graphQLClient.request(NOTIFICATION_DELETE_NOTIFICATION, {
+        notificationId,
+      });
+    },
+    {
+      onSuccess: successData => {
+        console.log({successData});
+        if (
+          successData?.notification_deleteNotification?.status ===
+          ResponseStatus.Success
+        ) {
+          showMessage(
+            getResponseMessage(
+              successData?.notification_deleteNotification?.status,
+            ),
+          );
+          queryClient.invalidateQueries(queryKeys.notifications);
+        } else {
+          showMessage(
+            getResponseMessage(
+              successData?.notification_deleteNotification?.status,
+            ),
+          );
+        }
+      },
+      onError: (errorData: any) => {
+        console.log('notification_deleteNotificationError=>', errorData);
         showMessage({
           type: 'danger',
           message: JSON.stringify(errorData),

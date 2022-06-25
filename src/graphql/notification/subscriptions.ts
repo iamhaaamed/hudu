@@ -7,6 +7,7 @@ export const NOTIFICATION_ADDED = gql`
       description
       isReaded
       notificationType
+      entityId
       userId
       user {
         email
@@ -70,6 +71,7 @@ export const NOTIFICATION_ADDED = gql`
           description
           isReaded
           notificationType
+          entityId
           userId
           id
           isDeleted

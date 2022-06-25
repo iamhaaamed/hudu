@@ -55,6 +55,7 @@ export {default as SectionFinishProject} from './molecules/SectionFinishProject'
 export {default as QuestionChildItem} from './molecules/QuestionChildItem';
 export {default as LinkItem} from './molecules/LinkItem';
 export {default as AuthProfileLinks} from './molecules/AuthProfileLinks';
+export {default as NotificationItem} from './molecules/NotificationItem';
 
 //organisms
 export {default as CustomTabBar} from './organisms/CustomTabBar';
