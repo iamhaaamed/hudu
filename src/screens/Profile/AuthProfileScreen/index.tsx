@@ -16,7 +16,6 @@ const AuthProfileScreen = () => {
           bg={Colors.WHITE}
           shadow="5"
           width="90%"
-          marginTop={24}
           borderRadius={8}
           alignSelf="center">
           <AuthProfileLinks />
@@ -29,5 +28,9 @@ const AuthProfileScreen = () => {
 export default AuthProfileScreen;
 
 const styles = StyleSheet.create({
-  contentContainerStyle: {paddingBottom: 32},
+  contentContainerStyle: {
+    paddingVertical: 32,
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
 });

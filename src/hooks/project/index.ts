@@ -36,6 +36,8 @@ import {
   Project_ReopenProjectMutation,
   Project_ReopenProjectMutationVariables,
   Project_UnlikeMutation,
+  Project_DeleteProjectMutationVariables,
+  Project_DeleteProjectMutation,
 } from '~/generated/graphql';
 import {
   PROJECT_GET_PROJECT,
@@ -54,6 +56,7 @@ import {
   PROJECT_LIKE,
   PROJECT_REOPEN_PROJECT,
   PROJECT_UNLIKE,
+  PROJECT_DELETE_PROJECT,
 } from '~/graphql/project/mutations';
 import {showMessage} from 'react-native-flash-message';
 import {getResponseMessage} from '~/utils/helper';
@@ -389,7 +392,7 @@ export const useFinishProject = () => {
       return graphQLClient.request(PROJECT_FINISHE_PROJECT, {projectId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.project_finisheProject?.status === ResponseStatus.Success
         ) {
@@ -401,6 +404,43 @@ export const useFinishProject = () => {
       },
       onError: (errorData: any) => {
         console.log('project_finishProjectError=>', errorData);
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
+      },
+    },
+  );
+};
+
+export const useDeleteProject = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Project_DeleteProjectMutation,
+    any,
+    Project_DeleteProjectMutationVariables
+  >(
+    async (projectId: any) => {
+      return graphQLClient.request(PROJECT_DELETE_PROJECT, {projectId});
+    },
+    {
+      onSuccess: successData => {
+        if (
+          successData?.project_deleteProject?.status === ResponseStatus.Success
+        ) {
+          showMessage(
+            getResponseMessage(successData?.project_deleteProject?.status),
+          );
+          queryClient.invalidateQueries(queryKeys.projects);
+        } else {
+          showMessage(
+            getResponseMessage(successData?.project_deleteProject?.status),
+          );
+        }
+      },
+      onError: (errorData: any) => {
+        console.log('project_deleteProjectError=>', errorData);
         showMessage({
           type: 'danger',
           message: JSON.stringify(errorData),

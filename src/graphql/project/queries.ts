@@ -20,6 +20,7 @@ export const PROJECT_GET_PROJECT = gql`
           id
           isDeleted
           createdDate
+          projectDeadLine
           projectImages {
             imageAddress
             id
@@ -103,6 +104,7 @@ export const PROJECT_GET_PROJECTS = gql`
             id
             isDeleted
             createdDate
+            projectDeadLine
             projectImages {
               imageAddress
               id
@@ -191,6 +193,7 @@ export const PROJECT_GET_USER_LIKE_PROJECT = gql`
           id
           isDeleted
           createdDate
+          projectDeadLine
           projectImages {
             imageAddress
             id
@@ -239,6 +242,7 @@ export const PROJECT_GET_USER_LIKE_PROJECTS = gql`
             userId
             id
             isDeleted
+            projectDeadLine
             createdDate
             projectImages {
               imageAddress

@@ -798,3 +798,29 @@ export const PROJECT_UNLIKE = gql`
     }
   }
 `;
+
+export const PROJECT_DELETE_PROJECT = gql`
+  mutation project_deleteProject($projectId: Int!) {
+    project_deleteProject(projectId: $projectId) {
+      result {
+        projectStatus
+        title
+        description
+        duration
+        availability
+        streetAddress
+        city
+        state
+        projectDeadLine
+        longitude
+        latitude
+        zipCode
+        userId
+        id
+        isDeleted
+        createdDate
+      }
+      status
+    }
+  }
+`;
