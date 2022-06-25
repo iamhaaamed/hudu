@@ -14,7 +14,11 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  amount: yup.number().required('required').nullable(),
+  amount: yup
+    .number()
+    .typeError('you must specify a number')
+    .required('required')
+    .nullable(),
   description: yup.string().required('required').nullable(),
 });
 
