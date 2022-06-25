@@ -20,9 +20,7 @@ const ProfileScreen = () => {
   });
 
   React.useLayoutEffect(() => {
-    setTimeout(() => {
-      refetch();
-    }, 300);
+    refetch();
   }, [isFocused]);
 
   const profile = getProfile?.user_getProfile?.result ?? {};

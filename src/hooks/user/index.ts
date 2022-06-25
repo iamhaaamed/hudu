@@ -21,7 +21,8 @@ import {
   User_SignUpMutationVariables,
   User_UpdateProfileMutationVariables,
   User_UpdateLastSeenMutationVariables,
-  MutationUser_SendEmailArgs,
+  User_SendEmailMutationVariables,
+  User_SendEmailMutation,
 } from '~/generated/graphql';
 import {
   USER_LOGIN,
@@ -590,18 +591,22 @@ export const useUpdateProfile = () => {
 };
 
 export const useSendEmail = () => {
-  return useMutation<any, any, MutationUser_SendEmailArgs>(
+  return useMutation<
+    User_SendEmailMutation,
+    any,
+    User_SendEmailMutationVariables
+  >(
     async (email: any) => {
       return graphQLClient.request(USER_SEND_EMAIL, {email});
     },
     {
-      onSuccess: async successData => {
-        if (successData?.user_sendEmail?.status === ResponseStatus.Success) {
-          showMessage(getResponseMessage(successData.user_sendEmail?.status));
-          goBack();
-        } else {
-          showMessage(getResponseMessage(successData?.user_sendEmail?.status));
-        }
+      onSuccess: () => {
+        showMessage({
+          message: 'Your message has been successfully sent',
+          type: 'success',
+          icon: 'success',
+        });
+        goBack();
       },
       onError: (errorData: any) => {
         console.log('user_sendEmailError=>', errorData);

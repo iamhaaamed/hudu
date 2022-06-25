@@ -24,13 +24,6 @@ export const USER_GET_PROFILE = gql`
         asListerRates
         huduersWhoRatedToMeCount
         averageRate
-        userLikeProjects {
-          projectId
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         externalId
         id
         isDeleted
