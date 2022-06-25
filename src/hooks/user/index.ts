@@ -21,12 +21,14 @@ import {
   User_SignUpMutationVariables,
   User_UpdateProfileMutationVariables,
   User_UpdateLastSeenMutationVariables,
+  MutationUser_SendEmailArgs,
 } from '~/generated/graphql';
 import {
   USER_LOGIN,
   USER_SIGN_UP,
   USER_UPDATE_PROFILE,
   USER_UPDATE_LAST_SEEN,
+  USER_SEND_EMAIL,
 } from '~/graphql/user/mutations';
 import {
   statusCodes,
@@ -577,6 +579,32 @@ export const useUpdateProfile = () => {
       },
       onError: (errorData: any) => {
         console.log('user_updateProfileError=>', errorData);
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
+      },
+    },
+  );
+};
+
+export const useSendEmail = () => {
+  return useMutation<any, any, MutationUser_SendEmailArgs>(
+    async (email: any) => {
+      return graphQLClient.request(USER_SEND_EMAIL, {email});
+    },
+    {
+      onSuccess: async successData => {
+        if (successData?.user_sendEmail?.status === ResponseStatus.Success) {
+          showMessage(getResponseMessage(successData.user_sendEmail?.status));
+          goBack();
+        } else {
+          showMessage(getResponseMessage(successData?.user_sendEmail?.status));
+        }
+      },
+      onError: (errorData: any) => {
+        console.log('user_sendEmailError=>', errorData);
         showMessage({
           type: 'danger',
           message: JSON.stringify(errorData),

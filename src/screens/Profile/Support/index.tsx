@@ -14,6 +14,7 @@ import {
   CustomKeyboardAwareScrollView,
 } from '~/components';
 import images from '~/assets/images';
+import {useSendEmail} from '~/hooks/user';
 
 const schema = yup.object().shape({
   title: yup.string().required('required'),
@@ -21,14 +22,27 @@ const schema = yup.object().shape({
 });
 
 export default function SupportScreen() {
+  const {mutate: mutateSendEmail, isLoading: sendEmailLoading} = useSendEmail();
+
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, formState} = methods;
+  const {watch, handleSubmit, register, formState} = methods;
 
-  const onSend = () => {};
+  // TODO : what is the TO field ?!
+  const onSend = async () => {
+    const {title, message} = watch();
+
+    const email = {
+      to: 'a@a.com',
+      subject: title,
+      plainTextContent: message,
+      htmlContent: `<div><p>${message}</p></div>`,
+    };
+    mutateSendEmail(email);
+  };
 
   return (
     <CustomContainer>
@@ -65,7 +79,7 @@ export default function SupportScreen() {
             <CustomButton
               title="Send"
               height={verticalScale(45)}
-              onPress={() => handleSubmit(onSend)}
+              onPress={handleSubmit(onSend)}
             />
           </Box>
         </CustomKeyboardAwareScrollView>
