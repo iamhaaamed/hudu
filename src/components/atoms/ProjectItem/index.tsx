@@ -20,8 +20,6 @@ const ProjectItem = ({item}: {item?: any}) => {
     return res;
   }, []);
 
-  console.log({item});
-
   const onPressHandler = () => {
     navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
   };

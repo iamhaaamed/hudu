@@ -8,29 +8,24 @@ import debounce from 'lodash.debounce';
 import {SearchProjectItem} from '~/components';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useGetProjects} from '~/hooks/project';
+import dayjs from 'dayjs';
 
 const SearchScreen = ({navigation}: any) => {
   const [userQuery, setUserQuery] = useState('');
   const [searchText, setSearchText] = useState('');
-  const [fetchData, setFetchData] = useState([]);
+  const today = dayjs(new Date());
 
-  const options =
-    searchText?.length > 0
-      ? {
-          where: {
-            or: [
-              {project: {title: {contains: searchText}}},
-              {project: {description: {contains: searchText}}},
-            ],
-          },
-        }
-      : {};
+  const [options, setOptions] = useState({
+    location: [12, 12],
+    where: {project: {projectDeadLine: {lte: today}}},
+  });
 
   const {
     isLoading: getProjectLoading,
     data: getProjects,
     fetchNextPage: fetchNextPageProjects,
     hasNextPage: hasNextPageProjects,
+    isRefetching,
   } = useGetProjects(options);
 
   const projects = getProjects?.pages ?? [];
@@ -53,15 +48,26 @@ const SearchScreen = ({navigation}: any) => {
   const sendQuery = async (query: any) => {
     if (query.length > 0) {
       setSearchText(query);
-      //   searchMutation.mutate(query, {
-      //     onSuccess: (data) => {
-      //       setFetchData(data);
-      //       setPath(data.image_path);
-      //     },
-      //     onError: () => {},
-      //   });
+      setOptions({
+        location: [12, 12],
+        where: {
+          and: [
+            {project: {projectDeadLine: {lte: today}}},
+            {
+              or: [
+                {project: {title: {contains: query}}},
+                {project: {description: {contains: query}}},
+              ],
+            },
+          ],
+        },
+      });
     } else {
       setSearchText(query);
+      setOptions({
+        location: [12, 12],
+        where: {project: {projectDeadLine: {lte: today}}},
+      });
     }
   };
 
@@ -112,6 +118,7 @@ const SearchScreen = ({navigation}: any) => {
           )}
         </HStack>
         <FlatList
+          refreshing={isRefetching}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={styles.columnWrapperStyle}
           contentContainerStyle={styles.contentContainerStyle}

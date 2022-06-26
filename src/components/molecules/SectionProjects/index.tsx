@@ -15,6 +15,7 @@ import {useGetProjects} from '~/hooks/project';
 import {requestLocationPermission} from '~/utils/getPermissions';
 import {showMessage} from 'react-native-flash-message';
 import Geolocation from 'react-native-geolocation-service';
+import dayjs from 'dayjs';
 
 const schema = yup.object().shape({
   sort: yup.string(),
@@ -30,7 +31,12 @@ const SectionProjects = () => {
 
   const sort = watch('sort');
 
-  const [options, setOptions] = useState({location: [12, 12]});
+  const today = dayjs(new Date());
+
+  const [options, setOptions] = useState({
+    location: [12, 12],
+    where: {project: {projectDeadLine: {lte: today}}},
+  });
   const [currentLocation, setCurrentLocation] = useState({location: [12, 12]});
 
   useEffect(() => {
@@ -41,7 +47,6 @@ const SectionProjects = () => {
     if (await requestLocationPermission()) {
       Geolocation.getCurrentPosition(
         position => {
-          console.log(position);
           const {latitude, longitude} = position.coords;
           setCurrentLocation({
             latitude,
@@ -67,6 +72,7 @@ const SectionProjects = () => {
       setOptions({
         projectFilter: sort,
         location: [currentLocation?.latitude, currentLocation?.longitude],
+        where: {project: {projectDeadLine: {lte: today}}},
       });
     }
   }, [sort]);

@@ -16,6 +16,7 @@ import {useGetUserLikeProjects} from '~/hooks/project';
 import {authStore} from '~/stores';
 import Geolocation from 'react-native-geolocation-service';
 import {requestLocationPermission} from '~/utils/getPermissions';
+import dayjs from 'dayjs';
 
 const schema = yup.object().shape({
   sort: yup.string(),
@@ -28,7 +29,12 @@ const FavoriteScreen = () => {
     mode: 'onChange',
   });
 
-  const [options, setOptions] = useState({location: [12, 12]});
+  const today = dayjs(new Date());
+
+  const [options, setOptions] = useState({
+    location: [12, 12],
+    where: {project: {projectDeadLine: {lte: today}}},
+  });
 
   const options2 = isUserLoggedIn ? options : {enabled: isUserLoggedIn};
   const [currentLocation, setCurrentLocation] = useState({location: [12, 12]});
@@ -56,7 +62,6 @@ const FavoriteScreen = () => {
     if (await requestLocationPermission()) {
       Geolocation.getCurrentPosition(
         position => {
-          console.log(position);
           const {latitude, longitude} = position.coords;
           setCurrentLocation({
             latitude,
@@ -82,6 +87,7 @@ const FavoriteScreen = () => {
       setOptions({
         projectFilter: sort,
         location: [currentLocation?.latitude, currentLocation?.longitude],
+        where: {project: {projectDeadLine: {lte: today}}},
       });
     }
   }, [sort]);

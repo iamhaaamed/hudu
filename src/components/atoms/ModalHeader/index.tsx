@@ -1,9 +1,8 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
-import {Text, HStack, Icon, Center} from 'native-base';
+import {Text, HStack, IconButton} from 'native-base';
 import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const ModalHeader = ({text, onPress}: {text?: string; onPress?: any}) => {
   const onPressHandler = () => {
@@ -19,14 +18,10 @@ const ModalHeader = ({text, onPress}: {text?: string; onPress?: any}) => {
         {text}
       </Text>
       {onPress && (
-        <TouchableOpacity activeOpacity={0.7} onPress={onPressHandler}>
-          <Center p="1">
-            <Icon
-              as={<MaterialCommunityIcons name="close" size={scale(24)} />}
-              color={Colors.BLACK_1}
-            />
-          </Center>
-        </TouchableOpacity>
+        <IconButton
+          onPress={onPressHandler}
+          icon={<Icon name="close" color={Colors.BLACK} size={24} />}
+        />
       )}
     </HStack>
   );
