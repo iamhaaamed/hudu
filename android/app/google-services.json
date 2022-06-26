@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "854018447373",
-    "project_id": "aps-hudu-dev",
-    "storage_bucket": "aps-hudu-dev.appspot.com"
+    "project_number": "1093284278259",
+    "project_id": "aps-hudu-qa",
+    "storage_bucket": "aps-hudu-qa.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:854018447373:android:cca854ef111bdb85561d44",
+        "mobilesdk_app_id": "1:1093284278259:android:3b3307f5b688bacde9ec86",
         "android_client_info": {
           "package_name": "io.apsy.hudu"
         }
       },
       "oauth_client": [
         {
-          "client_id": "854018447373-8dp74lf43jlnoi4hjc2ltl1f1jaabnhi.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "io.apsy.hudu",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "854018447373-m8vh6ibpda42lj42u633ot9vdnoclnk1.apps.googleusercontent.com",
+          "client_id": "1093284278259-bcerm7etc8neu80hup38ii068s5keo0q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBSuyZ3ARrQo2cEgyz7pBkMXssimrJG7mw"
+          "current_key": "AIzaSyArRUWZ2VoakKT81Qt9zMMdQCyhnMABbyk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "854018447373-m8vh6ibpda42lj42u633ot9vdnoclnk1.apps.googleusercontent.com",
+              "client_id": "1093284278259-bcerm7etc8neu80hup38ii068s5keo0q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
