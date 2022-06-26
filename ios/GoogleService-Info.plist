@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>854018447373-1su9uefjusok97luepkpeci6jvk8vlpp.apps.googleusercontent.com</string>
+	<string>1093284278259-vkl64fe2kfrf160kbsmlnsunl8o5t4b6.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.854018447373-1su9uefjusok97luepkpeci6jvk8vlpp</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>854018447373-8dp74lf43jlnoi4hjc2ltl1f1jaabnhi.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.1093284278259-vkl64fe2kfrf160kbsmlnsunl8o5t4b6</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBReb2vTz2JRjUxkm9h8gOAynWUEybgqAg</string>
+	<string>AIzaSyD0WCsxocC7QUEMFqzhegeH51NgZqO-SlI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>854018447373</string>
+	<string>1093284278259</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>org.reactjs.native.example.Hudu</string>
 	<key>PROJECT_ID</key>
-	<string>aps-hudu-dev</string>
+	<string>aps-hudu-qa</string>
 	<key>STORAGE_BUCKET</key>
-	<string>aps-hudu-dev.appspot.com</string>
+	<string>aps-hudu-qa.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:854018447373:ios:fbd99e5efe2b1a82561d44</string>
+	<string>1:1093284278259:ios:12167a3e2b7d59c2e9ec86</string>
 </dict>
 </plist>
