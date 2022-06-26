@@ -85,17 +85,24 @@ const CustomImage = ({
         <ImageViewer
           enableSwipeDown
           imageUrls={
-            imageSourceArray
+            imageSourceArray && imageSourceArray?.length > 0
               ? imageSourceArray
               : [
                   local
                     ? {
                         url: '',
                         props: {
-                          source: imageSource,
+                          source: imageSource ? imageSource : errorImage,
                         },
                       }
-                    : {url: imageSource},
+                    : imageSource
+                    ? {url: imageSource}
+                    : {
+                        url: '',
+                        props: {
+                          source: errorImage,
+                        },
+                      },
                 ]
           }
           onSwipeDown={oncloseZoomModal}
