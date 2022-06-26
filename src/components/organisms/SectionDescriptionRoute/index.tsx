@@ -23,6 +23,8 @@ import {navigate} from '~/navigation/Methods';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {getLocationFromState, getStateNameFromShortName} from '~/utils/helper';
 import {useGetLocation} from '~/hooks/location';
+import {Config} from 'react-native-config';
+//import MapViewDirections from 'react-native-maps-directions';
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -221,36 +223,54 @@ const SectionDescriptionRoute = forwardRef(
             </Text>
           </HStack>
           <Box overflow="hidden" w="100%" borderRadius="lg">
-            <MapView
-              region={{
+            {locationData?.Latitude && locationData?.Longitude && (
+              <MapView
+                region={{
+                  latitude: locationData?.Latitude,
+                  longitude: locationData?.Longitude,
+                  latitudeDelta: 0.99,
+                  longitudeDelta: 0.99,
+                }}
+                onRegionChange={e => {
+                  const coordinate = e;
+                  setLocationData({
+                    Latitude: coordinate?.latitude,
+                    Longitude: coordinate?.longitude,
+                  });
+                }}
+                ref={mapRef}
+                provider={PROVIDER_GOOGLE}
+                style={styles.map}
+                showsMyLocationButton={false}
+                showsUserLocation={false}
+                zoomEnabled
+                scrollEnabled
+                showsScale>
+                {/* <MapViewDirections
+              origin={{
                 latitude: locationData?.Latitude || 40.7128,
                 longitude: locationData?.Longitude || 74.006,
-                latitudeDelta: 0.99,
-                longitudeDelta: 0.99,
+                // latitudeDelta: 0.99,
+                // longitudeDelta: 0.99,
               }}
-              onRegionChange={e => {
-                const coordinate = e;
-                setLocationData({
-                  Latitude: coordinate?.latitude,
-                  Longitude: coordinate?.longitude,
-                });
+              destination={{
+                latitude: 35.0078,
+                longitude: 97.0929,
               }}
-              ref={mapRef}
-              provider={PROVIDER_GOOGLE}
-              style={styles.map}
-              showsMyLocationButton={false}
-              showsUserLocation={false}
-              zoomEnabled
-              scrollEnabled
-              showsScale>
-              <Marker
-                coordinate={{
-                  latitude: locationData?.Latitude || 40.7128,
-                  longitude: locationData?.Longitude || 74.006,
-                }}>
-                <MarkerIcon />
-              </Marker>
-            </MapView>
+              apikey={Config.GOOGLE_MAPS_API_KEY}
+              onError={error => {
+                console.log({error});
+              }}
+            /> */}
+                <Marker
+                  coordinate={{
+                    latitude: locationData?.Latitude,
+                    longitude: locationData?.Longitude,
+                  }}>
+                  <MarkerIcon />
+                </Marker>
+              </MapView>
+            )}
           </Box>
           {userData?.id !== data?.userId && (
             <CustomButton

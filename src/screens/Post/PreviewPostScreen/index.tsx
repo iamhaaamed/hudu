@@ -13,7 +13,6 @@ import {resetRoot} from '~/navigation/Methods';
 import {useAddProject} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
 import {useGetLocation} from '~/hooks/location';
-import {NavigationActions, StackActions} from 'react-navigation';
 
 const PreviewPostScreen = ({navigation, route}: any) => {
   const {params, availability} = route?.params;
