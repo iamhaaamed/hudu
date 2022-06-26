@@ -8,7 +8,7 @@ import {
   CustomLoading,
   EmptyData,
 } from '~/components';
-import {scale} from '~/utils/style';
+import {scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {useGetBids} from '~/hooks/bid';
 
@@ -23,7 +23,7 @@ const ChooseHudurModal = ({
   title: string;
   projectId?: any;
 }) => {
-  const listerReviewOption = {
+  const options = {
     where: {bidStatus: {eq: 'WAITING'}, projectId: {eq: projectId}},
   };
 
@@ -32,7 +32,7 @@ const ChooseHudurModal = ({
     data: getBids,
     fetchNextPage: fetchNextPageGetBids,
     hasNextPage: hasNextPageGetBids,
-  } = useGetBids(listerReviewOption);
+  } = useGetBids(options);
 
   const bids = getBids?.pages ?? [];
 
@@ -62,6 +62,7 @@ const ChooseHudurModal = ({
         {loading && <CustomLoading />}
         <VStack bg={Colors.WHITE} w="100%">
           <FlatList
+            contentContainerStyle={styles.contentContainerStyle}
             showsVerticalScrollIndicator={false}
             data={bids}
             renderItem={renderItem}
@@ -91,5 +92,8 @@ const styles = StyleSheet.create({
     height: scale(36),
     width: scale(36),
     borderRadius: 100,
+  },
+  contentContainerStyle: {
+    minHeight: verticalScale(120),
   },
 });

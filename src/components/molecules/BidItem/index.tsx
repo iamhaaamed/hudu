@@ -33,7 +33,7 @@ const BidItem = ({item}: {item?: any}) => {
   };
 
   return (
-    <VStack borderRadius="md" shadow="3" p="4" mx="2" mb="4" space="2">
+    <VStack borderRadius="md" shadow="1" p="4" mx="4" my="2" space="2">
       <HStack alignItems="center" justifyContent="space-between">
         <HStack alignItems="center" space="2">
           <CustomImage
