@@ -225,6 +225,14 @@ const SectionDescriptionRoute = forwardRef(
           <Box overflow="hidden" w="100%" borderRadius="lg">
             {locationData?.Latitude && locationData?.Longitude && (
               <MapView
+                showsScale
+                zoomEnabled
+                ref={mapRef}
+                scrollEnabled
+                style={styles.map}
+                showsUserLocation={false}
+                // provider={PROVIDER_GOOGLE}
+                showsMyLocationButton={false}
                 region={{
                   latitude: locationData?.Latitude,
                   longitude: locationData?.Longitude,
@@ -237,15 +245,7 @@ const SectionDescriptionRoute = forwardRef(
                     Latitude: coordinate?.latitude,
                     Longitude: coordinate?.longitude,
                   });
-                }}
-                ref={mapRef}
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                showsMyLocationButton={false}
-                showsUserLocation={false}
-                zoomEnabled
-                scrollEnabled
-                showsScale>
+                }}>
                 {/* <MapViewDirections
               origin={{
                 latitude: locationData?.Latitude || 40.7128,
