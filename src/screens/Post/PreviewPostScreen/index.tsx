@@ -41,7 +41,6 @@ const PreviewPostScreen = ({navigation, route}: any) => {
           const lat = parseFloat(success?.output?.[0]?.latitude);
           const long = parseFloat(success?.output?.[0]?.longitude);
           const input = {...params, point: [lat, long]};
-          console.log(input);
           addProjectMutate(input, {
             onSuccess: successData => {
               if (
