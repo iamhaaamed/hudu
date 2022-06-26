@@ -1,11 +1,14 @@
-import React, {useEffect} from 'react';
 import * as yup from 'yup';
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {HStack, VStack} from 'native-base';
 import {verticalScale} from '~/utils/style';
+import {stateList} from '~/constants/mockData';
+import {useGetLocation} from '~/hooks/location';
+import {authStore, userDataStore} from '~/stores';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
-import {authStore, userDataStore} from '~/stores';
+import {useGetProfile, useUpdateProfile} from '~/hooks/user';
 import {
   CustomInput,
   CustomButton,
@@ -14,9 +17,6 @@ import {
   CustomContainer,
   CustomKeyboardAwareScrollView,
 } from '~/components';
-import {useGetProfile, useUpdateProfile} from '~/hooks/user';
-import {useGetLocation} from '~/hooks/location';
-import {stateList} from '~/constants/mockData';
 
 const schema = yup.object().shape({
   imageAddress: yup.string().nullable(),
@@ -38,8 +38,8 @@ const schema = yup.object().shape({
 });
 
 export default function EditProfileScreen() {
-  const {userData} = userDataStore(state => state);
   const {isUserLoggedIn} = authStore(state => state);
+  const {userData, setUserData} = userDataStore(state => state);
 
   const {isLoading: getProfileLoading, data: getProfile} = useGetProfile({
     enabled: isUserLoggedIn,
@@ -93,8 +93,10 @@ export default function EditProfileScreen() {
             point: [lat, long],
             id: userData?.id,
           };
-          mutateUpdate(input, {
-            onSuccess: () => {},
+          mutateUpdate(input as any, {
+            onSuccess: data => {
+              setUserData(data?.user_updateProfile?.result);
+            },
           });
         }
       },
