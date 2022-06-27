@@ -33,6 +33,7 @@ export const CANCEL_CARD_BACKGROUND = '#DCDFE6';
 export const EMPTY_DATA = '#8BA4EF';
 export const TIME_LEFT_RED = '#F44848';
 export const TIME_LEFT_ORANGE = '#FDA500';
+export const FAVORITE_RIPPLE_COLOR = 'rgba(232,231,231,0.85)';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';

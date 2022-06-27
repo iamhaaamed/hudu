@@ -12,10 +12,15 @@ import {Colors} from '~/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import assetsImages from '~/assets/images';
+import {userDataStore} from '~/stores';
 
 export const PHOTO_SIZE = 120;
 
 const Header = ({title, images, user, isLiked, projectId}: any) => {
+  const {userData} = userDataStore(state => state);
+
+  const isLister = userData?.id === user?.id;
+
   const totalReview = useMemo(() => {
     const listerCounts = user?.listersWhoRatedToMeCount;
     const hudurCounts = user?.huduersWhoRatedToMeCount;
@@ -32,7 +37,7 @@ const Header = ({title, images, user, isLiked, projectId}: any) => {
   };
 
   return (
-    <VStack h={user ? verticalScale(396) : verticalScale(310)}>
+    <VStack h={user && !isLister ? verticalScale(396) : verticalScale(310)}>
       <VStack>
         <HStack
           w="100%"
@@ -43,7 +48,7 @@ const Header = ({title, images, user, isLiked, projectId}: any) => {
           justifyContent="space-between">
           <IconButton
             onPress={backOnPress}
-            bg={Colors.WHITE_RIPPLE_COLOR}
+            bg={Colors.FAVORITE_RIPPLE_COLOR}
             colorScheme={Colors.WHITE_RIPPLE_COLOR}
             borderRadius="full"
             icon={
@@ -70,7 +75,7 @@ const Header = ({title, images, user, isLiked, projectId}: any) => {
             {title}
           </Text>
         )}
-        {user && (
+        {!isLister && user && (
           <Center
             mt="4"
             bg={Colors.WHITE}

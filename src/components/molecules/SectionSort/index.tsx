@@ -12,7 +12,7 @@ export default React.forwardRef(({name}: {name: any}, ref: any) => {
         {id: 1, title: 'High to low bids', value: 'HIGH_TO_LOW_BIDS'},
         {
           id: 2,
-          title: 'Closet to current location',
+          title: 'Closest to current location',
           value: 'CLOSET_TO_CURRENT_LOCATION',
         },
         {id: 3, title: 'My zip code', value: 'MY_ZIP_CODE'},

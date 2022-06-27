@@ -142,12 +142,14 @@ export default function SignUpScreen({navigation}: NavigationProp) {
                 placeholder="Password"
                 {...{formState}}
                 validation
+                inputType="password"
               />
               <CustomInput
                 {...register('confirm')}
-                placeholder="Confirm Password"
+                placeholder="Confirm password"
                 {...{formState}}
                 validation
+                inputType="password"
               />
             </VStack>
             <Box px="4" py="4">

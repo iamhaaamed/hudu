@@ -38,7 +38,7 @@ const FavoriteIcon = ({
     <IconButton
       disabled={loading}
       onPress={onPressHandler}
-      bg={Colors.WHITE_RIPPLE_COLOR}
+      bg={Colors.FAVORITE_RIPPLE_COLOR}
       colorScheme={Colors.WHITE_RIPPLE_COLOR}
       borderRadius="full"
       icon={
