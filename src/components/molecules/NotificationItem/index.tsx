@@ -1,9 +1,11 @@
 import React, {useEffect} from 'react';
 import {Colors} from '~/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Text, Badge, HStack, IconButton, Spinner} from 'native-base';
+import {Text, Badge, HStack, IconButton, Spinner, VStack} from 'native-base';
 import {useDeleteNotification, useReadNotification} from '~/hooks/notification';
 import {TouchableOpacity} from 'react-native';
+import {fontFamily, scale} from '~/utils/style';
+import {navigate} from '~/navigation/Methods';
 
 const NotificationItem = ({item}: {item: any}) => {
   const {mutate: mutateReadNotification, isLoading: readNotificationLoading} =
@@ -14,10 +16,12 @@ const NotificationItem = ({item}: {item: any}) => {
   } = useDeleteNotification();
 
   useEffect(() => {
-    mutateReadNotification(item?.id, {
-      onSuccess: () => {},
-      onError: () => {},
-    });
+    if (item?.id) {
+      mutateReadNotification(item?.id, {
+        onSuccess: () => {},
+        onError: () => {},
+      });
+    }
   }, []);
 
   const deleteOnPress = () => {
@@ -26,13 +30,26 @@ const NotificationItem = ({item}: {item: any}) => {
     });
   };
 
-  const onPressHandler = () => {};
+  const onPressHandler = () => {
+    navigate('ProjectDetailsHudur', {projectId: item?.projectId});
+  };
+
+  const getNotificationType = () => {
+    switch (item?.notificationType) {
+      case 'BID_APPROVED_BY_LISTER':
+      case 'BID_REJECTED_BY_LISTER':
+      case 'BID_CANCELLED_BY_HUDU':
+        return '';
+      case 'NEW_BID_GIVEN':
+      case 'BID_WAS_EDITED':
+        return item?.bid?.hudu?.userName;
+      default:
+        return '';
+    }
+  };
 
   return (
-    <TouchableOpacity
-      disabled={true}
-      activeOpacity={0.7}
-      onPress={onPressHandler}>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPressHandler}>
       <HStack
         mb="3"
         px="2"
@@ -40,7 +57,6 @@ const NotificationItem = ({item}: {item: any}) => {
         rounded={10}
         borderWidth="1"
         overflow="hidden"
-        alignItems="center"
         borderColor={Colors.GARY_2}>
         {!item?.isReaded && (
           <Badge
@@ -53,19 +69,37 @@ const NotificationItem = ({item}: {item: any}) => {
             colorScheme="warning"
           />
         )}
-        <Text flex={1}>{item?.title}</Text>
-        <IconButton
-          rounded="full"
-          onPress={deleteOnPress}
-          colorScheme={Colors.RED_RIPPLE_COLOR}
-          icon={
-            deleteNotificationLoading ? (
-              <Spinner color={Colors.BLACK_3} size={24} />
-            ) : (
-              <Icon name="close" color={Colors.BLACK_3} size={24} />
-            )
-          }
-        />
+        <VStack flex={1}>
+          <HStack alignItems="center">
+            <Text
+              color={Colors.BLACK_1}
+              fontFamily={fontFamily.regular}
+              fontSize={scale(13)}
+              flex={1}>
+              {getNotificationType()}
+              {item?.title}
+            </Text>
+            <IconButton
+              rounded="full"
+              onPress={deleteOnPress}
+              colorScheme={Colors.RED_RIPPLE_COLOR}
+              icon={
+                deleteNotificationLoading ? (
+                  <Spinner color={Colors.BLACK_3} size={24} />
+                ) : (
+                  <Icon name="close" color={Colors.BLACK_3} size={24} />
+                )
+              }
+            />
+          </HStack>
+          <Text
+            color={Colors.PLACEHOLDER}
+            fontFamily={fontFamily.regular}
+            fontSize={scale(13)}>
+            {getNotificationType()}
+            {item?.project?.title}
+          </Text>
+        </VStack>
       </HStack>
     </TouchableOpacity>
   );
