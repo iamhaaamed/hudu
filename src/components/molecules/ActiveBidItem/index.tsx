@@ -15,7 +15,15 @@ import {useAcceptBid, useCancelBid, useRejectBid} from '~/hooks/bid';
 import images from '~/assets/images';
 import {ResponseStatus} from '~/generated/graphql';
 
-const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
+const ActiveBidItem = ({
+  item,
+  index,
+  projectStatus,
+}: {
+  item?: any;
+  index: number;
+  projectStatus: string;
+}) => {
   const {userData} = userDataStore(state => state);
   const {mutate: mutateCancelBid, isLoading: cancelBidLoading} = useCancelBid();
   const {mutate: mutateRejectBid, isLoading: rejectBidLoading} = useRejectBid();
@@ -95,6 +103,7 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
   };
 
   const isCancelled = item?.bidStatus === 'CANCELL';
+  const inProgress = item?.bidStatus === 'IN_PROGRESS';
 
   return (
     <>
@@ -105,7 +114,13 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
         px="4"
         py="4"
         borderRadius="lg"
-        bg={isCancelled ? Colors.CANCEL_CARD_BACKGROUND : Colors.WHITE}
+        bg={
+          isCancelled
+            ? Colors.CANCEL_CARD_BACKGROUND
+            : inProgress
+            ? Colors.WHITE
+            : Colors.CANCEL_CARD_BACKGROUND
+        }
         shadow="2">
         <TouchableOpacity
           activeOpacity={0.7}
@@ -133,7 +148,13 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
                   showRating="right"
                   total={totalReview}
                   disabled
-                  fillColor={isCancelled ? Colors.PLACEHOLDER : Colors.GOLDEN}
+                  fillColor={
+                    isCancelled
+                      ? Colors.PLACEHOLDER
+                      : inProgress
+                      ? Colors.CANCEL_CARD_BACKGROUND
+                      : Colors.GOLDEN
+                  }
                 />
               </VStack>
             </HStack>
@@ -162,7 +183,13 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
               <Text
                 fontSize={scale(14)}
                 fontFamily={fontFamily.regular}
-                color={isCancelled ? Colors.PLACEHOLDER : Colors.PRIMARY}>
+                color={
+                  isCancelled
+                    ? Colors.PLACEHOLDER
+                    : inProgress
+                    ? Colors.PRIMARY
+                    : Colors.CANCEL_CARD_BACKGROUND
+                }>
                 $ {item?.amount}
               </Text>
             </HStack>
@@ -174,26 +201,28 @@ const ActiveBidItem = ({item, index}: {item?: any; index: number}) => {
                 onPress={cancelOnPress}
               />
             )}
-            {item?.bidStatus === 'WAITING' && isLister && (
-              <HStack space="4">
-                <Center flex={1}>
-                  <CustomButton
-                    title="Award"
-                    onPress={awardOnPress}
-                    height={verticalScale(35)}
-                  />
-                </Center>
-                <Center flex={1}>
-                  <CustomButton
-                    color={Colors.BLACK_3}
-                    outline
-                    title="Reject"
-                    onPress={rejectOnPress}
-                    height={verticalScale(35)}
-                  />
-                </Center>
-              </HStack>
-            )}
+            {item?.bidStatus === 'WAITING' &&
+              isLister &&
+              projectStatus === 'BIDDING' && (
+                <HStack space="4">
+                  <Center flex={1}>
+                    <CustomButton
+                      title="Award"
+                      onPress={awardOnPress}
+                      height={verticalScale(35)}
+                    />
+                  </Center>
+                  <Center flex={1}>
+                    <CustomButton
+                      color={Colors.BLACK_3}
+                      outline
+                      title="Reject"
+                      onPress={rejectOnPress}
+                      height={verticalScale(35)}
+                    />
+                  </Center>
+                </HStack>
+              )}
           </VStack>
         </TouchableOpacity>
       </Center>

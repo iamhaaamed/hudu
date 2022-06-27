@@ -48,7 +48,7 @@ const Header = ({title, images, user, isLiked, projectId}: any) => {
           justifyContent="space-between">
           <IconButton
             onPress={backOnPress}
-            bg={Colors.WHITE_RIPPLE_COLOR}
+            bg={Colors.FAVORITE_RIPPLE_COLOR}
             colorScheme={Colors.WHITE_RIPPLE_COLOR}
             borderRadius="full"
             icon={

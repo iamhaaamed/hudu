@@ -18,8 +18,10 @@ import {ResponseStatus} from '~/generated/graphql';
 import {useQueryClient} from 'react-query';
 import queryKeys from '~/constants/queryKeys';
 import {navigate} from '~/navigation/Methods';
+import {userDataStore} from '~/stores';
 
 const SectionHudurProjectRow = ({item}: {item: any}) => {
+  const {userData} = userDataStore(state => state);
   const swipeable = useRef<Swipeable>(null);
   const queryClient = useQueryClient();
 
@@ -30,7 +32,9 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   const {mutate: mutateDeleteBid, isLoading: deleteBidLoading} = useDeleteBid();
 
   const itemOnPress = () => {
-    navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
+    if (userData?.id === item?.huduId) {
+      navigate('ProjectDetailsHudur', {projectId: item?.projectId});
+    }
   };
 
   const deleteOnPress = () => {

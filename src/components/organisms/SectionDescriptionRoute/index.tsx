@@ -118,7 +118,7 @@ const SectionDescriptionRoute = forwardRef(
     const projectDeadLine = dayjs().diff(data?.projectDeadLine, 'day');
 
     useEffect(() => {
-      if (userData?.id === data?.userId || bids?.length > 0) {
+      if (userData?.id === data?.userId && bids?.length > 0) {
         setLocationData(zipCodeLocation);
       } else {
         const locationItem = getLocationFromState(data?.state);
@@ -272,13 +272,14 @@ const SectionDescriptionRoute = forwardRef(
               </MapView>
             )}
           </Box>
-          {userData?.id !== data?.userId && (
-            <CustomButton
-              onPress={submitBidOnPress}
-              title="Submit bid"
-              height={verticalScale(45)}
-            />
-          )}
+          {userData?.id !== data?.userId &&
+            data?.projectStatus === 'BIDDING' && (
+              <CustomButton
+                onPress={submitBidOnPress}
+                title="Submit bid"
+                height={verticalScale(45)}
+              />
+            )}
         </VStack>
       ),
       [data],

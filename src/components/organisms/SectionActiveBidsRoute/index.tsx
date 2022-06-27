@@ -10,6 +10,7 @@ const SectionActiveBidsRoute = forwardRef(
   (
     {
       data,
+      projectStatus,
       contentContainerStyle,
       onMomentumScrollEnd,
       onScrollEndDrag,
@@ -22,7 +23,7 @@ const SectionActiveBidsRoute = forwardRef(
     const keyExtractor = useCallback((_, index: number) => `key${index}`, []);
 
     const renderItem = ({item, index}: {item: any; index: number}) => (
-      <ActiveBidItem {...{item, index}} />
+      <ActiveBidItem {...{item, index, projectStatus}} />
     );
 
     return (

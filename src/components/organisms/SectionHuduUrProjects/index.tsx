@@ -37,6 +37,7 @@ const SectionHuduUrProjects = () => {
     data: getBids,
     fetchNextPage: fetchNextPageGetBids,
     hasNextPage: hasNextPageGetBids,
+    isRefetching,
   } = useGetBids(options);
 
   const projects = getBids?.pages ?? [];
@@ -72,6 +73,7 @@ const SectionHuduUrProjects = () => {
             </HStack>
           </FormProvider>
           <FlatList
+            refreshing={isRefetching}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.contentContainerStyle}
             data={projects}
