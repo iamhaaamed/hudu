@@ -30,7 +30,7 @@ const locationData = [
 ];
 
 const schema = yup.object().shape({
-  projectImages: yup.array().required('required').nullable(),
+  projectImages: yup.array().nullable(),
   title: yup.string().required('required').nullable(),
   description: yup.string().required('required').nullable(),
   availability: yup.string().required('required').nullable(),
@@ -88,7 +88,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
       if (location === 'NEW_ADDRESS') {
         input = {
           duration: formData?.duration,
-          projectImages: formData?.projectImages,
+          projectImages: formData?.projectImages ? formData?.projectImages : [],
           title: formData?.title,
           description: formData?.description,
           availability: formData?.availability,
@@ -109,7 +109,9 @@ const PostScreen = ({navigation}: NavigationProp) => {
         ) {
           input = {
             duration: formData?.duration,
-            projectImages: formData?.projectImages,
+            projectImages: formData?.projectImages
+              ? formData?.projectImages
+              : [],
             title: formData?.title,
             description: formData?.description,
             availability: formData?.availability,
