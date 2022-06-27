@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet, TextInput} from 'react-native';
-import {Box, HStack, IconButton, Spinner, Text, VStack} from 'native-base';
+import {StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import {Box, HStack, Spinner, Text, VStack} from 'native-base';
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {authStore, userDataStore} from '~/stores';
@@ -70,6 +70,7 @@ const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
           <HStack space="4">
             <Box flex={0.2} />
             <HStack
+              h={verticalScale(40)}
               space="1"
               flex={0.7}
               alignItems="center"
@@ -85,22 +86,19 @@ const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
                 style={styles.input}
               />
               {replyText?.length > 0 && (
-                <IconButton
-                  onPress={sendOnPress}
-                  colorScheme={Colors.WHITE_RIPPLE_COLOR}
-                  borderRadius="full"
-                  icon={
-                    addQuestionLoading ? (
-                      <Spinner size={12} color={Colors.PRIMARY} />
+                <TouchableOpacity activeOpacity={0.7} onPress={sendOnPress}>
+                  <Box>
+                    {addQuestionLoading ? (
+                      <Spinner size={24} color={Colors.PRIMARY} />
                     ) : (
                       <SendIcon
-                        height={12}
-                        width={12}
+                        height={24}
+                        width={24}
                         fillColor={Colors.PRIMARY}
                       />
-                    )
-                  }
-                />
+                    )}
+                  </Box>
+                </TouchableOpacity>
               )}
             </HStack>
             <Box flex={0.15} />
@@ -118,7 +116,7 @@ export default QuestionItem;
 const styles = StyleSheet.create({
   input: {
     flex: 1,
-    height: verticalScale(30),
+    height: '100%',
     textAlignVertical: 'center',
     paddingTop: 0,
     paddingBottom: 0,
