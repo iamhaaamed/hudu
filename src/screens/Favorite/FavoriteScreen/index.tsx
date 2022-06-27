@@ -37,7 +37,10 @@ const FavoriteScreen = () => {
   });
 
   const options2 = isUserLoggedIn ? options : {enabled: isUserLoggedIn};
-  const [currentLocation, setCurrentLocation] = useState({location: [12, 12]});
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 12,
+    longitude: 12,
+  });
 
   const {
     isLoading: getUserLikeProjectsLoading,

@@ -7,7 +7,214 @@ export const NOTIFICATION_ADDED = gql`
       description
       isReaded
       notificationType
-      entityId
+      project {
+        projectStatus
+        title
+        description
+        duration
+        availability
+        streetAddress
+        city
+        state
+        projectDeadLine
+        longitude
+        latitude
+        zipCode
+        bids {
+          bidStatus
+          amount
+          description
+          hudusComment
+          hudusRate
+          isHuduCommented
+          listersComment
+          listersRate
+          isListerCommented
+          huduId
+          listerId
+          projectId
+          id
+          isDeleted
+          createdDate
+        }
+        questions {
+          text
+          parentId
+          projectId
+          userId
+          id
+          isDeleted
+          createdDate
+        }
+        projectImages {
+          imageAddress
+          projectId
+          id
+          isDeleted
+          createdDate
+        }
+        userLikeProjects {
+          projectId
+          userId
+          id
+          isDeleted
+          createdDate
+        }
+        notifications {
+          title
+          description
+          isReaded
+          notificationType
+          projectId
+          bidId
+          userId
+          id
+          isDeleted
+          createdDate
+        }
+        userId
+        user {
+          email
+          userName
+          lastSeen
+          userTypes
+          imageAddress
+          firstName
+          lastName
+          bio
+          streetAddress
+          city
+          state
+          isActive
+          longitude
+          latitude
+          zipCode
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
+          externalId
+          id
+          isDeleted
+          createdDate
+        }
+        id
+        isDeleted
+        createdDate
+      }
+      projectId
+      bid {
+        bidStatus
+        amount
+        description
+        hudusComment
+        hudusRate
+        isHuduCommented
+        listersComment
+        listersRate
+        isListerCommented
+        hudu {
+          email
+          userName
+          lastSeen
+          userTypes
+          imageAddress
+          firstName
+          lastName
+          bio
+          streetAddress
+          city
+          state
+          isActive
+          longitude
+          latitude
+          zipCode
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
+          externalId
+          id
+          isDeleted
+          createdDate
+        }
+        huduId
+        lister {
+          email
+          userName
+          lastSeen
+          userTypes
+          imageAddress
+          firstName
+          lastName
+          bio
+          streetAddress
+          city
+          state
+          isActive
+          longitude
+          latitude
+          zipCode
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
+          externalId
+          id
+          isDeleted
+          createdDate
+        }
+        listerId
+        project {
+          projectStatus
+          title
+          description
+          duration
+          availability
+          streetAddress
+          city
+          state
+          projectDeadLine
+          longitude
+          latitude
+          zipCode
+          userId
+          id
+          isDeleted
+          createdDate
+        }
+        projectId
+        payments {
+          amount
+          intentId
+          intentStatus
+          clientSecret
+          bidId
+          userId
+          id
+          isDeleted
+          createdDate
+        }
+        notifications {
+          title
+          description
+          isReaded
+          notificationType
+          projectId
+          bidId
+          userId
+          id
+          isDeleted
+          createdDate
+        }
+        id
+        isDeleted
+        createdDate
+      }
+      bidId
       userId
       user {
         email
@@ -71,7 +278,8 @@ export const NOTIFICATION_ADDED = gql`
           description
           isReaded
           notificationType
-          entityId
+          projectId
+          bidId
           userId
           id
           isDeleted

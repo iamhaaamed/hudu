@@ -83,7 +83,6 @@ export const NOTIFICATION_DELETE_NOTIFICATION = gql`
         description
         isReaded
         notificationType
-        entityId
         userId
         user {
           email
