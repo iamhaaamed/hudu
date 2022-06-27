@@ -13,90 +13,9 @@ export const BID_ACCEPT_BID = gql`
         listersComment
         listersRate
         isListerCommented
-        hudu {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         huduId
-        lister {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         listerId
-        project {
-          projectStatus
-          title
-          description
-          duration
-          availability
-          streetAddress
-          city
-          state
-          projectDeadLine
-          longitude
-          latitude
-          zipCode
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         projectId
-        payments {
-          amount
-          intentId
-          intentStatus
-          clientSecret
-          bidId
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         id
         isDeleted
         createdDate
@@ -119,90 +38,9 @@ export const BID_ADD_BID = gql`
         listersComment
         listersRate
         isListerCommented
-        hudu {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         huduId
-        lister {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         listerId
-        project {
-          projectStatus
-          title
-          description
-          duration
-          availability
-          streetAddress
-          city
-          state
-          projectDeadLine
-          longitude
-          latitude
-          zipCode
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         projectId
-        payments {
-          amount
-          intentId
-          intentStatus
-          clientSecret
-          bidId
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         id
         isDeleted
         createdDate
@@ -225,90 +63,9 @@ export const BID_CANCELL_BID = gql`
         listersComment
         listersRate
         isListerCommented
-        hudu {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         huduId
-        lister {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         listerId
-        project {
-          projectStatus
-          title
-          description
-          duration
-          availability
-          streetAddress
-          city
-          state
-          projectDeadLine
-          longitude
-          latitude
-          zipCode
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         projectId
-        payments {
-          amount
-          intentId
-          intentStatus
-          clientSecret
-          bidId
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         id
         isDeleted
         createdDate
@@ -331,90 +88,9 @@ export const BID_DELETE_BID = gql`
         listersComment
         listersRate
         isListerCommented
-        hudu {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         huduId
-        lister {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         listerId
-        project {
-          projectStatus
-          title
-          description
-          duration
-          availability
-          streetAddress
-          city
-          state
-          projectDeadLine
-          longitude
-          latitude
-          zipCode
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         projectId
-        payments {
-          amount
-          intentId
-          intentStatus
-          clientSecret
-          bidId
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         id
         isDeleted
         createdDate
@@ -437,90 +113,9 @@ export const BID_EDIT_BID = gql`
         listersComment
         listersRate
         isListerCommented
-        hudu {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         huduId
-        lister {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         listerId
-        project {
-          projectStatus
-          title
-          description
-          duration
-          availability
-          streetAddress
-          city
-          state
-          projectDeadLine
-          longitude
-          latitude
-          zipCode
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         projectId
-        payments {
-          amount
-          intentId
-          intentStatus
-          clientSecret
-          bidId
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         id
         isDeleted
         createdDate
@@ -543,90 +138,9 @@ export const BID_REJECT_BID = gql`
         listersComment
         listersRate
         isListerCommented
-        hudu {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         huduId
-        lister {
-          email
-          userName
-          lastSeen
-          userTypes
-          imageAddress
-          firstName
-          lastName
-          bio
-          streetAddress
-          city
-          state
-          isActive
-          longitude
-          latitude
-          zipCode
-          asHuduRates
-          listersWhoRatedToMeCount
-          asListerRates
-          huduersWhoRatedToMeCount
-          averageRate
-          externalId
-          id
-          isDeleted
-          createdDate
-        }
         listerId
-        project {
-          projectStatus
-          title
-          description
-          duration
-          availability
-          streetAddress
-          city
-          state
-          projectDeadLine
-          longitude
-          latitude
-          zipCode
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         projectId
-        payments {
-          amount
-          intentId
-          intentStatus
-          clientSecret
-          bidId
-          userId
-          id
-          isDeleted
-          createdDate
-        }
         id
         isDeleted
         createdDate
