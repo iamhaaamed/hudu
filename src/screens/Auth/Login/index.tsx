@@ -138,7 +138,7 @@ export default function LoginScreen({navigation}: NavigationProp) {
               variant="link"
               alignSelf="flex-end"
               onPress={() => navigation.navigate('ForgotPassword')}>
-              <Text color={Colors.PRIMARY}>Forgot Password ?</Text>
+              <Text color={Colors.PRIMARY}>Forgot password ?</Text>
             </Button>
             <Box px="4" py="4">
               <CustomButton
