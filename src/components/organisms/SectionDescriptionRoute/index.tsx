@@ -231,7 +231,7 @@ const SectionDescriptionRoute = forwardRef(
                 scrollEnabled
                 style={styles.map}
                 showsUserLocation={false}
-                // provider={PROVIDER_GOOGLE}
+                provider={PROVIDER_GOOGLE}
                 showsMyLocationButton={false}
                 region={{
                   latitude: locationData?.Latitude,
