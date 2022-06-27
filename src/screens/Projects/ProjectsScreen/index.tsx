@@ -22,7 +22,7 @@ const ProjectsScreen = ({route}: {route: any}) => {
   const viewPager = useRef(null);
 
   useEffect(() => {
-    setPage(pageNumber);
+    move(pageNumber);
   }, [pageNumber]);
 
   const move = (currentPage: number) => {
