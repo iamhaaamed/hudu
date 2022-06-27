@@ -132,9 +132,11 @@ export default function LoginScreen({navigation}: NavigationProp) {
                 placeholder="Password"
                 {...{formState}}
                 validation
+                inputType="password"
               />
             </VStack>
             <Button
+              mx="1.5"
               variant="link"
               alignSelf="flex-end"
               onPress={() => navigation.navigate('ForgotPassword')}>
