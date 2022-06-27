@@ -107,6 +107,7 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
               <CustomImage
                 imageSource={item?.project?.projectImages?.[0]?.imageAddress}
                 style={styles.image}
+                resizeMode="stretch"
               />
               <VStack flex={1} space="1">
                 <HStack alignItems="center">
