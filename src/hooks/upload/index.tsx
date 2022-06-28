@@ -7,10 +7,8 @@ export const useUploadFile = () => {
       return uploadFile(param);
     },
     {
-      onSuccess: (successData: any) => {
-        //console.log(successData);
-      },
-      onError: (errorData: any) => {
+      onSuccess: successData => {},
+      onError: errorData => {
         console.log(errorData);
       },
     },
