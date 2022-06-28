@@ -45,7 +45,10 @@ const Tab = createMaterialTopTabNavigator();
 const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
   const {projectId} = route?.params;
 
-  const getBidsOption = {where: {projectId: {eq: projectId}}};
+  const getBidsOption = {
+    location: [12, 12],
+    where: {projectId: {eq: projectId}},
+  };
   const getQuestionsOptions = {
     where: {and: [{projectId: {eq: projectId}}, {parentId: {eq: null}}]},
   };
