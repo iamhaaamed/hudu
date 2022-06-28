@@ -67,16 +67,18 @@ const SectionDescriptionRoute = forwardRef(
     const mapRef = createRef<MapView>();
 
     const [zipCodeLocation, setZipCodeLocation] = useState({});
-    const [locationData, setLocationData] = useState();
-    const getBidsOption = {
-      where: {
-        and: [
-          {projectId: {eq: data?.id}},
-          {huduId: {eq: userData?.id}},
-          {bidStatus: {eq: 'IN_PROGRESS'}},
-        ],
-      },
-    };
+    const getBidsOption = isUserLoggedIn
+      ? {
+          location: [12, 12],
+          where: {
+            and: [
+              {projectId: {eq: data?.id}},
+              {huduId: {eq: userData?.id}},
+              {bidStatus: {eq: 'IN_PROGRESS'}},
+            ],
+          },
+        }
+      : {enabled: false};
     const {mutate: mutateAddBid, isLoading: addBidLoading} = useAddBid();
     const {mutate: getLocationMutate, isLoading: getLocationLoading} =
       useGetLocation();
@@ -87,20 +89,24 @@ const SectionDescriptionRoute = forwardRef(
 
     useEffect(() => {
       if (data?.zipCode) {
-        getLocationMutate(data?.zipCode, {
-          onSuccess: (success: any) => {
-            if (success?.status === 1) {
-              const lat = parseFloat(success?.output?.[0]?.latitude);
-              const long = parseFloat(success?.output?.[0]?.longitude);
-              setZipCodeLocation({
-                Latitude: lat,
-                Longitude: long,
-              });
-            }
-          },
-        });
+        getZipCodeLocation();
       }
     }, [data]);
+
+    const getZipCodeLocation = async () => {
+      getLocationMutate(data?.zipCode, {
+        onSuccess: (success: any) => {
+          if (success?.status === 1) {
+            const lat = parseFloat(success?.output?.[0]?.latitude);
+            const long = parseFloat(success?.output?.[0]?.longitude);
+            setZipCodeLocation({
+              Latitude: lat,
+              Longitude: long,
+            });
+          }
+        },
+      });
+    };
 
     const lowBid = useMemo(() => {
       let res = -1;
@@ -117,16 +123,14 @@ const SectionDescriptionRoute = forwardRef(
 
     const projectDeadLine = dayjs().diff(data?.projectDeadLine, 'day');
 
-    useEffect(() => {
-      if (userData?.id === data?.userId && bids?.length > 0) {
-        setLocationData(zipCodeLocation);
-      } else {
-        const locationItem = getLocationFromState(data?.state);
-        setLocationData(locationItem);
-      }
-    }, [data, zipCodeLocation]);
-
     const [editModalVisible, setEditModalVisible] = useState(false);
+
+    const locationData = getLocationFromState(data?.state);
+
+    const location =
+      userData?.id === data?.userId && bids?.length > 0
+        ? zipCodeLocation
+        : locationData;
 
     const closeEditModal = () => {
       setEditModalVisible(false);
@@ -223,7 +227,7 @@ const SectionDescriptionRoute = forwardRef(
             </Text>
           </HStack>
           <Box overflow="hidden" w="100%" borderRadius="lg">
-            {locationData?.Latitude && locationData?.Longitude && (
+            {location && (
               <MapView
                 showsScale
                 zoomEnabled
@@ -234,17 +238,10 @@ const SectionDescriptionRoute = forwardRef(
                 provider={PROVIDER_GOOGLE}
                 showsMyLocationButton={false}
                 region={{
-                  latitude: locationData?.Latitude,
-                  longitude: locationData?.Longitude,
+                  latitude: location?.Latitude,
+                  longitude: location?.Longitude,
                   latitudeDelta: 0.99,
                   longitudeDelta: 0.99,
-                }}
-                onRegionChange={e => {
-                  const coordinate = e;
-                  setLocationData({
-                    Latitude: coordinate?.latitude,
-                    Longitude: coordinate?.longitude,
-                  });
                 }}>
                 {/* <MapViewDirections
               origin={{
@@ -264,8 +261,8 @@ const SectionDescriptionRoute = forwardRef(
             /> */}
                 <Marker
                   coordinate={{
-                    latitude: locationData?.Latitude,
-                    longitude: locationData?.Longitude,
+                    latitude: location?.Latitude,
+                    longitude: location?.Longitude,
                   }}>
                   <MarkerIcon />
                 </Marker>
