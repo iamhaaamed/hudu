@@ -1,40 +1,54 @@
 import React from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
-import {VStack, Text, HStack, Box} from 'native-base';
+import {StyleSheet, FlatList} from 'react-native';
+import {VStack, Box} from 'native-base';
 import {
   ModalContainer,
-  CustomButton,
-  RatingStar,
   ModalHeader,
-  CustomImage,
+  BidItem,
+  CustomLoading,
+  EmptyData,
 } from '~/components';
-import {scale, fontFamily, verticalScale} from '~/utils/style';
+import {scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
+import {useGetBids} from '~/hooks/bid';
 
 const ChooseHudurModal = ({
   visible,
   onClose,
-  onSubmit,
   title,
-  data,
+  projectId,
 }: {
   visible: boolean;
   onClose: any;
-  onSubmit: any;
   title: string;
-  data?: any;
+  projectId?: any;
 }) => {
+  const options = {
+    where: {bidStatus: {eq: 'WAITING'}, projectId: {eq: projectId}},
+  };
+
+  const {
+    isLoading: getBidsLoading,
+    data: getBids,
+    fetchNextPage: fetchNextPageGetBids,
+    hasNextPage: hasNextPageGetBids,
+  } = useGetBids(options);
+
+  const bids = getBids?.pages ?? [];
+
   const onCloseHandler = () => {
     onClose?.();
   };
 
-  const awardOnPress = (item: any) => {
-    onClose?.();
+  const onLoadMore = () => {
+    if (hasNextPageGetBids) {
+      fetchNextPageGetBids();
+    }
   };
 
-  const rejectOnPress = (item: any) => {
-    onClose?.();
-  };
+  const loading = getBidsLoading;
+
+  const renderItem = ({item}: {item: any}) => <BidItem {...{item}} />;
 
   return (
     <ModalContainer
@@ -45,99 +59,21 @@ const ChooseHudurModal = ({
         <Box px="2">
           <ModalHeader text={title} onPress={onCloseHandler} />
         </Box>
+        {loading && <CustomLoading />}
         <VStack bg={Colors.WHITE} w="100%">
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {data.map((item: any, index: number) => {
-              return (
-                <VStack
-                  key={index + 2}
-                  borderRadius="md"
-                  shadow="3"
-                  p="4"
-                  mx="2"
-                  mb="4"
-                  space="2">
-                  <HStack alignItems="center" justifyContent="space-between">
-                    <HStack alignItems="center" space="2">
-                      <CustomImage
-                        local
-                        imageSource={item?.image}
-                        style={styles.avatar}
-                        resizeMode="stretch"
-                      />
-                      <Text
-                        fontSize={scale(16)}
-                        fontFamily={fontFamily.medium}
-                        color={Colors.BLACK_1}>
-                        {item?.name}
-                      </Text>
-                    </HStack>
-                    <VStack alignItems="center">
-                      <RatingStar
-                        showRating="left"
-                        size={scale(10)}
-                        rate={item?.rate}
-                        disabled
-                      />
-                      <Text
-                        fontSize={scale(8)}
-                        fontFamily={fontFamily.regular}
-                        color={
-                          Colors.BLACK_1
-                        }>{`(${item?.totalReview} review)`}</Text>
-                    </VStack>
-                  </HStack>
-                  <HStack space="2">
-                    <Text
-                      fontSize={scale(14)}
-                      fontFamily={fontFamily.regular}
-                      color={Colors.BLACK_1}>
-                      Note:
-                    </Text>
-                    <Text
-                      flex={1}
-                      fontSize={scale(14)}
-                      fontFamily={fontFamily.regular}
-                      color={Colors.PLACEHOLDER}>
-                      {item?.description}
-                    </Text>
-                  </HStack>
-                  <HStack alignItems="center" justifyContent="space-between">
-                    <Text
-                      fontSize={scale(14)}
-                      fontFamily={fontFamily.regular}
-                      color={Colors.BLACK_1}>
-                      Bid amount
-                    </Text>
-                    <Text
-                      fontSize={scale(14)}
-                      fontFamily={fontFamily.regular}
-                      color={Colors.INFO}>
-                      $ {item?.bidAmount}
-                    </Text>
-                  </HStack>
-                  <HStack alignItems="center" space="4">
-                    <Box flex={1}>
-                      <CustomButton
-                        title="Award"
-                        onPress={() => awardOnPress(item)}
-                        height={verticalScale(30)}
-                      />
-                    </Box>
-                    <Box flex={1}>
-                      <CustomButton
-                        outline
-                        color={Colors.BLACK_3}
-                        title="Reject"
-                        onPress={() => rejectOnPress(item)}
-                        height={verticalScale(30)}
-                      />
-                    </Box>
-                  </HStack>
-                </VStack>
-              );
-            })}
-          </ScrollView>
+          <FlatList
+            contentContainerStyle={styles.contentContainerStyle}
+            showsVerticalScrollIndicator={false}
+            data={bids}
+            renderItem={renderItem}
+            ListEmptyComponent={EmptyData}
+            keyExtractor={(_, index) => `key${index}`}
+            onEndReachedThreshold={0.9}
+            onEndReached={({distanceFromEnd}) => {
+              if (distanceFromEnd < 0) return;
+              onLoadMore();
+            }}
+          />
         </VStack>
       </VStack>
     </ModalContainer>
@@ -156,5 +92,8 @@ const styles = StyleSheet.create({
     height: scale(36),
     width: scale(36),
     borderRadius: 100,
+  },
+  contentContainerStyle: {
+    minHeight: verticalScale(120),
   },
 });

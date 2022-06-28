@@ -1,22 +1,28 @@
-import React, {useEffect, useState, useCallback} from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
+  LogBox,
   Platform,
-  UIManager,
   StatusBar,
+  UIManager,
+  StyleSheet,
+  SafeAreaView,
 } from 'react-native';
-import {NativeBaseProvider} from 'native-base';
-import AppNavigator from '~/navigation/AppNavigator';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Colors} from '~/styles';
-import {QueryClient, QueryClientProvider, QueryCache} from 'react-query';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
-import {ResponseStatus} from '~/generated/graphql';
-import auth from '@react-native-firebase/auth';
-import {authStore, userDataStore} from '~/stores';
-import graphQLClient from 'src/graphql/graphQLClient';
 import {useSignOutAuth} from '~/hooks/user';
+import auth from '@react-native-firebase/auth';
+import {NativeBaseProvider} from 'native-base';
+import {authStore, userDataStore} from '~/stores';
+import {ResponseStatus} from '~/generated/graphql';
+import AppNavigator from '~/navigation/AppNavigator';
+import graphQLClient from 'src/graphql/graphQLClient';
+import React, {useEffect, useState, useCallback} from 'react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {QueryClient, QueryClientProvider, QueryCache} from 'react-query';
+
+LogBox.ignoreLogs([
+  'ViewPropTypes will be removed',
+  'ColorPropType will be removed',
+]);
 
 if (
   Platform.OS === 'android' &&
@@ -80,6 +86,7 @@ const App = () => {
         showMessage({
           message: `Something went wrong: ${error.message}`,
           type: 'danger',
+          icon: 'danger',
         });
       },
       onSuccess: async (data: any) => {

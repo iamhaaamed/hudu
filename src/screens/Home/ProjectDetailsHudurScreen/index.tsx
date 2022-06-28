@@ -20,7 +20,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import useScrollSync from '~/hooks/useScrollSync';
-import {Connection} from '~/types/Connection';
 import {ScrollPair} from '~/types/ScrollPair';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {HeaderConfig} from '~/types/HeaderConfig';
@@ -34,65 +33,35 @@ import {
   Header,
 } from '~/components';
 import {verticalScale} from '~/utils/style';
-import images from '~/assets/images';
 import {Colors} from '~/styles';
-
-const data = {
-  title: 'Duct need cleaned out',
-  image: images.testImage1,
-  hudur: {
-    name: 'Mary Olivia',
-    email: 'aaa@gmail.com',
-    rating: 4,
-    totalReviews: 200,
-    image: images.testImage1,
-  },
-  description: {
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    lowBid: 100,
-    timeLeft: '3Days:3H:23M:20S',
-    location: 'Grimes , IA',
-    howLong: '12 Minutes',
-  },
-  questions: [
-    {
-      message:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis Lorem ipsum dolor sit amet, consectetur adipiscing elit. DuisLorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      user: {
-        id: 1,
-        name: 'Mr.Jack',
-      },
-    },
-  ],
-  activeBids: [
-    {
-      id: 1,
-      name: 'BCcontracting',
-      note: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-      bidAmount: 150,
-      rating: 3,
-      totalReviews: 130,
-      image: images.testImage1,
-    },
-    {
-      id: 3,
-      name: 'You',
-      note: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-      bidAmount: 180,
-      rating: 4,
-      totalReviews: 170,
-      image: images.testImage1,
-    },
-  ],
-};
+import {useGetProject, useGetQuestions} from '~/hooks/project';
+import {useGetBids} from '~/hooks/bid';
 
 const TAB_BAR_HEIGHT = verticalScale(35);
 const HEADER_HEIGHT = 0;
 
 const Tab = createMaterialTopTabNavigator();
 
-const ProjectDetailsHudurScreen = () => {
+const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
+  const {projectId} = route?.params;
+
+  const getBidsOption = {where: {projectId: {eq: projectId}}};
+  const getQuestionsOptions = {
+    where: {and: [{projectId: {eq: projectId}}, {parentId: {eq: null}}]},
+  };
+
+  const {isLoading: getProjectLoading, data: getProject} = useGetProject({
+    projectId,
+  });
+  const {isLoading: getBidsLoading, data: getBids} = useGetBids(getBidsOption);
+  const {isLoading: getQuestionLoading, data: getQuestions} =
+    useGetQuestions(getQuestionsOptions);
+
+  const bids = getBids?.pages ?? [];
+  const questions = getQuestions?.pages ?? [];
+
+  const project = getProject?.project_getProject?.result ?? {};
+
   const {top, bottom} = useSafeAreaInsets();
 
   const {height: screenHeight} = useWindowDimensions();
@@ -204,7 +173,7 @@ const ProjectDetailsHudurScreen = () => {
     [rendered, headerHeight, bottom, screenHeight, headerDiff],
   );
 
-  const sharedProps = useMemo<Partial<FlatListProps<Connection>>>(
+  const sharedProps = useMemo<Partial<FlatListProps<any>>>(
     () => ({
       contentContainerStyle,
       onMomentumScrollEnd: sync,
@@ -219,7 +188,7 @@ const ProjectDetailsHudurScreen = () => {
     () => (
       <SectionDescriptionRoute
         ref={descriptionRef}
-        data={data?.description}
+        data={project?.project}
         onScroll={descriptionScrollHandler}
         {...sharedProps}
       />
@@ -231,24 +200,34 @@ const ProjectDetailsHudurScreen = () => {
     () => (
       <SectionQuestionRoute
         ref={QuestionRef}
-        data={data?.questions}
+        data={questions}
+        listerId={project?.project?.userId}
+        projectId={projectId}
         onScroll={suggestionsScrollHandler}
         {...sharedProps}
       />
     ),
-    [QuestionRef, suggestionsScrollHandler, sharedProps],
+    [
+      QuestionRef,
+      suggestionsScrollHandler,
+      sharedProps,
+      questions,
+      project,
+      projectId,
+    ],
   );
 
   const renderActiveBids = useCallback(
     () => (
       <SectionActiveBidsRoute
         ref={ActiveBidsRef}
-        data={data?.activeBids}
+        data={bids}
+        projectStatus={project?.project?.projectStatus}
         onScroll={activeBidsScrollHandler}
         {...sharedProps}
       />
     ),
-    [ActiveBidsRef, activeBidsScrollHandler, sharedProps],
+    [ActiveBidsRef, activeBidsScrollHandler, sharedProps, bids],
   );
 
   const tabBarStyle = useMemo<StyleProp<ViewStyle>>(
@@ -281,13 +260,17 @@ const ProjectDetailsHudurScreen = () => {
     [rendered, top, headerAnimatedStyle],
   );
 
+  const loading = getProjectLoading || getBidsLoading || getQuestionLoading;
+
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <Animated.View onLayout={handleHeaderLayout} style={headerContainerStyle}>
         <Header
-          title={data?.title}
-          image={data?.image}
-          user={tabIndex === 0 ? data?.hudur : null}
+          title={project?.project?.title}
+          images={project?.project?.projectImages}
+          user={tabIndex === 0 ? project?.project?.user : null}
+          isLiked={project?.isLiked}
+          projectId={project?.project?.id}
         />
       </Animated.View>
       <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">

@@ -113,7 +113,7 @@ export const useCreateMessage = () => {
       return graphQLClient.request(MESSAGE_CREATE_MESSAGE, {messageInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.message_createMessage?.status === ResponseStatus.Success
         ) {
@@ -122,7 +122,11 @@ export const useCreateMessage = () => {
       },
       onError: (errorData: any) => {
         console.log('message_createMessageError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -139,7 +143,7 @@ export const useDeleteMessage = () => {
       return graphQLClient.request(MESSAGE_DELETE_MESSAGE, {messageId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.message_deleteMessage?.status === ResponseStatus.Success
         ) {
@@ -148,7 +152,11 @@ export const useDeleteMessage = () => {
       },
       onError: (errorData: any) => {
         console.log('message_deleteMessageError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -167,7 +175,7 @@ export const useRemoveConversation = () => {
       });
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.message_removeConversation?.status ===
           ResponseStatus.Success
@@ -177,7 +185,11 @@ export const useRemoveConversation = () => {
       },
       onError: (errorData: any) => {
         console.log('message_removeConversationError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );

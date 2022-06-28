@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useMemo} from 'react';
+import {RefreshControl, StyleSheet} from 'react-native';
 import {
   Box,
   VStack,
@@ -14,63 +15,90 @@ import {
   CustomImage,
   RatingStar,
 } from '~/components';
-import {StyleSheet} from 'react-native';
 import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
+import {userDataStore} from '~/stores';
+import {useGetProfile} from '~/hooks/user';
+import {useGetBids} from '~/hooks/bid';
+import images from '~/assets/images';
 
-const HudurProfileScreen = ({navigation, route}: any) => {
-  const data = {
-    id: 1,
-    name: 'BCcontracting',
-    image:
-      'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-    email: 'BCcontracting@gmail.com',
-    rating: 4,
-    totalReview: 150,
-    bio: 'Lorem ipsum dolor sit amet, consetetur, amet sadipscing elitr, sed diam',
-    reviews: [
-      {
-        id: 0,
-        name: 'HUDUr',
-        review:
-          'Lorem ipsum dolor sit amet,  sit consetetur sadipscing elitr, sed diam nonumy eirmod',
-        rate: 3,
-      },
-      {
-        id: 1,
-        name: 'HUDUr',
-        review:
-          'Lorem ipsum dolor sit amet,  sit consetetur sadipscing elitr, sed diam nonumy eirmod',
-        rate: 1,
-      },
-      {
-        id: 2,
-        name: 'HUDUr',
-        review:
-          'Lorem ipsum dolor sit amet,  sit consetetur sadipscing elitr, sed diam nonumy eirmod',
-        rate: 3,
-      },
-      {
-        id: 3,
-        name: 'HUDUr',
-        review:
-          'Lorem ipsum dolor sit amet,  sit consetetur sadipscing elitr, sed diam nonumy eirmod',
-        rate: 5,
-      },
-    ],
+const HudurProfileScreen = ({route}: any) => {
+  const {userId} = route?.params;
+  const {userData} = userDataStore(state => state);
+
+  const options = userId === userData?.id ? {} : {userId};
+  const listerReviewOption = {
+    where: {bidStatus: {eq: 'FINISHED'}, huduId: {eq: userId}},
   };
 
+  const {isLoading: getProfileLoading, data: getProfile} =
+    useGetProfile(options);
+
+  const {
+    isLoading: getListerReviewsLoading,
+    data: getListerReviews,
+    fetchNextPage: fetchNextPageListerReviews,
+    hasNextPage: hasNextPageListerReviews,
+    refetch: refetchListerReviews,
+    isRefetching: isRefetchingListerReviews,
+  } = useGetBids(listerReviewOption);
+
+  const profile = getProfile?.user_getProfile?.result ?? {};
+
+  const listerReviews = getListerReviews?.pages ?? [];
+
+  const totalReview = useMemo(() => {
+    const listerCounts = profile?.listersWhoRatedToMeCount;
+    const hudurCounts = profile?.huduersWhoRatedToMeCount;
+    const reviews = Number(listerCounts) + Number(hudurCounts);
+    return reviews ? reviews : 0;
+  }, [profile]);
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }: any) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
+  const onLoadMore = () => {
+    if (hasNextPageListerReviews) {
+      fetchNextPageListerReviews();
+    }
+  };
+
+  const loading = getProfileLoading || getListerReviewsLoading;
+
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <ScrollView
+        onScroll={({nativeEvent}: any) => {
+          if (isCloseToBottom(nativeEvent)) {
+            onLoadMore();
+          }
+        }}
+        scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetchingListerReviews}
+            onRefresh={refetchListerReviews}
+          />
+        }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}>
         <Box mt="12">
           <Center position="absolute" alignSelf="center" zIndex={6} top="-32">
             <CustomImage
-              imageSource={data?.image}
+              imageSource={profile?.imageAddress}
               style={styles.avatar}
               resizeMode="stretch"
+              zoomable
+              errorImage={images.avatarErrorImage}
             />
           </Center>
           <VStack
@@ -88,27 +116,16 @@ const HudurProfileScreen = ({navigation, route}: any) => {
               fontSize={scale(14)}
               fontFamily={fontFamily.medium}
               color={Colors.BLACK_1}>
-              {data?.name}
-            </Text>
-            <Text
-              fontSize={scale(14)}
-              fontFamily={fontFamily.regular}
-              color={Colors.PLACEHOLDER}>
-              {data?.email}
+              {profile?.userName ?? 'Hudur'}
             </Text>
             <VStack alignItems="flex-end">
               <RatingStar
-                size={14}
-                rate={data?.rating}
+                size={12}
+                rate={profile?.averageRate}
                 showRating="right"
                 disabled
+                total={totalReview}
               />
-              <Text
-                fontSize={scale(14)}
-                fontFamily={fontFamily.regular}
-                color={Colors.PLACEHOLDER}>
-                {`(${data?.totalReview} Review)`}
-              </Text>
             </VStack>
             <HStack space="2">
               <Text
@@ -117,7 +134,7 @@ const HudurProfileScreen = ({navigation, route}: any) => {
                 color={Colors.BLACK_1}>
                 Bio:
               </Text>
-              <CustomCollapseText numberOfLines={2} text={data?.bio} />
+              <CustomCollapseText numberOfLines={2} text={profile?.bio} />
             </HStack>
           </VStack>
         </Box>
@@ -128,40 +145,54 @@ const HudurProfileScreen = ({navigation, route}: any) => {
           color={Colors.BLACK_1}>
           Reviews
         </Text>
-        <VStack
-          space="2"
-          m="4"
-          px="4"
-          py="4"
-          borderRadius="lg"
-          shadow="2"
-          bg={Colors.WHITE}>
-          {data?.reviews?.map((itm: any, indx: number) => {
-            return (
-              <VStack key={indx}>
-                <HStack space="1">
-                  <Text
-                    fontSize={scale(12)}
-                    color={Colors.BLACK_1}
-                    fontFamily={fontFamily.regular}>
-                    {itm?.name}
-                  </Text>
-                  <Text
-                    flex={1}
-                    fontSize={scale(12)}
-                    color={Colors.PLACEHOLDER}
-                    fontFamily={fontFamily.regular}>
-                    {itm?.review}
-                  </Text>
-                  <VStack space="1">
-                    <RatingStar rate={itm?.rate} disabled size={14} />
+        {listerReviews?.length > 0 && (
+          <VStack
+            space="2"
+            m="4"
+            px="4"
+            py="4"
+            borderRadius="lg"
+            shadow="2"
+            bg={Colors.WHITE}>
+            {listerReviews?.map((itm: any, indx: number) => {
+              if (itm?.listersComment) {
+                return (
+                  <VStack key={indx}>
+                    <HStack>
+                      <Text
+                        flex={0.15}
+                        numberOfLines={1}
+                        fontSize={scale(12)}
+                        color={Colors.BLACK_1}
+                        fontFamily={fontFamily.regular}>
+                        {itm?.lister?.userName ?? 'Lister'} :
+                      </Text>
+                      <HStack space="1" flex={0.85}>
+                        <Text
+                          flex={1}
+                          fontSize={scale(12)}
+                          color={Colors.PLACEHOLDER}
+                          fontFamily={fontFamily.regular}>
+                          {itm?.listersComment}
+                        </Text>
+                        <VStack space="1">
+                          <RatingStar
+                            rate={itm?.listersRate}
+                            showRating="right"
+                            disabled
+                            size={12}
+                          />
+                        </VStack>
+                      </HStack>
+                    </HStack>
+                    {indx < listerReviews?.length - 1 && <Divider my="2" />}
                   </VStack>
-                </HStack>
-                {indx < data?.reviews?.length - 1 && <Divider my="1" />}
-              </VStack>
-            );
-          })}
-        </VStack>
+                );
+              }
+              return null;
+            })}
+          </VStack>
+        )}
       </ScrollView>
     </CustomContainer>
   );

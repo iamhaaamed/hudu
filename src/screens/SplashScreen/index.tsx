@@ -3,14 +3,14 @@ import {Center} from 'native-base';
 import images from '~/assets/images';
 import {CustomImage} from '~/components';
 import {StyleSheet} from 'react-native';
-import {verticalScale} from '~/utils/style';
+import {scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 
 export default function SplashScreen() {
   return (
-    <Center flex={1} bg={Colors.BACKGROUND}>
+    <Center flex={1} bg={Colors.BACKGROUND} px="4">
       <CustomImage
-        imageSource={images.huduLogo}
+        imageSource={images.huduLogo1}
         style={styles.image}
         resizeMode="stretch"
         local
@@ -22,8 +22,7 @@ export default function SplashScreen() {
 
 const styles = StyleSheet.create({
   image: {
-    height: verticalScale(195),
-    width: verticalScale(195),
-    borderRadius: 15,
+    height: verticalScale(61),
+    width: scale(275),
   },
 });

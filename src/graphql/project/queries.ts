@@ -20,6 +20,54 @@ export const PROJECT_GET_PROJECT = gql`
           id
           isDeleted
           createdDate
+          projectDeadLine
+          projectImages {
+            imageAddress
+            id
+          }
+          bids {
+            bidStatus
+            amount
+            description
+            hudu {
+              userName
+              imageAddress
+              averageRate
+              listersWhoRatedToMeCount
+              huduersWhoRatedToMeCount
+            }
+            lister {
+              userName
+              imageAddress
+              averageRate
+              listersWhoRatedToMeCount
+              huduersWhoRatedToMeCount
+            }
+          }
+          questions {
+            text
+            parentQuestion {
+              text
+            }
+            parentId
+            childrenQuestions {
+              text
+            }
+            user {
+              userName
+            }
+          }
+          user {
+            id
+            email
+            userName
+            imageAddress
+            firstName
+            lastName
+            averageRate
+            listersWhoRatedToMeCount
+            huduersWhoRatedToMeCount
+          }
         }
         isLiked
       }
@@ -34,8 +82,10 @@ export const PROJECT_GET_PROJECTS = gql`
     $take: Int
     $where: ProjectDtoFilterInput
     $order: [ProjectDtoSortInput!]
+    $projectFilter: ProjectFilter
+    $location: Position
   ) {
-    project_getProjects {
+    project_getProjects(projectFilter: $projectFilter, location: $location) {
       result(skip: $skip, take: $take, where: $where, order: $order) {
         items {
           project {
@@ -54,6 +104,16 @@ export const PROJECT_GET_PROJECTS = gql`
             id
             isDeleted
             createdDate
+            projectDeadLine
+            projectImages {
+              imageAddress
+              id
+            }
+            bids {
+              bidStatus
+              amount
+              description
+            }
           }
           isLiked
         }
@@ -85,6 +145,22 @@ export const PROJECT_GET_QUESTIONS = gql`
           id
           isDeleted
           createdDate
+          text
+          user {
+            userName
+            email
+            imageAddress
+            firstName
+          }
+          userId
+          parentId
+          childrenQuestions {
+            userId
+            text
+            user {
+              userName
+            }
+          }
         }
         pageInfo {
           hasNextPage
@@ -117,6 +193,16 @@ export const PROJECT_GET_USER_LIKE_PROJECT = gql`
           id
           isDeleted
           createdDate
+          projectDeadLine
+          projectImages {
+            imageAddress
+            id
+          }
+          bids {
+            bidStatus
+            amount
+            description
+          }
         }
         isLiked
       }
@@ -131,11 +217,43 @@ export const PROJECT_GET_USER_LIKE_PROJECTS = gql`
     $take: Int
     $where: ProjectDtoFilterInput
     $order: [ProjectDtoSortInput!]
+    $projectFilter: ProjectFilter
+    $location: Position
   ) {
-    project_getUserLikeProjects {
+    project_getUserLikeProjects(
+      projectFilter: $projectFilter
+      location: $location
+    ) {
       result(skip: $skip, take: $take, where: $where, order: $order) {
         items {
           isLiked
+          project {
+            projectStatus
+            title
+            description
+            duration
+            availability
+            streetAddress
+            city
+            state
+            longitude
+            latitude
+            zipCode
+            userId
+            id
+            isDeleted
+            projectDeadLine
+            createdDate
+            projectImages {
+              imageAddress
+              id
+            }
+            bids {
+              bidStatus
+              amount
+              description
+            }
+          }
         }
         pageInfo {
           hasNextPage

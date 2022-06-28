@@ -8,6 +8,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Box, Button, Flex, HStack, Text, VStack} from 'native-base';
 import {
+  useAppleAuth,
   useFacebookAuth,
   useGoogleAuth,
   useSignUp,
@@ -24,9 +25,15 @@ import {
 
 const schema = yup.object().shape({
   email: yup.string().email().required('required'),
-  password: yup.string().required('required'),
+  password: yup
+    .string()
+    .min(6, 'Must be 6 characters or more')
+    .max(36, 'Must be 36 characters or less')
+    .required('Required'),
   confirm: yup
     .string()
+    .min(6, 'Must be 6 characters or more')
+    .max(36, 'Must be 36 characters or less')
     .required('required')
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
 });
@@ -41,10 +48,15 @@ export default function SignUpScreen({navigation}: NavigationProp) {
   const {mutate: signUpMutate} = useSignUp();
   const {signInWithGoogle} = useGoogleAuth();
   const {signInWithFacebook} = useFacebookAuth();
+  const {signInWithApple} = useAppleAuth();
 
   const [loading, setLoading] = useState<boolean>(false);
 
   const {handleSubmit, register, formState} = methods;
+
+  const signInOnPress = () => {
+    navigation.replace('Login');
+  };
 
   const signUpOnPress = async (formData: any) => {
     setLoading(true);
@@ -72,6 +84,16 @@ export default function SignUpScreen({navigation}: NavigationProp) {
   const facebookOnPress = async () => {
     setLoading(true);
     const res = await signInWithFacebook();
+    if (res?.data) {
+      completeSignUp();
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const appleOnPress = async () => {
+    setLoading(true);
+    const res = await signInWithApple();
     if (res?.data) {
       completeSignUp();
     } else {
@@ -113,16 +135,21 @@ export default function SignUpScreen({navigation}: NavigationProp) {
                 {...register('email')}
                 placeholder="Email"
                 {...{formState}}
+                validation
               />
               <CustomInput
                 {...register('password')}
                 placeholder="Password"
                 {...{formState}}
+                validation
+                inputType="password"
               />
               <CustomInput
                 {...register('confirm')}
-                placeholder="Confirm Password"
+                placeholder="Confirm password"
                 {...{formState}}
+                validation
+                inputType="password"
               />
             </VStack>
             <Box px="4" py="4">
@@ -132,15 +159,14 @@ export default function SignUpScreen({navigation}: NavigationProp) {
                 onPress={handleSubmit(signUpOnPress)}
               />
             </Box>
-            <SectionRowSocial {...{googleOnPress, facebookOnPress}} />
+            <SectionRowSocial
+              {...{googleOnPress, facebookOnPress, appleOnPress}}
+            />
             <HStack alignItems="center" justifyContent="center">
               <Text fontSize="md">Already have an account?</Text>
-              <Button
-                px={1}
-                variant="link"
-                onPress={() => navigation.replace('SignUp')}>
+              <Button px={1} variant="link" onPress={signInOnPress}>
                 <Text underline color={Colors.PRIMARY} fontSize="md">
-                  Signin
+                  Sign in
                 </Text>
               </Button>
             </HStack>

@@ -21,6 +21,7 @@ import {
   Bid_EditBidMutationVariables,
 } from '~/generated/graphql';
 import {showMessage} from 'react-native-flash-message';
+import {getResponseMessage} from '~/utils/helper';
 import {
   BID_ACCEPT_BID,
   BID_REJECT_BID,
@@ -77,14 +78,21 @@ export const useAcceptBid = () => {
       return graphQLClient.request(BID_ACCEPT_BID, {bidId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_acceptBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
+        } else {
+          showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
         }
       },
       onError: (errorData: any) => {
         console.log('bid_acceptBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -101,14 +109,21 @@ export const useRejectBid = () => {
       return graphQLClient.request(BID_REJECT_BID, {bidId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_rejectBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_rejectBid?.status));
+        } else {
+          showMessage(getResponseMessage(successData?.bid_rejectBid?.status));
         }
       },
       onError: (errorData: any) => {
         console.log('bid_rejectBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -121,14 +136,21 @@ export const useAddBid = () => {
       return graphQLClient.request(BID_ADD_BID, {bidInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_addBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_addBid?.status));
+        } else {
+          showMessage(getResponseMessage(successData?.bid_addBid?.status));
         }
       },
       onError: (errorData: any) => {
         console.log('bid_addBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -145,14 +167,21 @@ export const useCancelBid = () => {
       return graphQLClient.request(BID_CANCELL_BID, {bidId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_cancellBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
+        } else {
+          showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
         }
       },
       onError: (errorData: any) => {
         console.log('bid_cancellBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -169,14 +198,22 @@ export const useDeleteBid = () => {
       return graphQLClient.request(BID_DELETE_BID, {bidId});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_DeleteBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.projects);
+          showMessage(getResponseMessage(successData?.bid_DeleteBid?.status));
+        } else {
+          showMessage(getResponseMessage(successData?.bid_DeleteBid?.status));
         }
       },
       onError: (errorData: any) => {
         console.log('bid_DeleteBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -185,18 +222,26 @@ export const useDeleteBid = () => {
 export const useEditBid = () => {
   const queryClient = useQueryClient();
   return useMutation<Bid_EditBidMutation, any, Bid_EditBidMutationVariables>(
-    async (bidId: any) => {
-      return graphQLClient.request(BID_EDIT_BID, {bidId});
+    async (editBidInput: any) => {
+      return graphQLClient.request(BID_EDIT_BID, {editBidInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData?.bid_editBid?.status === ResponseStatus.Success) {
+          showMessage(getResponseMessage(successData?.bid_editBid?.status));
           queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.projects);
+        } else {
+          showMessage(getResponseMessage(successData?.bid_editBid?.status));
         }
       },
       onError: (errorData: any) => {
         console.log('bid_editBidError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );

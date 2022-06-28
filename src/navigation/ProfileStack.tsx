@@ -1,108 +1,126 @@
 import React from 'react';
-import {
-  CommonActions,
-  getFocusedRouteNameFromRoute,
-} from '@react-navigation/native';
-import {CustomHeader} from '~/components/atoms/CustomHeader';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
-  ProfileScreen,
   ReviewsScreen,
   EditProfileScreen,
   NotificationScreen,
   SupportScreen,
-  AuthScreen,
   LoginScreen,
   SignUpScreen,
   ForgotPasswordScreen,
 } from '~/screens';
-import {useTabBar} from '~/context/TabBarContext';
+import {CustomHeader} from '~/components';
+import {authStore} from '~/stores';
 
 const Stack = createNativeStackNavigator();
 
 export type ProfileStackParamList = {
-  Auth: undefined;
-  Login: undefined;
-  SignUp: undefined;
   Profile: undefined;
+  EditProfile: undefined;
   Reviews: undefined;
   Support: undefined;
-  EditProfile: undefined;
-  Notification: undefined;
+  Login: undefined;
+  SignUp: undefined;
   ForgotPassword: undefined;
 };
 
-const navigatorOptions = {
-  headerShown: false,
-  ...CommonActions,
-};
-
-const screens = [
-  {
-    name: 'Profile',
-    component: ProfileScreen,
-  },
+const profileScreens = [
   {
     name: 'EditProfile',
     component: EditProfileScreen,
+    options: {
+      headerTitle: 'Edit profile',
+      headerShown: true,
+      header: ({route, options, navigation}: any) => (
+        <CustomHeader back {...{route, options, navigation}} />
+      ),
+    },
   },
   {
     name: 'Reviews',
     component: ReviewsScreen,
+    options: {
+      headerTitle: 'Reviews',
+      headerShown: true,
+      header: ({route, options, navigation}: any) => (
+        <CustomHeader back {...{route, options, navigation}} />
+      ),
+    },
   },
   {
     name: 'Support',
     component: SupportScreen,
-  },
-  {
-    name: 'Auth',
-    component: AuthScreen,
-  },
-  {
-    name: 'Login',
-    component: LoginScreen,
-  },
-  {
-    name: 'SignUp',
-    component: SignUpScreen,
-  },
-  {
-    name: 'ForgotPassword',
-    component: ForgotPasswordScreen,
+    options: {
+      headerTitle: 'Support',
+      headerShown: true,
+      header: ({route, options, navigation}: any) => (
+        <CustomHeader back {...{route, options, navigation}} />
+      ),
+    },
   },
   {
     name: 'Notification',
     component: NotificationScreen,
+    options: {
+      headerTitle: 'Notification',
+      headerShown: true,
+      header: ({route, options, navigation}: any) => (
+        <CustomHeader back {...{route, options, navigation}} />
+      ),
+    },
   },
 ];
 
-const tabHiddenRoutes = ['Auth', 'Login', 'SignUp', 'ForgotPassword'];
+const authScreens = [
+  {
+    name: 'Login',
+    component: LoginScreen,
+    options: {
+      headerTitle: 'Login',
+      headerShown: true,
+      header: ({route, options, navigation}: any) => (
+        <CustomHeader back {...{route, options, navigation}} />
+      ),
+    },
+  },
+  {
+    name: 'SignUp',
+    component: SignUpScreen,
+    options: {
+      headerTitle: 'Create account',
+      headerShown: true,
+      header: ({route, options, navigation}: any) => (
+        <CustomHeader back {...{route, options, navigation}} />
+      ),
+    },
+  },
+  {
+    name: 'ForgotPassword',
+    component: ForgotPasswordScreen,
+    options: {
+      headerTitle: 'Forgot password',
+      headerShown: true,
+      header: ({route, options, navigation}: any) => (
+        <CustomHeader back {...{route, options, navigation}} />
+      ),
+    },
+  },
+];
 
-export default function ProfileStack({navigation, route}: any) {
-  const {changeTabBarVisibility} = useTabBar();
-
-  React.useLayoutEffect(() => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-
-    if (tabHiddenRoutes.includes(routeName as string))
-      changeTabBarVisibility(true);
-    else changeTabBarVisibility(false);
-  }, [navigation, route]);
+export default function ProfileStack() {
+  const {isUserLoggedIn} = authStore(state => state);
 
   return (
-    <Stack.Navigator screenOptions={navigatorOptions}>
-      {screens.map(screen => (
-        //@ts-ignore
-        <Stack.Screen
-          key={screen.name}
-          options={{
-            headerTitle: screen.name,
-            headerShown: screen.name != 'Profile',
-            header: (props: any) => <CustomHeader {...props} />,
-          }}
-          {...screen}
-        />
-      ))}
+    <Stack.Navigator>
+      {isUserLoggedIn
+        ? profileScreens.map(screen => (
+            //@ts-ignore
+            <Stack.Screen key={screen.name} {...screen} />
+          ))
+        : authScreens.map(screen => (
+            //@ts-ignore
+            <Stack.Screen key={screen.name} {...screen} />
+          ))}
     </Stack.Navigator>
   );
 }

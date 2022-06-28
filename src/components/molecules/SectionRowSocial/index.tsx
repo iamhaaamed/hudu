@@ -1,4 +1,5 @@
 import React from 'react';
+import {Platform} from 'react-native';
 import {Colors} from '~/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -7,9 +8,11 @@ import {Divider, HStack, IconButton, Text, VStack} from 'native-base';
 export default function SectionRowSocial({
   googleOnPress,
   facebookOnPress,
+  appleOnPress,
 }: {
   googleOnPress: () => void;
   facebookOnPress: () => void;
+  appleOnPress: () => void;
 }) {
   return (
     <VStack px="4" mt="2" width="full">
@@ -32,6 +35,14 @@ export default function SectionRowSocial({
           as={FontAwesome}
           onPress={facebookOnPress}
         />
+        {Platform.OS === 'ios' && (
+          <SocialButton
+            left={2}
+            name="apple"
+            as={FontAwesome}
+            onPress={appleOnPress}
+          />
+        )}
       </HStack>
     </VStack>
   );

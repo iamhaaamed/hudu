@@ -6,6 +6,7 @@ import {verticalScale, scale} from '~/utils/style';
 import {Colors} from '~/styles';
 import ModalContainer from '../ModalContainer';
 import FastImage from 'react-native-fast-image';
+import images from '~/assets/images';
 
 const CustomImage = ({
   imageSource,
@@ -15,6 +16,8 @@ const CustomImage = ({
   backgroundColor = Colors.GARY_1,
   local = false,
   children,
+  imageSourceArray,
+  errorImage = images.errorImage,
 }: {
   imageSource?: any;
   style?: any;
@@ -23,6 +26,8 @@ const CustomImage = ({
   backgroundColor?: any;
   local?: boolean;
   children?: any;
+  imageSourceArray?: any;
+  errorImage?: any;
 }) => {
   const [imageZoom, setImageZoom] = useState<boolean>(false);
 
@@ -50,10 +55,12 @@ const CustomImage = ({
           source={
             local
               ? imageSource
-              : {
+              : imageSource && imageSource !== null
+              ? {
                   uri: imageSource,
                   priority: FastImage.priority.high,
                 }
+              : errorImage
           }
           resizeMode={resizeMode}>
           {children && children}
@@ -77,16 +84,27 @@ const CustomImage = ({
         </View>
         <ImageViewer
           enableSwipeDown
-          imageUrls={[
-            local
-              ? {
-                  url: '',
-                  props: {
-                    source: imageSource,
-                  },
-                }
-              : {url: imageSource},
-          ]}
+          imageUrls={
+            imageSourceArray && imageSourceArray?.length > 0
+              ? imageSourceArray
+              : [
+                  local
+                    ? {
+                        url: '',
+                        props: {
+                          source: imageSource ? imageSource : errorImage,
+                        },
+                      }
+                    : imageSource
+                    ? {url: imageSource}
+                    : {
+                        url: '',
+                        props: {
+                          source: errorImage,
+                        },
+                      },
+                ]
+          }
           onSwipeDown={oncloseZoomModal}
         />
       </ModalContainer>

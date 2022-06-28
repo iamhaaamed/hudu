@@ -1,11 +1,14 @@
+import {useEffect} from 'react';
 import {useInfiniteQuery, useMutation, useQueryClient} from 'react-query';
 import {PAGE_SIZE} from '~/constants/pagination';
 import graphQLClient from '~/graphql/graphQLClient';
 import queryKeys from '~/constants/queryKeys';
 import {NOTIFICATION_GET_NOTIFICATIONS} from '~/graphql/notification/queries';
+import {NOTIFICATION_ADDED} from '~/graphql/notification/subscriptions';
 import {
   NOTIFICATION_ADD_NOTIFICATION,
   NOTIFICATION_READ_NOTIFICATION,
+  NOTIFICATION_DELETE_NOTIFICATION,
 } from '~/graphql/notification/mutations';
 import {
   Notification_AddNotificationMutation,
@@ -14,9 +17,13 @@ import {
   Notification_GetNotificationsQueryVariables,
   Notification_ReadNotificationMutation,
   Notification_ReadNotificationMutationVariables,
+  Notification_DeleteNotificationMutationVariables,
+  Notification_DeleteNotificationMutation,
   ResponseStatus,
 } from '~/generated/graphql';
 import {showMessage} from 'react-native-flash-message';
+import {Config} from 'react-native-config';
+import {getResponseMessage} from '~/utils/helper';
 
 export const useGetNotifications = (options: any = {}) => {
   return useInfiniteQuery<
@@ -71,7 +78,7 @@ export const useAddNotification = () => {
       });
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.notification_addNotification?.status ===
           ResponseStatus.Success
@@ -81,14 +88,17 @@ export const useAddNotification = () => {
       },
       onError: (errorData: any) => {
         console.log('notification_addNotificationError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
 };
 
 export const useReadNotification = () => {
-  const queryClient = useQueryClient();
   return useMutation<
     Notification_ReadNotificationMutation,
     any,
@@ -100,18 +110,98 @@ export const useReadNotification = () => {
       });
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (
           successData?.notification_readNotification?.status ===
           ResponseStatus.Success
         ) {
-          queryClient.invalidateQueries(queryKeys.notifications);
         }
       },
       onError: (errorData: any) => {
         console.log('notification_readNotificationError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
+};
+
+export const useDeleteNotification = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    Notification_DeleteNotificationMutation,
+    any,
+    Notification_DeleteNotificationMutationVariables
+  >(
+    async (notificationId: any) => {
+      return graphQLClient.request(NOTIFICATION_DELETE_NOTIFICATION, {
+        notificationId,
+      });
+    },
+    {
+      onSuccess: successData => {
+        console.log({successData});
+        if (
+          successData?.notification_deleteNotification?.status ===
+          ResponseStatus.Success
+        ) {
+          showMessage(
+            getResponseMessage(
+              successData?.notification_deleteNotification?.status,
+            ),
+          );
+          queryClient.invalidateQueries(queryKeys.notifications);
+        } else {
+          showMessage(
+            getResponseMessage(
+              successData?.notification_deleteNotification?.status,
+            ),
+          );
+        }
+      },
+      onError: (errorData: any) => {
+        console.log('notification_deleteNotificationError=>', errorData);
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
+      },
+    },
+  );
+};
+
+export const useNotificationSubscription = ({
+  userId,
+  callback,
+}: {
+  userId: number;
+  callback: () => void;
+}) => {
+  useEffect(() => {
+    const ws = new WebSocket(Config.API_URL, 'graphql-ws');
+    ws.onopen = () => {
+      console.log('connected');
+      const notification = {
+        id: '1',
+        type: 'start',
+        payload: {
+          variables: {userId: userId},
+          extensions: {},
+          operationName: null,
+          query: NOTIFICATION_ADDED,
+        },
+      };
+      ws.send(JSON.stringify(notification));
+    };
+    ws.onmessage = callback;
+    return () => {
+      // Unsubscribe before exit
+      ws.send(JSON.stringify({id: '1', type: 'stop'}));
+      ws.close();
+    };
+  }, []);
 };

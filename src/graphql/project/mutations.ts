@@ -25,10 +25,15 @@ export const PROJECT_ADD_FEED_BACK = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -47,10 +52,15 @@ export const PROJECT_ADD_FEED_BACK = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -66,6 +76,7 @@ export const PROJECT_ADD_FEED_BACK = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -107,6 +118,7 @@ export const PROJECT_ADD_PROJECT = gql`
         streetAddress
         city
         state
+        projectDeadLine
         longitude
         latitude
         zipCode
@@ -163,15 +175,56 @@ export const PROJECT_ADD_PROJECT = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
           createdDate
         }
+        id
+        isDeleted
+        createdDate
+      }
+      status
+    }
+  }
+`;
+
+export const PROJECT_ADD_IMAGE_TO_PROJECT = gql`
+  mutation project_addImageToProject($imageAddress: String, $projectId: Int!) {
+    project_addImageToProject(
+      imageAddress: $imageAddress
+      projectId: $projectId
+    ) {
+      result {
+        imageAddress
+        project {
+          projectStatus
+          title
+          description
+          duration
+          availability
+          streetAddress
+          city
+          state
+          projectDeadLine
+          longitude
+          latitude
+          zipCode
+          userId
+          id
+          isDeleted
+          createdDate
+        }
+        projectId
         id
         isDeleted
         createdDate
@@ -214,6 +267,7 @@ export const PROJECT_ADD_QUESTION = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -236,10 +290,15 @@ export const PROJECT_ADD_QUESTION = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -266,6 +325,7 @@ export const PROJECT_EDIT_PROJECT = gql`
         streetAddress
         city
         state
+        projectDeadLine
         longitude
         latitude
         zipCode
@@ -322,10 +382,15 @@ export const PROJECT_EDIT_PROJECT = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -352,6 +417,7 @@ export const PROJECT_FAILE_PROJECT = gql`
         streetAddress
         city
         state
+        projectDeadLine
         longitude
         latitude
         zipCode
@@ -408,10 +474,15 @@ export const PROJECT_FAILE_PROJECT = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -438,6 +509,7 @@ export const PROJECT_FINISHE_PROJECT = gql`
         streetAddress
         city
         state
+        projectDeadLine
         longitude
         latitude
         zipCode
@@ -494,10 +566,15 @@ export const PROJECT_FINISHE_PROJECT = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -526,6 +603,7 @@ export const PROJECT_LIKE = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -547,10 +625,15 @@ export const PROJECT_LIKE = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -577,6 +660,7 @@ export const PROJECT_REOPEN_PROJECT = gql`
         streetAddress
         city
         state
+        projectDeadLine
         longitude
         latitude
         zipCode
@@ -633,10 +717,15 @@ export const PROJECT_REOPEN_PROJECT = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
@@ -665,6 +754,7 @@ export const PROJECT_UNLIKE = gql`
           streetAddress
           city
           state
+          projectDeadLine
           longitude
           latitude
           zipCode
@@ -686,15 +776,46 @@ export const PROJECT_UNLIKE = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted
           createdDate
         }
+        id
+        isDeleted
+        createdDate
+      }
+      status
+    }
+  }
+`;
+
+export const PROJECT_DELETE_PROJECT = gql`
+  mutation project_deleteProject($projectId: Int!) {
+    project_deleteProject(projectId: $projectId) {
+      result {
+        projectStatus
+        title
+        description
+        duration
+        availability
+        streetAddress
+        city
+        state
+        projectDeadLine
+        longitude
+        latitude
+        zipCode
+        userId
         id
         isDeleted
         createdDate

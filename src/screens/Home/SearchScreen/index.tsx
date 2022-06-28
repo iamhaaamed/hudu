@@ -1,45 +1,34 @@
 import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, TextInput} from 'react-native';
-import {HStack, VStack} from 'native-base';
+import {HStack, VStack, IconButton} from 'native-base';
 import {CustomContainer, EmptyData} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import debounce from 'lodash.debounce';
-import images from '~/assets/images';
-import {ProjectItem} from '~/components';
+import {SearchProjectItem} from '~/components';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import {useGetProjects} from '~/hooks/project';
+import dayjs from 'dayjs';
 
-const projects = [
-  {
-    id: 0,
-    timeLeft: '3 Days',
-    title: 'Project 1',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-  {
-    id: 1,
-    timeLeft: '3 Days',
-    title: 'Project 2',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    image: images.testImage1,
-  },
-  {
-    id: 2,
-    timeLeft: '3 Days',
-    title: 'Project 3',
-    description:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
-    lowBid: 190,
-    image: images.testImage1,
-  },
-];
-
-const SearchScreen = () => {
+const SearchScreen = ({navigation}: any) => {
   const [userQuery, setUserQuery] = useState('');
-  const [fetchData, setFetchData] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const today = dayjs(new Date());
+
+  const [options, setOptions] = useState({
+    location: [12, 12],
+    where: {project: {projectDeadLine: {lte: today}}},
+  });
+
+  const {
+    isLoading: getProjectLoading,
+    data: getProjects,
+    fetchNextPage: fetchNextPageProjects,
+    hasNextPage: hasNextPageProjects,
+    isRefetching,
+  } = useGetProjects(options);
+
+  const projects = getProjects?.pages ?? [];
 
   const delayedQuery = debounce(() => updateQuery(), 500);
 
@@ -58,29 +47,48 @@ const SearchScreen = () => {
 
   const sendQuery = async (query: any) => {
     if (query.length > 0) {
-      const newData = projects.filter((item: any) => {
-        const itemData = `${(item.title || '').toUpperCase()}`;
-        const textData = userQuery.toUpperCase();
-        const t = itemData.indexOf(textData) > -1;
-        return t;
+      setSearchText(query);
+      setOptions({
+        location: [12, 12],
+        where: {
+          and: [
+            {project: {projectDeadLine: {lte: today}}},
+            {
+              or: [
+                {project: {title: {contains: query}}},
+                {project: {description: {contains: query}}},
+              ],
+            },
+          ],
+        },
       });
-      setFetchData(newData);
-      //   searchMutation.mutate(query, {
-      //     onSuccess: (data) => {
-      //       setFetchData(data);
-      //       setPath(data.image_path);
-      //     },
-      //     onError: () => {},
-      //   });
     } else {
-      setFetchData([]);
+      setSearchText(query);
+      setOptions({
+        location: [12, 12],
+        where: {project: {projectDeadLine: {lte: today}}},
+      });
     }
   };
 
-  const renderItem = ({item}: {item: any}) => <ProjectItem item={item} />;
+  const closeOnPress = () => {
+    navigation.goBack();
+  };
+
+  const onLoadMore = () => {
+    if (hasNextPageProjects) {
+      fetchNextPageProjects();
+    }
+  };
+
+  const renderItem = ({item}: {item: any}) => (
+    <SearchProjectItem {...{item, userQuery: searchText}} />
+  );
+
+  const loading = getProjectLoading;
 
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={loading}>
       <VStack space="4" py="4" flex={1}>
         <HStack
           alignItems="center"
@@ -94,20 +102,33 @@ const SearchScreen = () => {
           <TextInput
             value={userQuery}
             onChangeText={onChange}
-            placeholder="Search project"
+            placeholder="Search projects"
             placeholderTextColor={Colors.BLACK_3}
             style={styles.input}
+            autoFocus
+          />
+          <IconButton
+            onPress={closeOnPress}
+            colorScheme={Colors.WHITE_RIPPLE_COLOR}
+            borderRadius="full"
+            icon={<EvilIcons name="close" color={Colors.BLACK_3} size={18} />}
           />
         </HStack>
         <FlatList
+          refreshing={isRefetching}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={styles.columnWrapperStyle}
           contentContainerStyle={styles.contentContainerStyle}
           ListEmptyComponent={EmptyData}
           numColumns={2}
-          data={fetchData}
+          data={projects}
           renderItem={renderItem}
           keyExtractor={(_, index) => `key${index}`}
+          onEndReachedThreshold={0.5}
+          onEndReached={({distanceFromEnd}) => {
+            if (distanceFromEnd < 0) return;
+            onLoadMore?.();
+          }}
         />
       </VStack>
     </CustomContainer>

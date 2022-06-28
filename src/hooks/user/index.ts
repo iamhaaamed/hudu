@@ -1,8 +1,12 @@
+import React, {useState} from 'react';
 import Config from 'react-native-config';
 import auth from '@react-native-firebase/auth';
 import queryKeys from '~/constants/queryKeys';
+import {getResponseMessage} from '~/utils/helper';
+import {authStore, userDataStore} from '~/stores';
 import graphQLClient from '~/graphql/graphQLClient';
 import {showMessage} from 'react-native-flash-message';
+import {resetRoot, goBack} from '~/navigation/Methods';
 import {USER_GET_PROFILE} from '~/graphql/user/queries';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import {
@@ -17,14 +21,16 @@ import {
   User_SignUpMutationVariables,
   User_UpdateProfileMutationVariables,
   User_UpdateLastSeenMutationVariables,
+  User_SendEmailMutationVariables,
+  User_SendEmailMutation,
 } from '~/generated/graphql';
 import {
   USER_LOGIN,
   USER_SIGN_UP,
   USER_UPDATE_PROFILE,
   USER_UPDATE_LAST_SEEN,
+  USER_SEND_EMAIL,
 } from '~/graphql/user/mutations';
-
 import {
   statusCodes,
   GoogleSignin,
@@ -37,8 +43,7 @@ import {
   LoginManager,
   GraphRequestManager,
 } from 'react-native-fbsdk-next';
-import {getResponseMessage} from '~/utils/helper';
-import {authStore, userDataStore} from '~/stores';
+import appleAuth from '@invertase/react-native-apple-authentication';
 
 GoogleSignin.configure({
   scopes: ['profile', 'email'], // what API you want to access on behalf of the user, default is email and profile
@@ -80,6 +85,7 @@ export const useSignUpAuth = () => {
         showMessage({
           message: errorMessage,
           type: 'danger',
+          icon: 'danger',
         });
       }
       return {data: null, error: errorData, loading: false};
@@ -111,6 +117,7 @@ export const useLoginAuth = () => {
         showMessage({
           message: errorMessage,
           type: 'danger',
+          icon: 'danger',
         });
       }
       return {data: null, error: errorData, loading: false};
@@ -118,6 +125,52 @@ export const useLoginAuth = () => {
   };
 
   return {loginWithEmailAndPass};
+};
+
+export const useForgotPasswordAuth = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(null);
+
+  const forgotPassword = async (email: string) => {
+    setLoading(true);
+    try {
+      await auth()
+        .sendPasswordResetEmail(email)
+        .then(() => {
+          showMessage({
+            message: 'Email sent successfully',
+            type: 'success',
+            icon: 'success',
+          });
+          goBack();
+          setIsSuccess(true);
+          setError(false);
+          setLoading(false);
+        })
+        .catch((errorData: any) => {
+          console.log(error, 'error');
+          setIsSuccess(false);
+          setError(errorData);
+          setLoading(false);
+          const errorMessage = errorData?.message;
+          if (errorMessage) {
+            showMessage({
+              message: errorMessage,
+              type: 'danger',
+              icon: 'danger',
+            });
+          }
+        });
+    } catch (err: any) {
+      console.log(err, 'err*****');
+      setIsSuccess(false);
+      setError(err);
+      setLoading(false);
+    }
+  };
+
+  return {forgotPassword, loading, isSuccess, error};
 };
 
 export const useGetProfile = (options: any = {}) => {
@@ -129,7 +182,7 @@ export const useGetProfile = (options: any = {}) => {
   >(
     [queryKeys.userProfile],
     async () => {
-      return graphQLClient.request(USER_GET_PROFILE);
+      return graphQLClient.request(USER_GET_PROFILE, options);
     },
     {
       ...options,
@@ -150,21 +203,27 @@ export const useLogin = () => {
       return graphQLClient.request(USER_LOGIN);
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData.user_login?.status === ResponseStatus.Success) {
           setUserData(successData.user_login?.result);
           setIsUserLoggedIn(true);
           showMessage({
             message: 'You are logged in successfully',
             type: 'success',
+            icon: 'success',
           });
+          resetRoot('MainTabs');
         } else {
           showMessage(getResponseMessage(successData.user_login?.status));
         }
       },
       onError: (errorData: any) => {
         console.log('user_loginError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -179,13 +238,14 @@ export const useSignUp = () => {
       return graphQLClient.request(USER_SIGN_UP);
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: successData => {
         if (successData.user_signUp?.status === ResponseStatus.Success) {
           setIsUserLoggedIn(true);
           setUserData(successData.user_signUp?.result);
           showMessage({
             message: 'You have successfully registered',
             type: 'success',
+            icon: 'success',
           });
         } else {
           showMessage(getResponseMessage(successData.user_signUp?.status));
@@ -193,7 +253,11 @@ export const useSignUp = () => {
       },
       onError: (errorData: any) => {
         console.log('user_signUpError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -404,6 +468,56 @@ export const useFacebookAuth = () => {
   return {signInWithFacebook};
 };
 
+export const useAppleAuth = () => {
+  const {signOut} = useSignOutAuth();
+
+  const signInWithApple = async () => {
+    try {
+      signOut();
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+      if (!appleAuthRequestResponse.identityToken) {
+        return {
+          data: null,
+          success: false,
+          loading: false,
+          error: 'Apple Sign-In failed - no identify token returned',
+        };
+      }
+      const fullResult = appleAuthRequestResponse;
+      const idToken = appleAuthRequestResponse.identityToken;
+      const nonce = appleAuthRequestResponse.nonce;
+      const appleCredential = auth.AppleAuthProvider.credential(idToken, nonce);
+
+      await auth().signInWithCredential(appleCredential);
+      const currentUser = auth().currentUser;
+      const fbIdToken = await currentUser?.getIdToken();
+      console.log({fbIdToken});
+      graphQLClient.setHeader('authorization', 'Bearer ' + fbIdToken);
+      return {
+        data: {
+          fbIdToken,
+          fullResult,
+        },
+        success: true,
+        loading: false,
+        error: false,
+      };
+    } catch (err: any) {
+      return {
+        data: null,
+        success: false,
+        loading: false,
+        error: err,
+      };
+    }
+  };
+
+  return {signInWithApple};
+};
+
 export const useSignOutAuth = () => {
   const signOut = async () => {
     const firebaseAuth = auth();
@@ -428,7 +542,11 @@ export const useUpdateLastSeen = () => {
       onSuccess: () => {},
       onError: (errorData: any) => {
         console.log('user_UpdateLastSeenError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );
@@ -445,16 +563,58 @@ export const useUpdateProfile = () => {
       return graphQLClient.request(USER_UPDATE_PROFILE, {userInput});
     },
     {
-      onSuccess: (successData: any) => {
+      onSuccess: async successData => {
         if (
           successData?.user_updateProfile?.status === ResponseStatus.Success
         ) {
-          queryClient.invalidateQueries(queryKeys.userProfile);
+          await queryClient.invalidateQueries(queryKeys.userProfile);
+          showMessage(
+            getResponseMessage(successData.user_updateProfile?.status),
+          );
+          goBack();
+        } else {
+          showMessage(
+            getResponseMessage(successData?.user_updateProfile?.status),
+          );
         }
       },
       onError: (errorData: any) => {
         console.log('user_updateProfileError=>', errorData);
-        showMessage({type: 'danger', message: JSON.stringify(errorData)});
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
+      },
+    },
+  );
+};
+
+export const useSendEmail = () => {
+  return useMutation<
+    User_SendEmailMutation,
+    any,
+    User_SendEmailMutationVariables
+  >(
+    async (email: any) => {
+      return graphQLClient.request(USER_SEND_EMAIL, {email});
+    },
+    {
+      onSuccess: () => {
+        showMessage({
+          message: 'Your message has been successfully sent',
+          type: 'success',
+          icon: 'success',
+        });
+        goBack();
+      },
+      onError: (errorData: any) => {
+        console.log('user_sendEmailError=>', errorData);
+        showMessage({
+          type: 'danger',
+          message: JSON.stringify(errorData),
+          icon: 'danger',
+        });
       },
     },
   );

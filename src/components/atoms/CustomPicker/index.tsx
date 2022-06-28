@@ -41,6 +41,9 @@ export default React.forwardRef(
       textColor = Colors.BLACK_2,
       formState,
       isHorizontal = false,
+      validation = false,
+      valueKey = 'value',
+      titleKey = 'title',
     }: {
       name: any;
       data: any;
@@ -66,6 +69,9 @@ export default React.forwardRef(
       textColor?: any;
       formState?: any;
       isHorizontal?: boolean;
+      validation?: boolean;
+      valueKey?: string;
+      titleKey?: string;
     },
     ref: any,
   ) => {
@@ -91,13 +97,19 @@ export default React.forwardRef(
       DropdownButton?.current?.measure((_fx, _fy, _w, h, _px, py) => {
         if (screenHeight - (py + h) > maxHeight) {
           setDropdownPosition({
-            top: py + h,
+            top:
+              field.value || fieldState.error || isHorizontal
+                ? py + h
+                : py + h + 12,
             bottom: undefined,
           });
         } else if (py > maxHeight) {
           setDropdownPosition({
             top: undefined,
-            bottom: screenHeight - py + 5 - h / 2,
+            bottom:
+              field.value || fieldState.error
+                ? screenHeight - py + 5 - h / 2
+                : screenHeight - py + 5 - h / 2 + 14,
           });
         } else {
           setDropdownPosition({
@@ -110,17 +122,25 @@ export default React.forwardRef(
     };
 
     const getName = (value: string) => {
-      const item = data.find((element: any) => element.value === value);
-      return item?.title;
+      const item = data.find((element: any) => element?.[valueKey] === value);
+      return item?.[titleKey];
     };
 
     const itemOnPress = (item: any) => {
       setVisible(false);
-      field.onChange?.(item?.value);
+      field.onChange?.(item?.[valueKey]);
     };
 
+    const borderColor = fieldState.error
+      ? Colors.ERROR
+      : !validation
+      ? Colors.BORDER_COLOR
+      : isDirty
+      ? Colors.SUCCESS
+      : Colors.BORDER_COLOR;
+
     const renderItem = ({item, index}: {item: any; index: number}) => {
-      const isEnable = item?.value === field.value;
+      const isEnable = item?.[valueKey] === field.value;
       return (
         <Box
           key={index + 1}
@@ -129,11 +149,11 @@ export default React.forwardRef(
             activeOpacity={0.7}
             onPress={() => itemOnPress(item)}>
             <VStack p="2">
-              {item?.title && (
+              {item?.[titleKey] && (
                 <Text
                   style={textStyle}
                   color={isEnable ? Colors.WHITE : Colors.BLACK_2}>
-                  {item?.title}
+                  {item?.[titleKey]}
                 </Text>
               )}
               {item?.subtitle && (
@@ -164,7 +184,7 @@ export default React.forwardRef(
               position="absolute"
               zIndex={400}
               top="-12"
-              left="6"
+              left="4"
               pl="2"
               pr="4"
               bg={Colors.WHITE}
@@ -188,19 +208,19 @@ export default React.forwardRef(
               px="3"
               bg={Colors.WHITE}
               alignItems="center"
-              borderColor={
-                fieldState.error
-                  ? Colors.ERROR
-                  : isDirty
-                  ? Colors.SUCCESS
-                  : Colors.BORDER_COLOR
-              }>
+              borderColor={borderColor}>
               <Text
                 flex={1}
                 numberOfLines={1}
                 color={textColor}
                 style={textStyle}>
-                {field.value ? getName(field.value) : placeholder}
+                {field.value
+                  ? getName(field.value)
+                  : !visible
+                  ? label
+                    ? label
+                    : placeholder
+                  : placeholder}
               </Text>
               <Icon
                 as={<MaterialCommunityIcons name="chevron-down" />}

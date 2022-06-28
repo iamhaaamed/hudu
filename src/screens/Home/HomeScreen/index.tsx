@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, VStack} from 'native-base';
 import {
-  CustomKeyboardAwareScrollView,
   CustomContainer,
   SectionUserRow,
   SectionSearchBox,
@@ -10,23 +9,31 @@ import {
 } from '~/components';
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
+import {authStore} from '~/stores';
+import {useGetProfile} from '~/hooks/user';
 
 const HomeScreen = ({navigation}: {navigation: any}) => {
+  const {isUserLoggedIn} = authStore(state => state);
+
+  const {isLoading: getProfileLoading, data: getProfile} = useGetProfile({
+    enabled: isUserLoggedIn,
+  });
+
+  const profile = getProfile?.user_getProfile?.result ?? {};
+
   const questionHandler = () => {
-    navigation.navigate('ProfileStack', {screen: 'Support'});
+    navigation.navigate('AuthStack', {screen: 'Support'});
   };
 
   return (
     <CustomContainer>
-      <CustomKeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainerStyle}>
-        <VStack space="3" py="2" flex={1}>
-          <SectionUserRow />
-          <SectionSearchBox />
-          <SectionProjects />
-        </VStack>
-      </CustomKeyboardAwareScrollView>
+      <VStack space="3" py="2" flex={1}>
+        {isUserLoggedIn && (
+          <SectionUserRow {...{data: profile, loading: getProfileLoading}} />
+        )}
+        <SectionSearchBox />
+        <SectionProjects />
+      </VStack>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={questionHandler}

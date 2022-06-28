@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity, ActivityIndicator} from 'react-native';
 import {Colors, Spacing} from '~/styles';
-import {Box, Center, Text} from 'native-base';
+import {Box, Center, Spinner, Text} from 'native-base';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 
 export default function CustomButton({
@@ -54,7 +54,7 @@ export default function CustomButton({
         activeOpacity={0.7}>
         <Center flex={1}>
           {loading ? (
-            <ActivityIndicator size={Spacing.larger} color={spinnerColor} />
+            <Spinner size={fontSize} color={spinnerColor} />
           ) : (
             <Text
               fontSize={fontSize}

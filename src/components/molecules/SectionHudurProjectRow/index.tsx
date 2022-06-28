@@ -4,24 +4,61 @@ import {HStack, Text, VStack, Center, Icon} from 'native-base';
 import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
 import {
-  SectionProjectLabel,
+  SectionBidLabel,
   CustomImage,
   SectionLeaveReview,
   EditModal,
+  QuestionModal,
 } from '~/components';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useDeleteBid, useEditBid} from '~/hooks/bid';
+import {ResponseStatus} from '~/generated/graphql';
+import {useQueryClient} from 'react-query';
+import queryKeys from '~/constants/queryKeys';
+import {navigate} from '~/navigation/Methods';
 
 const SectionHudurProjectRow = ({item}: {item: any}) => {
   const swipeable = useRef<Swipeable>(null);
+  const queryClient = useQueryClient();
 
-  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [questionModalVisible, setQuestionModalVisible] =
+    useState<boolean>(false);
+  const {mutate: mutateEditBid, isLoading: editBidLoading} = useEditBid();
+  const {mutate: mutateDeleteBid, isLoading: deleteBidLoading} = useDeleteBid();
 
-  const deleteOnPress = () => {};
+  const itemOnPress = () => {
+    if (item?.bidStatus === 'IN_PROGRESS' || item?.bidStatus === 'FINISHED') {
+      navigate('ProjectDetailsHudur', {projectId: item?.projectId});
+    }
+  };
+
+  const deleteOnPress = () => {
+    if (item?.bidStatus === 'WAITING') {
+      setQuestionModalVisible(true);
+    }
+  };
+
+  const onCloseQuestionModal = () => {
+    setQuestionModalVisible(false);
+  };
+
+  const deleteHandler = () => {
+    mutateDeleteBid(item?.id, {
+      onSuccess: successData => {
+        if (successData?.bid_deleteBid?.status === ResponseStatus.Success) {
+          setQuestionModalVisible(false);
+        }
+      },
+    });
+  };
 
   const editOnPress = () => {
-    setEditModalVisible(true);
+    if (item?.bidStatus === 'WAITING') {
+      setEditModalVisible(true);
+    }
   };
 
   const closeEditModal = () => {
@@ -29,7 +66,20 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   };
 
   const submitEditModal = (formData: any) => {
-    setEditModalVisible(false);
+    const input = {
+      id: item?.id,
+      amount: formData?.amount,
+      description: formData?.description,
+    };
+    mutateEditBid(input, {
+      onSuccess: successData => {
+        if (successData?.bid_editBid?.status === ResponseStatus.Success) {
+          queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.bids);
+          setEditModalVisible(false);
+        }
+      },
+    });
   };
 
   const renderRightActions = () => {
@@ -78,67 +128,87 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
         ref={swipeable}
         renderRightActions={renderRightActions}
         renderLeftActions={renderLeftActions}>
-        <HStack
+        <Center
           px="2"
           py="2"
-          space="2"
           mx="1"
           my="1"
           flex={1}
           borderRadius="lg"
           bg={Colors.WHITE}
-          shadow="2">
-          <CustomImage
-            local
-            imageSource={item?.image}
-            style={styles.image}
-            resizeMode="stretch"
-          />
-          <VStack flex={1} space="1">
-            <HStack alignItems="center">
-              <Text
-                flex={1}
-                numberOfLines={1}
-                fontSize={scale(16)}
-                fontFamily={fontFamily.medium}
-                color={Colors.BLACK_1}>
-                {item?.title}
-              </Text>
-              <SectionProjectLabel {...{item}} />
+          shadow="4">
+          <TouchableOpacity
+            style={styles.item}
+            activeOpacity={0.7}
+            onPress={itemOnPress}>
+            <HStack space="2">
+              <CustomImage
+                imageSource={item?.project?.projectImages?.[0]?.imageAddress}
+                style={styles.image}
+                resizeMode="stretch"
+              />
+              <VStack flex={1} space="1">
+                <HStack alignItems="center">
+                  <Text
+                    flex={1}
+                    numberOfLines={1}
+                    fontSize={scale(16)}
+                    fontFamily={fontFamily.medium}
+                    color={Colors.BLACK_1}>
+                    {item?.project?.title}
+                  </Text>
+                  <SectionBidLabel {...{item}} />
+                </HStack>
+                <Text
+                  flex={1}
+                  numberOfLines={3}
+                  fontSize={scale(14)}
+                  fontFamily={fontFamily.regular}
+                  color={Colors.PLACEHOLDER}>
+                  {item?.description}
+                </Text>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <Text
+                    fontSize={scale(14)}
+                    fontFamily={fontFamily.regular}
+                    color={Colors.BLACK_1}>
+                    Your bid
+                  </Text>
+                  <Text
+                    fontSize={scale(16)}
+                    fontFamily={fontFamily.regular}
+                    color={Colors.INFO}>
+                    ${item?.amount}
+                  </Text>
+                </HStack>
+                {item?.bidStatus === 'FINISHED' && (
+                  <SectionLeaveReview {...{bidId: item?.id}} />
+                )}
+              </VStack>
             </HStack>
-            <Text
-              flex={1}
-              numberOfLines={3}
-              fontSize={scale(14)}
-              fontFamily={fontFamily.regular}
-              color={Colors.PLACEHOLDER}>
-              {item?.description}
-            </Text>
-            <HStack alignItems="center" justifyContent="space-between">
-              <Text
-                fontSize={scale(14)}
-                fontFamily={fontFamily.regular}
-                color={Colors.BLACK_1}>
-                Your bid
-              </Text>
-              <Text
-                fontSize={scale(16)}
-                fontFamily={fontFamily.regular}
-                color={Colors.INFO}>
-                ${item?.lowBid}
-              </Text>
-            </HStack>
-            {item?.id === 1 && (
-              <SectionLeaveReview {...{item, type: 'hudur'}} />
-            )}
-          </VStack>
-        </HStack>
+          </TouchableOpacity>
+        </Center>
       </Swipeable>
       <EditModal
         visible={editModalVisible}
         onClose={closeEditModal}
         onSubmit={submitEditModal}
         title="Bid details"
+        loading={editBidLoading}
+        defaultData={{
+          amount: item?.amount,
+          description: item?.description,
+        }}
+      />
+      <QuestionModal
+        visible={questionModalVisible}
+        onClose={onCloseQuestionModal}
+        title="Are you sure you want delete this bid?"
+        option1="Cancel"
+        option2="Delete"
+        option1OnPress={onCloseQuestionModal}
+        option2OnPress={deleteHandler}
+        loading={deleteBidLoading}
       />
     </>
   );
@@ -151,5 +221,9 @@ const styles = StyleSheet.create({
     height: '100%',
     width: scale(107),
     borderRadius: 10,
+  },
+  item: {
+    width: '100%',
+    flex: 1,
   },
 });

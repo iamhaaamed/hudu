@@ -1,17 +1,19 @@
 import React, {forwardRef, useCallback, memo} from 'react';
 import {FlatList} from 'react-native';
+import {Box, IconButton, VStack} from 'native-base';
 import Animated from 'react-native-reanimated';
-import {Box, HStack, IconButton, Text, VStack} from 'native-base';
 import * as yup from 'yup';
 import {Colors} from '~/styles';
-import {CustomInput} from '~/components';
-import {fontFamily, scale} from '~/utils/style';
+import {CustomInput, QuestionItem, CustomLoading} from '~/components';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
-import Feather from 'react-native-vector-icons/Feather';
+import {SendIcon} from '~/assets/icons';
+import {authStore, userDataStore} from '~/stores';
+import {useAddQuestion} from '~/hooks/project';
+import {ResponseStatus} from '~/generated/graphql';
 
 const schema = yup.object().shape({
-  message: yup.string().required('required'),
+  message: yup.string(),
 });
 
 export const AnimatedFlatList: typeof FlatList =
@@ -21,52 +23,66 @@ const SectionQuestionRoute = forwardRef(
   (
     {
       data,
+      listerId,
       contentContainerStyle,
       onMomentumScrollEnd,
       onScrollEndDrag,
       scrollEventThrottle,
       scrollIndicatorInsets,
       onScroll,
+      projectId,
     }: any,
     ref,
   ) => {
+    const {isUserLoggedIn} = authStore(state => state);
+    const {userData} = userDataStore(state => state);
+
+    const {mutate: mutateAddQuestion, isLoading: addQuestionLoading} =
+      useAddQuestion();
+
     const {...methods} = useForm<Record<string, any>, object>({
       resolver: yupResolver<yup.AnyObjectSchema>(schema),
       mode: 'onChange',
     });
 
-    const {handleSubmit, register, watch, formState} = methods;
+    const {handleSubmit, register, watch, formState, setValue} = methods;
 
-    const sendOnPress = () => {};
+    const sendOnPress = (formData: any) => {
+      if (formData?.message?.length > 0) {
+        const input = {
+          text: formData?.message,
+          projectId,
+          parentId: null,
+        };
+        mutateAddQuestion(input, {
+          onSuccess: successData => {
+            if (
+              successData?.project_addQuestion?.status ===
+              ResponseStatus.Success
+            ) {
+              setValue('message', '');
+            }
+          },
+          onError: () => {},
+        });
+      }
+    };
 
     const keyExtractor = useCallback((_, index: number) => `key${index}`, []);
 
-    const renderItem = ({item}: {item: any}) => {
-      return (
-        <HStack space="4" px="4">
-          <Text
-            fontSize={scale(14)}
-            fontFamily={fontFamily.medium}
-            color={Colors.BLACK_1}>
-            {item?.user?.name}:
-          </Text>
-          <Text
-            flex={1}
-            fontSize={scale(14)}
-            fontFamily={fontFamily.regular}
-            color={Colors.PLACEHOLDER}>
-            {item?.message}
-          </Text>
-        </HStack>
-      );
-    };
+    const renderItem = ({item}: {item: any}) => (
+      <QuestionItem {...{item, listerId}} />
+    );
 
     const ItemSeparatorComponent = () => <Box h="4" />;
 
     const messageText = watch('message');
 
+    const loading = addQuestionLoading;
+
     return (
       <VStack flex={1} pt={4} pb={6} bg={Colors.WHITE}>
+        {loading && <CustomLoading />}
         <AnimatedFlatList
           ref={ref}
           renderItem={renderItem}
@@ -83,31 +99,34 @@ const SectionQuestionRoute = forwardRef(
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={ItemSeparatorComponent}
         />
-        <VStack px="4" py="4">
-          <FormProvider {...methods}>
-            <CustomInput
-              {...register('message')}
-              placeholder="Cannot find your question? Type it here"
-              backgroundColor={Colors.WHITE}
-              {...{formState}}
-              rightComponent={() => (
-                <IconButton
-                  onPress={sendOnPress}
-                  colorScheme={Colors.WHITE_RIPPLE_COLOR}
-                  borderRadius="full"
-                  icon={
-                    <Feather
-                      name="navigation"
-                      color={Colors.BLACK_3}
-                      size={24}
-                    />
-                  }
-                  style={{transform: [{rotate: '45deg'}]}}
-                />
-              )}
-            />
-          </FormProvider>
-        </VStack>
+        {isUserLoggedIn && userData?.id !== listerId && (
+          <VStack px="4" py="4">
+            <FormProvider {...methods}>
+              <CustomInput
+                {...register('message')}
+                placeholder="Cannot find your question? Type it here"
+                backgroundColor={Colors.WHITE}
+                {...{formState}}
+                rightComponent={() => (
+                  <IconButton
+                    onPress={handleSubmit(sendOnPress)}
+                    colorScheme={Colors.WHITE_RIPPLE_COLOR}
+                    borderRadius="full"
+                    icon={
+                      <SendIcon
+                        fillColor={
+                          messageText?.length > 0
+                            ? Colors.PRIMARY
+                            : Colors.BLACK_1
+                        }
+                      />
+                    }
+                  />
+                )}
+              />
+            </FormProvider>
+          </VStack>
+        )}
       </VStack>
     );
   },

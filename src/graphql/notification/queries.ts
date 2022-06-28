@@ -14,10 +14,30 @@ export const NOTIFICATION_GET_NOTIFICATIONS = gql`
           description
           isReaded
           notificationType
+          projectId
+          bidId
           userId
           id
           isDeleted
           createdDate
+          project {
+            projectDeadLine
+            projectStatus
+            title
+            description
+            id
+          }
+          bid {
+            amount
+            hudu {
+              id
+              userName
+            }
+            lister {
+              userName
+              id
+            }
+          }
         }
         pageInfo {
           hasNextPage

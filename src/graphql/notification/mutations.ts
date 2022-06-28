@@ -52,10 +52,59 @@ export const NOTIFICATION_READ_NOTIFICATION = gql`
           streetAddress
           city
           state
+          isActive
           longitude
           latitude
           zipCode
-          rate
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
+          externalId
+          id
+          isDeleted
+          createdDate
+        }
+        id
+        isDeleted
+        createdDate
+      }
+      status
+    }
+  }
+`;
+
+export const NOTIFICATION_DELETE_NOTIFICATION = gql`
+  mutation notification_deleteNotification($notificationId: Int!) {
+    notification_deleteNotification(notificationId: $notificationId) {
+      result {
+        title
+        description
+        isReaded
+        notificationType
+        userId
+        user {
+          email
+          userName
+          lastSeen
+          userTypes
+          imageAddress
+          firstName
+          lastName
+          bio
+          streetAddress
+          city
+          state
+          isActive
+          longitude
+          latitude
+          zipCode
+          asHuduRates
+          listersWhoRatedToMeCount
+          asListerRates
+          huduersWhoRatedToMeCount
+          averageRate
           externalId
           id
           isDeleted

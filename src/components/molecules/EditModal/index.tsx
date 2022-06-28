@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {VStack} from 'native-base';
 import {
@@ -14,8 +14,12 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  amount: yup.number().required('required'),
-  describe: yup.string().required('required'),
+  amount: yup
+    .number()
+    .typeError('you must specify a number')
+    .required('required')
+    .nullable(),
+  description: yup.string().required('required').nullable(),
 });
 
 const EditModal = ({
@@ -23,18 +27,28 @@ const EditModal = ({
   onClose,
   onSubmit,
   title,
+  loading,
+  defaultData,
 }: {
   visible: boolean;
   onClose: any;
   onSubmit: any;
   title: string;
+  loading?: boolean;
+  defaultData?: any;
 }) => {
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, formState} = methods;
+  const {handleSubmit, register, formState, setValue} = methods;
+
+  useEffect(() => {
+    defaultData?.amount && setValue('amount', String(defaultData?.amount));
+    defaultData?.description &&
+      setValue('description', defaultData?.description);
+  }, [defaultData]);
 
   const onCloseHandler = () => {
     onClose?.();
@@ -48,11 +62,13 @@ const EditModal = ({
     <ModalContainer
       isVisible={visible}
       onClose={onCloseHandler}
-      style={styles.modal}>
+      style={styles.modal}
+      loading={loading}>
       <FormProvider {...methods}>
         <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
-          <ModalHeader text={title} />
+          <ModalHeader text={title} onPress={onCloseHandler} />
           <CustomInput
+            autoFocus
             {...register('amount')}
             label="Bid amount"
             placeholder="0"
@@ -62,7 +78,7 @@ const EditModal = ({
             {...{formState}}
           />
           <CustomInput
-            {...register('describe')}
+            {...register('description')}
             label="Describe your proposal"
             placeholder="Enter Describe your proposal"
             backgroundColor={Colors.WHITE}

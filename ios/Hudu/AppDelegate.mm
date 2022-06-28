@@ -1,4 +1,10 @@
+#import <Firebase.h> // <- FIREBASE
 #import "AppDelegate.h"
+#import <GoogleMaps/GoogleMaps.h> // <- GOOGLE MAPS
+#import <RNGoogleSignin/RNGoogleSignin.h> // <- GOOGLE SIGNIN
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h> // <- FACEBOOK
+#import <React/RCTLinkingManager.h> // <- FACEBOOK
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -27,8 +33,21 @@
 
 @implementation AppDelegate
 
+ // <- FACEBOOK
+- (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<NSString *,id> *)options {
+  return [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options] || [RNGoogleSignin application:application openURL:url options:options];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyB4MfDPM7eiAftxCK2EFMI_tRzsy4rK90Y"];  // <- GOOGLE MAPS
+
+  // <- FIREBASE \/
+  if ([FIRApp defaultApp] == nil) {
+    [FIRApp configure];
+  }
+  // <- FIREBASE --- /\
+  
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
@@ -54,6 +73,11 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
+  // <- FACEBOOK
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                         didFinishLaunchingWithOptions:launchOptions];
+
   return YES;
 }
 

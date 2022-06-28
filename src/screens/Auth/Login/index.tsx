@@ -8,6 +8,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {Box, Button, Flex, HStack, Text, VStack} from 'native-base';
 import {
+  useAppleAuth,
   useFacebookAuth,
   useGoogleAuth,
   useLogin,
@@ -24,7 +25,11 @@ import {
 
 const schema = yup.object().shape({
   email: yup.string().email().required('required'),
-  password: yup.string().required('required'),
+  password: yup
+    .string()
+    .min(6, 'Must be 6 characters or more')
+    .max(36, 'Must be 36 characters or less')
+    .required('Required'),
 });
 
 export default function LoginScreen({navigation}: NavigationProp) {
@@ -37,6 +42,7 @@ export default function LoginScreen({navigation}: NavigationProp) {
   const {mutate: loginMutate} = useLogin();
   const {signInWithGoogle} = useGoogleAuth();
   const {signInWithFacebook} = useFacebookAuth();
+  const {signInWithApple} = useAppleAuth();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -68,6 +74,16 @@ export default function LoginScreen({navigation}: NavigationProp) {
   const facebookOnPress = async () => {
     setLoading(true);
     const res = await signInWithFacebook();
+    if (res?.data) {
+      completeLogin();
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const appleOnPress = async () => {
+    setLoading(true);
+    const res = await signInWithApple();
     if (res?.data) {
       completeLogin();
     } else {
@@ -109,18 +125,22 @@ export default function LoginScreen({navigation}: NavigationProp) {
                 {...register('email')}
                 placeholder="Email"
                 {...{formState}}
+                validation
               />
               <CustomInput
                 {...register('password')}
                 placeholder="Password"
                 {...{formState}}
+                validation
+                inputType="password"
               />
             </VStack>
             <Button
+              mx="1.5"
               variant="link"
               alignSelf="flex-end"
               onPress={() => navigation.navigate('ForgotPassword')}>
-              <Text color={Colors.PRIMARY}>Forgot Password ?</Text>
+              <Text color={Colors.PRIMARY}>Forgot password ?</Text>
             </Button>
             <Box px="4" py="4">
               <CustomButton
@@ -129,7 +149,9 @@ export default function LoginScreen({navigation}: NavigationProp) {
                 onPress={handleSubmit(loginOnPress)}
               />
             </Box>
-            <SectionRowSocial {...{googleOnPress, facebookOnPress}} />
+            <SectionRowSocial
+              {...{googleOnPress, facebookOnPress, appleOnPress}}
+            />
             <HStack alignItems="center" justifyContent="center">
               <Text fontSize="md">Don't have an account?</Text>
               <Button

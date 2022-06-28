@@ -17,6 +17,10 @@ export const RIGHT_ACTION_BACKGROUND = '#E5EEF7';
 export const LEFT_ACTION_BACKGROUND = '#FCEFEF';
 export const DELETE = '#5F0A0A';
 export const WAITING_BACKGROUND = '#E1ECFC';
+export const IN_PROGRESS_BACKGROUND = '#E5F4EA';
+export const FINISHED_BACKGROUND = '#FCEBE1';
+export const FAILED_BACKGROUND = '#F8E5E5';
+export const FINISHED_COLOR = '#EB7B35';
 export const BORDER_COLOR = '#393939';
 export const INPUT = '#213950';
 export const RIGHT_TEXT = '#7E7E7E';
@@ -25,6 +29,12 @@ export const IMAGE_UPLOADER_BACKGROUND = '#E7EBEF';
 export const WHITE_RIPPLE_COLOR = 'rgba(252,252,253,0.75)';
 export const CANCEL_BUTTON = '#E6ACAD';
 export const INPUT_LABEL2 = '#707070';
+export const CANCEL_CARD_BACKGROUND = '#DCDFE6';
+export const EMPTY_DATA = '#8BA4EF';
+export const TIME_LEFT_RED = '#F44848';
+export const TIME_LEFT_ORANGE = '#FDA500';
+export const FAVORITE_RIPPLE_COLOR = 'rgba(232,231,231,0.85)';
+export const TAB_BAR_ICON = '#a5a6af';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';
@@ -34,6 +44,7 @@ export const SUCCESS = '#1CA24A';
 export const WARNING = '#FFBD0A';
 export const ERROR = '#BF1A1A';
 
+export const WHITE_F = '#FFFFFF';
 export const WHITE = '#FCFCFD';
 
 export const BLACK_1 = '#21242F';

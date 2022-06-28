@@ -1,40 +1,71 @@
 import React from 'react';
-import {Divider} from 'native-base';
 import {FlatList, StyleSheet} from 'react-native';
-import ReviewItem from '~/components/atoms/ReviewItem';
-import SectionReviewContainer from '../../molecules/SectionReviewContainer';
+import {VStack} from 'native-base';
+import {
+  ListerReviewItem,
+  SectionReviewContainer,
+  CustomLoading,
+  EmptyData,
+} from '~/components';
+import {useGetBids} from '~/hooks/bid';
+import {userDataStore} from '~/stores';
 
-export default function SectionListerReviews() {
-  const onLoadMore = () => {};
+const SectionListerReviews = () => {
+  const {userData} = userDataStore(state => state);
 
-  const renderItem = ({item}: {item: any}) => (
-    <ReviewItem title={item.title} content={item.content} rate={item.rate} />
+  const listerReviewOption = {
+    where: {bidStatus: {eq: 'FINISHED'}, listerId: {eq: userData?.id}},
+  };
+
+  const {
+    isLoading: getListerReviewsLoading,
+    data: getListerReviews,
+    fetchNextPage: fetchNextPageListerReviews,
+    hasNextPage: hasNextPageListerReviews,
+    refetch: refetchListerReviews,
+    isRefetching: isRefetchingListerReviews,
+  } = useGetBids(listerReviewOption);
+
+  const listerReviews = getListerReviews?.pages ?? [];
+
+  const onLoadMore = () => {
+    if (hasNextPageListerReviews) {
+      fetchNextPageListerReviews();
+    }
+  };
+
+  const renderItem = ({item, index}: {item: any; index: number}) => (
+    <ListerReviewItem {...{item, index, arrayLength: listerReviews?.length}} />
   );
 
-  const ItemSeparatorComponent = () => <Divider mx="3" />;
   return (
     <SectionReviewContainer>
-      <FlatList
-        data={Array(15).fill({
-          title: 'HUDUr',
-          content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          rate: 3,
-        })}
-        renderItem={renderItem}
-        onEndReachedThreshold={0.5}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(_, index) => `key${index}`}
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        contentContainerStyle={styles.contentContainerStyle}
-        onEndReached={({distanceFromEnd}: any) => {
-          if (distanceFromEnd < 0) return;
-          onLoadMore();
-        }}
-      />
+      <VStack flexGrow={1} h="100%">
+        {getListerReviewsLoading ? (
+          <CustomLoading />
+        ) : (
+          <FlatList
+            refreshing={isRefetchingListerReviews}
+            onRefresh={refetchListerReviews}
+            data={listerReviews}
+            renderItem={renderItem}
+            ListEmptyComponent={EmptyData}
+            onEndReachedThreshold={0.5}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(_, index) => `key${index + 1}`}
+            contentContainerStyle={styles.contentContainerStyle}
+            onEndReached={({distanceFromEnd}: any) => {
+              if (distanceFromEnd < 0) return;
+              onLoadMore();
+            }}
+          />
+        )}
+      </VStack>
     </SectionReviewContainer>
   );
-}
+};
+
+export default React.memo(SectionListerReviews);
 
 const styles = StyleSheet.create({
   contentContainerStyle: {

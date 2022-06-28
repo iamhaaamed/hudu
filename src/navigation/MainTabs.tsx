@@ -1,20 +1,17 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {
-  CommonActions,
-  getFocusedRouteNameFromRoute,
-} from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 import {CustomTabBar} from '~/components';
 import HomeStack from './HomeStack';
 import FavoriteStack from './FavoriteStack';
 import PostStack from './PostStack';
 import ProjectsStack from './ProjectsStack';
-import ProfileStack from './ProfileStack';
-import {TabBarContextProvider} from '~/context/TabBarContext';
+import {authStore} from '~/stores';
+import {AuthScreen, ProfileScreen, AuthProfileScreen} from '~/screens';
 
 const Tab = createBottomTabNavigator();
 
-const navigatorOptions = {
+const publicScreenOption = {
   headerShown: false,
   ...CommonActions,
 };
@@ -23,37 +20,39 @@ const screens = [
   {
     name: 'HomeStack',
     component: HomeStack,
+    options: publicScreenOption,
   },
   {
     name: 'FavoriteStack',
     component: FavoriteStack,
-  },
-  {
-    name: 'PostStack',
-    component: PostStack,
-  },
-  {
-    name: 'ProjectsStack',
-    component: ProjectsStack,
-  },
-  {
-    name: 'ProfileStack',
-    component: ProfileStack,
+    options: publicScreenOption,
   },
 ];
 
 const MainTabs = () => {
+  const {isUserLoggedIn} = authStore(state => state);
   return (
-    <TabBarContextProvider>
-      <Tab.Navigator
-        screenOptions={navigatorOptions}
-        tabBar={(props: any) => <CustomTabBar {...props} />}>
-        {screens.map(screen => (
-          //@ts-ignore
-          <Tab.Screen key={screen.name} {...screen} />
-        ))}
-      </Tab.Navigator>
-    </TabBarContextProvider>
+    <Tab.Navigator tabBar={(props: any) => <CustomTabBar {...props} />}>
+      {screens.map(screen => (
+        //@ts-ignore
+        <Tab.Screen key={screen.name} {...screen} />
+      ))}
+      <Tab.Screen
+        name="PostStack"
+        component={isUserLoggedIn ? PostStack : AuthScreen}
+        options={publicScreenOption}
+      />
+      <Tab.Screen
+        name="ProjectsStack"
+        component={ProjectsStack}
+        options={publicScreenOption}
+      />
+      <Tab.Screen
+        name="ProfileStack"
+        component={isUserLoggedIn ? ProfileScreen : AuthProfileScreen}
+        options={publicScreenOption}
+      />
+    </Tab.Navigator>
   );
 };
 

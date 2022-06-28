@@ -11,6 +11,7 @@ import {
   CustomContainer,
   CustomKeyboardAwareScrollView,
 } from '~/components';
+import {useForgotPasswordAuth} from '~/hooks/user';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('required'),
@@ -24,24 +25,22 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
 
   const {handleSubmit, register, formState} = methods;
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: 'Forgot password',
-    });
-  }, []);
+  const {forgotPassword, loading: forgotLoading} = useForgotPasswordAuth();
 
-  const onSend = () => {};
+  const onSend = (formData: any) => {
+    forgotPassword(formData?.email);
+  };
 
   return (
-    <CustomContainer>
+    <CustomContainer isLoading={forgotLoading}>
       <FormProvider {...methods}>
         <CustomKeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}>
           <VStack px="4" pt="10" space="20">
             <Text fontSize="md">
-              Please write your email address that send a link for changing your
-              password
+              Please enter the email addresses linked to your HUDU account. A
+              link will be sent to reset your password.
             </Text>
             <VStack space="10">
               <CustomInput
@@ -52,7 +51,7 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
               <CustomButton
                 title="Send link"
                 height={verticalScale(45)}
-                onPress={() => handleSubmit(onSend)}
+                onPress={handleSubmit(onSend)}
               />
             </VStack>
           </VStack>

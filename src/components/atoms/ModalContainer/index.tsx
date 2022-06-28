@@ -1,6 +1,7 @@
 import React from 'react';
 import {Modal, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {scale} from '~/utils/style';
+import {CustomLoading} from '~/components';
 
 function ModalContainer({
   isVisible,
@@ -10,6 +11,7 @@ function ModalContainer({
   backgroundColor,
   justify = 'center',
   style = styles.modalInnerContainer,
+  loading,
 }: {
   isVisible: boolean;
   onClose: any;
@@ -19,6 +21,7 @@ function ModalContainer({
   backgroundColor?: string;
   justify?: any;
   style?: any;
+  loading?: boolean;
 }) {
   return (
     <Modal
@@ -43,6 +46,7 @@ function ModalContainer({
                   backgroundColor: backgroundColor || '#F8F8F8',
                 },
               ]}>
+              {loading && <CustomLoading />}
               {children}
             </View>
           </TouchableWithoutFeedback>

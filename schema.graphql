@@ -321,32 +321,55 @@ scalar Geometry
 type Query {
   user_login: ResponseBaseOfUsers
   user_getProfile(userId: Int): ResponseBaseOfUsers
+  user_getUsers: ListResponseBaseOfUsers
+  user_getAdminDashboard: ResponseBaseOfAdminDashboardDto
+  user_getActiveUsers: ListResponseBaseOfActiveUsers
   message_getConversation(conversationId: Int!): ListResponseBaseOfMessages
   message_getUserMessages: ListResponseBaseOfConversationDto
+  message_getConversationForUser(otherUserId: Int!): ResponseBaseOfConversations
   notification_getNotifications: ListResponseBaseOfNotification
-  project_getProject(projectId: Int!): ResponseBaseOfProjectDto
-  project_getProjects: ListResponseBaseOfProjectDto
+  project_getProject(projectId: Int!): SingleResponseBaseOfProjectDto
+  project_getProjects(
+    projectFilter: ProjectFilter
+    location: Position
+  ): ListResponseBaseOfProjectDto
   project_getUserLikeProject(projectId: Int!): ResponseBaseOfProjectDto
-  project_getUserLikeProjects: ListResponseBaseOfProjectDto
+  project_getUserLikeProjects(
+    projectFilter: ProjectFilter
+    location: Position
+  ): ListResponseBaseOfProjectDto
   project_getQuestions: ListResponseBaseOfQuestion
-  bid_getBids: ListResponseBaseOfBid
+  bid_getBids(
+    projectFilter: ProjectFilter
+    location: Position
+  ): ListResponseBaseOfBid
 }
 
 type Mutation {
   user_signUp: ResponseBaseOfUsers
   user_updateProfile(userInput: UserInput): ResponseBaseOfUsers
+  user_activationUser(isActive: Boolean!, userId: Int!): ResponseBaseOfUsers
   user_UpdateLastSeen: ResponseBaseOfUsers
+  user_sendEmail(email: EmailInput): ResponseStatus!
   message_createMessage(messageInput: MessageInput): ResponseBaseOfMessages
   message_removeConversation(conversationId: Int!): ResponseBase
   message_deleteMessage(messageId: Int!): ResponseBaseOfMessages
   notification_addNotification(
     notifications: [NotificationInputsInput]
   ): ListResponseBaseOfNotification
+  notification_deleteNotification(
+    notificationId: Int!
+  ): ResponseBaseOfNotification
   notification_readNotification(
     notificationId: Int!
   ): ResponseBaseOfNotification
   project_addProject(addProjectInput: AddProjectInput): ResponseBaseOfProject
   project_editProject(editProjectInput: EditProjectInput): ResponseBaseOfProject
+  project_deleteProject(projectId: Int!): ResponseBaseOfProject
+  project_addImageToProject(
+    imageAddress: String
+    projectId: Int!
+  ): ResponseBaseOfProjectImages
   project_finisheProject(projectId: Int!): ResponseBaseOfProject
   project_faileProject(projectId: Int!): ResponseBaseOfProject
   project_reopenProject(projectId: Int!): ResponseBaseOfProject
@@ -364,6 +387,15 @@ type Mutation {
 
 type Subscription {
   messageAdded(userId: Int!): Messages
+  notificationAdded(userId: Int!): Notification
+}
+
+type ActiveUsers {
+  activeUserCount: Int!
+  activeUsersId: String
+  id: Int!
+  isDeleted: Boolean!
+  createdDate: DateTime!
 }
 
 type Bid {
@@ -383,6 +415,7 @@ type Bid {
   project: Project
   projectId: Int!
   payments: [Payment]
+  notifications: [Notification]
   id: Int!
   isDeleted: Boolean!
   createdDate: DateTime!
@@ -404,6 +437,8 @@ type Conversations {
 }
 
 type Messages {
+  messageType: MessageTypes!
+  photoUrl: String
   createdAt: DateTime!
   conversationId: Int!
   conversation: Conversations
@@ -420,6 +455,10 @@ type Notification {
   description: String
   isReaded: Boolean!
   notificationType: NotificationType!
+  project: Project
+  projectId: Int
+  bid: Bid
+  bidId: Int
   userId: Int!
   user: Users
   id: Int!
@@ -450,6 +489,7 @@ type Project {
   streetAddress: String
   city: String
   state: String
+  projectDeadLine: DateTime!
   longitude: Float!
   latitude: Float!
   zipCode: String
@@ -457,6 +497,7 @@ type Project {
   questions: [Question]
   projectImages: [ProjectImages]
   userLikeProjects: [UserLikeProject]
+  notifications: [Notification]
   userId: Int!
   user: Users
   id: Int!
@@ -509,10 +550,15 @@ type Users {
   streetAddress: String
   city: String
   state: String
+  isActive: Boolean!
   longitude: Float!
   latitude: Float!
   zipCode: String
-  rate: Int!
+  asHuduRates: Float!
+  listersWhoRatedToMeCount: Int!
+  asListerRates: Float!
+  huduersWhoRatedToMeCount: Int!
+  averageRate: Float!
   payments: [Payment]
   userLikeProjects: [UserLikeProject]
   projects: [Project]
@@ -526,7 +572,18 @@ type Users {
   createdDate: DateTime!
 }
 
+type AdminDashboardDto {
+  activeBidsCount: Int!
+  activeProjectsCount: Int!
+  activeUsersCount: Int!
+  balance: Float!
+  activeUsers: [ActiveUsers]
+}
+
 type ConversationDto {
+  userEmail: String
+  userFirstName: String
+  userLastName: String
   subject: String
   conversationId: Int!
   user: Users
@@ -537,6 +594,7 @@ type ConversationDto {
 type ProjectDto {
   project: Project
   isLiked: Boolean!
+  bids: [Bid]
 }
 
 """
@@ -549,6 +607,11 @@ enum ApplyPolicy {
   AFTER_RESOLVER
 }
 
+"""
+The `DateTime` scalar represents an ISO-8601 compliant date time type.
+"""
+scalar DateTime
+
 enum BidStatus {
   WAITING
   IN_PROGRESS
@@ -558,10 +621,13 @@ enum BidStatus {
   FINISHED
 }
 
-"""
-The `DateTime` scalar represents an ISO-8601 compliant date time type.
-"""
-scalar DateTime
+enum MessageTypes {
+  TEXT
+  PHOTO
+  VIDEO
+  VOICE
+  FILE
+}
 
 enum NotificationType {
   NEW_BID_GIVEN
@@ -594,63 +660,14 @@ enum UserTypes {
   USER
 }
 
-type ResponseBaseOfUserLikeProject {
-  result: UserLikeProject
-  status: ResponseStatus!
-}
-
-input EditProjectInput {
-  id: Int!
-  title: String
-  description: String
-  duration: Int
-  availability: Availability
-  streetAddress: String
-  city: String
-  state: String
-  point: Position
-  zipCode: String
-  projectImages: [ProjectImagesInput]
-}
-
-input AddProjectInput {
-  title: String!
-  description: String!
-  duration: Int
-  availability: Availability!
-  streetAddress: String!
-  city: String!
-  state: String!
-  point: Position!
-  zipCode: String!
-  projectImages: [ProjectImagesInput]
-}
-
-type ResponseBaseOfProject {
-  result: Project
-  status: ResponseStatus!
-}
-
-type ResponseBaseOfNotification {
-  result: Notification
-  status: ResponseStatus!
-}
-
-input NotificationInputsInput {
-  title: String!
-  description: String!
-  userId: Int!
-}
-
 type ResponseBase {
   status: ResponseStatus!
 }
 
 input MessageInput {
   subject: String
-  programId: Int
-  careerId: Int
-  isChatWithCareer: Boolean!
+  messageType: MessageTypes!
+  photoUrl: String
   conversationId: Int
   receiverId: Int
   text: String
@@ -659,6 +676,52 @@ input MessageInput {
 type ResponseBaseOfMessages {
   result: Messages
   status: ResponseStatus!
+}
+
+input EmailInput {
+  to: String
+  subject: String
+  plainTextContent: String
+  htmlContent: String
+}
+
+enum ResponseStatus {
+  SUCCESS
+  NOT_FOUND
+  UNKNOWN_ERROR
+  NOT_ENOUGH_DATA
+  AUTHENTICATION_FAILED
+  USER_NOT_FOUND
+  ALREADY_EXIST
+  SELF_MESSAGE_NOT_ALLOWED
+  ALREADY_REMOVED
+  NOT_ALLOWED
+  ALREADY_FOLLOWED
+  SAME_ID
+  POST_NOT_FOUND
+  COMMENT_NOT_FOUND
+  INVALID_TIME_RANGE
+  TIME_CONFLICT
+  INVALID_TIME_SYNTAX
+  DIFFRENET_IDS
+  HOST_NOT_FOUND
+  ACCESS_DENIED
+  FAILED
+  USERNAME_ALREADY_EXIST
+  DURATION_IS_REQUIRED
+  ACTIVE_BIDS_EXIST
+  IN_PROGRESS_BID_EXIST
+  SELF_BID_NOT_ALLOWED
+  USER_IS_NOT_ACTIVE
+  SESSION_NOT_FOUND
+  STRIPE_ACCOUNT_NOT_EXIST
+  USER_DONT_HAVE_STRIPE_ACCOUNT
+  USER_DONT_HAVE_ENOUGH_BALANCE_IN_STRIP_ACCOUNT
+  PLAT_FORM_DONT_HAVE_ENOUGH_BALANCE_IN_STRIP_ACCOUNT
+  IN_VALID_AMOUNT_FOR_STRIPE_PAYMENT
+  FAILED_PAYMENT
+  FAILED_TO_WIDTHRAW
+  HUDUR_ACCOUNT_NEEDS_TO_HAVE_TRANSFER_ENABLED
 }
 
 input UserInput {
@@ -695,6 +758,20 @@ type ListResponseBaseOfQuestion {
   status: ResponseStatus!
 }
 
+type ResponseBaseOfProjectDto {
+  result: ProjectDto
+  status: ResponseStatus!
+}
+
+enum ProjectFilter {
+  LOW_TO_HIGH_BIDS
+  HIGH_TO_LOW_BIDS
+  CLOSET_TO_CURRENT_LOCATION
+  MY_ZIP_CODE
+  NEWEST_TO_OLDEST
+  OLDEST_TO_NEWEST
+}
+
 type ListResponseBaseOfProjectDto {
   result(
     skip: Int
@@ -705,7 +782,7 @@ type ListResponseBaseOfProjectDto {
   status: ResponseStatus!
 }
 
-type ResponseBaseOfProjectDto {
+type SingleResponseBaseOfProjectDto {
   result: ProjectDto
   status: ResponseStatus!
 }
@@ -717,6 +794,11 @@ type ListResponseBaseOfNotification {
     where: NotificationFilterInput
     order: [NotificationSortInput!]
   ): NotificationCollectionSegment
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfConversations {
+  result: Conversations
   status: ResponseStatus!
 }
 
@@ -740,8 +822,86 @@ type ListResponseBaseOfMessages {
   status: ResponseStatus!
 }
 
+type ListResponseBaseOfActiveUsers {
+  result(
+    skip: Int
+    take: Int
+    where: ActiveUsersFilterInput
+    order: [ActiveUsersSortInput!]
+  ): ActiveUsersCollectionSegment
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfAdminDashboardDto {
+  result: AdminDashboardDto
+  status: ResponseStatus!
+}
+
+type ListResponseBaseOfUsers {
+  result(
+    skip: Int
+    take: Int
+    where: UsersFilterInput
+    order: [UsersSortInput!]
+  ): UsersCollectionSegment
+  status: ResponseStatus!
+}
+
 type ResponseBaseOfUsers {
   result: Users
+  status: ResponseStatus!
+}
+
+input NotificationInputsInput {
+  title: String!
+  description: String!
+  userId: Int!
+}
+
+type ResponseBaseOfNotification {
+  result: Notification
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfProject {
+  result: Project
+  status: ResponseStatus!
+}
+
+input AddProjectInput {
+  title: String!
+  description: String!
+  duration: Int
+  availability: Availability!
+  streetAddress: String!
+  city: String!
+  state: String!
+  point: Position!
+  zipCode: String!
+  projectImages: [ProjectImagesInput]
+}
+
+input EditProjectInput {
+  id: Int!
+  title: String
+  description: String
+  duration: Int
+  availability: Availability
+  streetAddress: String
+  city: String
+  state: String
+  point: Position
+  zipCode: String
+  projectImages: [ProjectImagesInput]
+}
+
+type ResponseBaseOfProjectImages {
+  result: ProjectImages
+  status: ResponseStatus!
+}
+
+type ResponseBaseOfUserLikeProject {
+  result: UserLikeProject
   status: ResponseStatus!
 }
 
@@ -768,9 +928,10 @@ input BidInput {
 }
 
 input EditBidInput {
-  bidId: Int!
+  id: Int!
   amount: Float
   description: String
+  bidStatus: BidStatus!
 }
 
 input FeedbackInput {
@@ -800,6 +961,7 @@ input BidFilterInput {
   project: ProjectFilterInput
   projectId: ComparableInt32OperationFilterInput
   payments: ListFilterInputTypeOfPaymentFilterInput
+  notifications: ListFilterInputTypeOfNotificationFilterInput
   id: ComparableInt32OperationFilterInput
   isDeleted: BooleanOperationFilterInput
   createdDate: ComparableDateTimeOperationFilterInput
@@ -880,6 +1042,7 @@ input ProjectDtoFilterInput {
   or: [ProjectDtoFilterInput!]
   project: ProjectFilterInput
   isLiked: BooleanOperationFilterInput
+  bids: ListFilterInputTypeOfBidFilterInput
 }
 
 input ProjectDtoSortInput {
@@ -904,6 +1067,10 @@ input NotificationFilterInput {
   description: StringOperationFilterInput
   isReaded: BooleanOperationFilterInput
   notificationType: NotificationTypeOperationFilterInput
+  project: ProjectFilterInput
+  projectId: ComparableNullableOfInt32OperationFilterInput
+  bid: BidFilterInput
+  bidId: ComparableNullableOfInt32OperationFilterInput
   userId: ComparableInt32OperationFilterInput
   user: UsersFilterInput
   id: ComparableInt32OperationFilterInput
@@ -916,6 +1083,10 @@ input NotificationSortInput {
   description: SortEnumType
   isReaded: SortEnumType
   notificationType: SortEnumType
+  project: ProjectSortInput
+  projectId: SortEnumType
+  bid: BidSortInput
+  bidId: SortEnumType
   userId: SortEnumType
   user: UsersSortInput
   id: SortEnumType
@@ -936,6 +1107,9 @@ type NotificationCollectionSegment {
 input ConversationDtoFilterInput {
   and: [ConversationDtoFilterInput!]
   or: [ConversationDtoFilterInput!]
+  userEmail: StringOperationFilterInput
+  userFirstName: StringOperationFilterInput
+  userLastName: StringOperationFilterInput
   subject: StringOperationFilterInput
   conversationId: ComparableInt32OperationFilterInput
   user: UsersFilterInput
@@ -944,6 +1118,9 @@ input ConversationDtoFilterInput {
 }
 
 input ConversationDtoSortInput {
+  userEmail: SortEnumType
+  userFirstName: SortEnumType
+  userLastName: SortEnumType
   subject: SortEnumType
   conversationId: SortEnumType
   user: UsersSortInput
@@ -964,6 +1141,8 @@ type ConversationDtoCollectionSegment {
 input MessagesFilterInput {
   and: [MessagesFilterInput!]
   or: [MessagesFilterInput!]
+  messageType: MessageTypesOperationFilterInput
+  photoUrl: StringOperationFilterInput
   createdAt: ComparableDateTimeOperationFilterInput
   conversationId: ComparableInt32OperationFilterInput
   conversation: ConversationsFilterInput
@@ -976,6 +1155,8 @@ input MessagesFilterInput {
 }
 
 input MessagesSortInput {
+  messageType: SortEnumType
+  photoUrl: SortEnumType
   createdAt: SortEnumType
   conversationId: SortEnumType
   conversation: ConversationsSortInput
@@ -989,6 +1170,107 @@ input MessagesSortInput {
 
 type MessagesCollectionSegment {
   items: [Messages]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input ActiveUsersFilterInput {
+  and: [ActiveUsersFilterInput!]
+  or: [ActiveUsersFilterInput!]
+  activeUserCount: ComparableInt32OperationFilterInput
+  activeUsersId: StringOperationFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input ActiveUsersSortInput {
+  activeUserCount: SortEnumType
+  activeUsersId: SortEnumType
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+type ActiveUsersCollectionSegment {
+  items: [ActiveUsers]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input UsersFilterInput {
+  and: [UsersFilterInput!]
+  or: [UsersFilterInput!]
+  email: StringOperationFilterInput
+  userName: StringOperationFilterInput
+  lastSeen: ComparableDateTimeOperationFilterInput
+  userTypes: UserTypesOperationFilterInput
+  imageAddress: StringOperationFilterInput
+  firstName: StringOperationFilterInput
+  lastName: StringOperationFilterInput
+  bio: StringOperationFilterInput
+  streetAddress: StringOperationFilterInput
+  city: StringOperationFilterInput
+  state: StringOperationFilterInput
+  isActive: BooleanOperationFilterInput
+  longitude: ComparableDoubleOperationFilterInput
+  latitude: ComparableDoubleOperationFilterInput
+  zipCode: StringOperationFilterInput
+  asHuduRates: ComparableDoubleOperationFilterInput
+  listersWhoRatedToMeCount: ComparableInt32OperationFilterInput
+  asListerRates: ComparableDoubleOperationFilterInput
+  huduersWhoRatedToMeCount: ComparableInt32OperationFilterInput
+  averageRate: ComparableDoubleOperationFilterInput
+  payments: ListFilterInputTypeOfPaymentFilterInput
+  userLikeProjects: ListFilterInputTypeOfUserLikeProjectFilterInput
+  projects: ListFilterInputTypeOfProjectFilterInput
+  notifications: ListFilterInputTypeOfNotificationFilterInput
+  questions: ListFilterInputTypeOfQuestionFilterInput
+  hudus: ListFilterInputTypeOfBidFilterInput
+  listers: ListFilterInputTypeOfBidFilterInput
+  externalId: StringOperationFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input UsersSortInput {
+  email: SortEnumType
+  userName: SortEnumType
+  lastSeen: SortEnumType
+  userTypes: SortEnumType
+  imageAddress: SortEnumType
+  firstName: SortEnumType
+  lastName: SortEnumType
+  bio: SortEnumType
+  streetAddress: SortEnumType
+  city: SortEnumType
+  state: SortEnumType
+  isActive: SortEnumType
+  longitude: SortEnumType
+  latitude: SortEnumType
+  zipCode: SortEnumType
+  asHuduRates: SortEnumType
+  listersWhoRatedToMeCount: SortEnumType
+  asListerRates: SortEnumType
+  huduersWhoRatedToMeCount: SortEnumType
+  averageRate: SortEnumType
+  externalId: SortEnumType
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+type UsersCollectionSegment {
+  items: [Users]
 
   """
   Information to aid in pagination.
@@ -1039,37 +1321,6 @@ input BooleanOperationFilterInput {
   neq: Boolean
 }
 
-input UsersFilterInput {
-  and: [UsersFilterInput!]
-  or: [UsersFilterInput!]
-  email: StringOperationFilterInput
-  userName: StringOperationFilterInput
-  lastSeen: ComparableDateTimeOperationFilterInput
-  userTypes: UserTypesOperationFilterInput
-  imageAddress: StringOperationFilterInput
-  firstName: StringOperationFilterInput
-  lastName: StringOperationFilterInput
-  bio: StringOperationFilterInput
-  streetAddress: StringOperationFilterInput
-  city: StringOperationFilterInput
-  state: StringOperationFilterInput
-  longitude: ComparableDoubleOperationFilterInput
-  latitude: ComparableDoubleOperationFilterInput
-  zipCode: StringOperationFilterInput
-  rate: ComparableInt32OperationFilterInput
-  payments: ListFilterInputTypeOfPaymentFilterInput
-  userLikeProjects: ListFilterInputTypeOfUserLikeProjectFilterInput
-  projects: ListFilterInputTypeOfProjectFilterInput
-  notifications: ListFilterInputTypeOfNotificationFilterInput
-  questions: ListFilterInputTypeOfQuestionFilterInput
-  hudus: ListFilterInputTypeOfBidFilterInput
-  listers: ListFilterInputTypeOfBidFilterInput
-  externalId: StringOperationFilterInput
-  id: ComparableInt32OperationFilterInput
-  isDeleted: BooleanOperationFilterInput
-  createdDate: ComparableDateTimeOperationFilterInput
-}
-
 input ComparableInt32OperationFilterInput {
   eq: Int
   neq: Int
@@ -1096,6 +1347,7 @@ input ProjectFilterInput {
   streetAddress: StringOperationFilterInput
   city: StringOperationFilterInput
   state: StringOperationFilterInput
+  projectDeadLine: ComparableDateTimeOperationFilterInput
   longitude: ComparableDoubleOperationFilterInput
   latitude: ComparableDoubleOperationFilterInput
   zipCode: StringOperationFilterInput
@@ -1103,6 +1355,7 @@ input ProjectFilterInput {
   questions: ListFilterInputTypeOfQuestionFilterInput
   projectImages: ListFilterInputTypeOfProjectImagesFilterInput
   userLikeProjects: ListFilterInputTypeOfUserLikeProjectFilterInput
+  notifications: ListFilterInputTypeOfNotificationFilterInput
   userId: ComparableInt32OperationFilterInput
   user: UsersFilterInput
   id: ComparableInt32OperationFilterInput
@@ -1114,6 +1367,13 @@ input ListFilterInputTypeOfPaymentFilterInput {
   all: PaymentFilterInput
   none: PaymentFilterInput
   some: PaymentFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfNotificationFilterInput {
+  all: NotificationFilterInput
+  none: NotificationFilterInput
+  some: NotificationFilterInput
   any: Boolean
 }
 
@@ -1137,28 +1397,6 @@ enum SortEnumType {
   DESC
 }
 
-input UsersSortInput {
-  email: SortEnumType
-  userName: SortEnumType
-  lastSeen: SortEnumType
-  userTypes: SortEnumType
-  imageAddress: SortEnumType
-  firstName: SortEnumType
-  lastName: SortEnumType
-  bio: SortEnumType
-  streetAddress: SortEnumType
-  city: SortEnumType
-  state: SortEnumType
-  longitude: SortEnumType
-  latitude: SortEnumType
-  zipCode: SortEnumType
-  rate: SortEnumType
-  externalId: SortEnumType
-  id: SortEnumType
-  isDeleted: SortEnumType
-  createdDate: SortEnumType
-}
-
 input ProjectSortInput {
   projectStatus: SortEnumType
   title: SortEnumType
@@ -1168,6 +1406,7 @@ input ProjectSortInput {
   streetAddress: SortEnumType
   city: SortEnumType
   state: SortEnumType
+  projectDeadLine: SortEnumType
   longitude: SortEnumType
   latitude: SortEnumType
   zipCode: SortEnumType
@@ -1215,11 +1454,25 @@ input ListFilterInputTypeOfQuestionFilterInput {
   any: Boolean
 }
 
+input ListFilterInputTypeOfBidFilterInput {
+  all: BidFilterInput
+  none: BidFilterInput
+  some: BidFilterInput
+  any: Boolean
+}
+
 input NotificationTypeOperationFilterInput {
   eq: NotificationType
   neq: NotificationType
   in: [NotificationType!]
   nin: [NotificationType!]
+}
+
+input MessageTypesOperationFilterInput {
+  eq: MessageTypes
+  neq: MessageTypes
+  in: [MessageTypes!]
+  nin: [MessageTypes!]
 }
 
 input ConversationsFilterInput {
@@ -1271,20 +1524,6 @@ input ListFilterInputTypeOfProjectFilterInput {
   all: ProjectFilterInput
   none: ProjectFilterInput
   some: ProjectFilterInput
-  any: Boolean
-}
-
-input ListFilterInputTypeOfNotificationFilterInput {
-  all: NotificationFilterInput
-  none: NotificationFilterInput
-  some: NotificationFilterInput
-  any: Boolean
-}
-
-input ListFilterInputTypeOfBidFilterInput {
-  all: BidFilterInput
-  none: BidFilterInput
-  some: BidFilterInput
   any: Boolean
 }
 
@@ -1356,35 +1595,5 @@ input ProjectImagesFilterInput {
 }
 
 input ProjectImagesInput {
-  id: Int
   imageAddress: String
-}
-
-enum ResponseStatus {
-  SUCCESS
-  NOT_FOUND
-  UNKNOWN_ERROR
-  NOT_ENOUGH_DATA
-  AUTHENTICATION_FAILED
-  USER_NOT_FOUND
-  ALREADY_EXIST
-  SELF_MESSAGE_NOT_ALLOWED
-  ALREADY_REMOVED
-  NOT_ALLOWED
-  ALREADY_FOLLOWED
-  SAME_ID
-  POST_NOT_FOUND
-  COMMENT_NOT_FOUND
-  INVALID_TIME_RANGE
-  TIME_CONFLICT
-  INVALID_TIME_SYNTAX
-  DIFFRENET_IDS
-  HOST_NOT_FOUND
-  ACCESS_DENIED
-  FAILED
-  USERNAME_ALREADY_EXIST
-  DURATION_IS_REQUIRED
-  ACTIVE_BIDS_EXIST
-  IN_PROGRESS_BID_EXIST
-  SELF_BID_NOT_ALLOWED
 }

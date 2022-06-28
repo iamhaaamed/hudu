@@ -1,10 +1,16 @@
 import React, {useState} from 'react';
+import {
+  TextInput,
+  Platform,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+} from 'react-native';
+import {FormControl, Text, HStack, Box, Icon} from 'native-base';
 import {Colors} from '~/styles';
 import {useController} from 'react-hook-form';
-import {fontFamily, scale} from '~/utils/style';
+import {fontFamily, scale, verticalScale} from '~/utils/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TextInput, Platform, StyleSheet, TextStyle} from 'react-native';
-import {FormControl, Text, HStack, Box, Icon} from 'native-base';
 
 export default React.forwardRef(
   (
@@ -22,6 +28,13 @@ export default React.forwardRef(
       disabled,
       rightComponent,
       formState,
+      validation = false,
+      isHorizontal = false,
+      height = verticalScale(45),
+      labelFontSize = scale(14),
+      fontSize = scale(14),
+      autoFocus,
+      inputType,
     }: {
       name: any;
       placeholder?: string;
@@ -50,14 +63,36 @@ export default React.forwardRef(
       disabled?: boolean;
       rightComponent?: any;
       formState?: any;
+      validation?: boolean;
+      height?: number;
+      isHorizontal?: boolean;
+      labelFontSize?: number;
+      fontSize?: number;
+      autoFocus?: boolean;
+      inputType?: string | undefined;
     },
     ref: any,
   ) => {
     const {field, fieldState} = useController({name});
-    const [isFocused, setIsFocused] = useState(false);
+    const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [secureText, setSecureText] = useState<boolean>(true);
+
+    const handleSecurePassword = () => {
+      setSecureText(prevState => !prevState);
+    };
 
     const isValid = formState?.isValid;
     const isDirty = formState?.isDirty;
+
+    const borderColor = disabled
+      ? Colors.DISABLE_COLOR
+      : fieldState.error
+      ? Colors.ERROR
+      : !validation
+      ? Colors.BORDER_COLOR
+      : isDirty
+      ? Colors.SUCCESS
+      : Colors.BORDER_COLOR;
 
     const handleFocus = () => {
       setIsFocused(true);
@@ -70,20 +105,27 @@ export default React.forwardRef(
 
     return (
       <FormControl isInvalid={fieldState.error} w={{base: '100%'}}>
-        <Box mt={isFocused || field.value || fieldState.error ? '3' : '0'}>
+        <Box
+          mt={
+            isFocused || field.value || fieldState.error || isHorizontal
+              ? '3'
+              : '0'
+          }>
           {(isFocused || field.value || fieldState.error || disabled) && (
             <Text
               pl="2"
               pr="4"
-              left="6"
+              left="4"
               top="-12"
               zIndex={60}
               bg={Colors.WHITE}
               position="absolute"
-              fontSize={scale(14)}
+              fontSize={labelFontSize}
               fontFamily={fontFamily.regular}
               color={
-                field.value || fieldState.error || disabled
+                disabled
+                  ? Colors.DISABLE_COLOR
+                  : field.value || fieldState.error
                   ? Colors.INPUT_LABEL2
                   : Colors.BLACK_1
               }>
@@ -91,48 +133,61 @@ export default React.forwardRef(
             </Text>
           )}
           <HStack
+            h={textArea ? undefined : height}
             px="2"
-            borderWidth="0.5"
+            borderWidth="0.7"
             borderRadius="md"
             alignItems="center"
             bg={backgroundColor}
             justifyContent="center"
-            borderColor={
-              disabled
-                ? Colors.DISABLE_COLOR
-                : fieldState.error
-                ? Colors.ERROR
-                : isDirty
-                ? Colors.SUCCESS
-                : Colors.BORDER_COLOR
-            }>
+            borderColor={borderColor}>
             <TextInput
+              autoFocus={autoFocus}
               ref={ref}
               value={field.value}
               onFocus={handleFocus}
               onBlur={handleBlur}
               editable={!disabled}
               autoCapitalize="none"
-              placeholder={placeholder}
+              placeholder={
+                !isFocused ? (label ? label : placeholder) : placeholder
+              }
               keyboardType={keyboardType}
               onChangeText={field.onChange}
               numberOfLines={textArea ? 4 : 1}
               multiline={textArea ? true : false}
               textAlignVertical={textArea ? 'top' : 'center'}
+              secureTextEntry={inputType === 'password' ? secureText : false}
               placeholderTextColor={
                 disabled ? Colors.DISABLE_COLOR : Colors.PLACEHOLDER2
               }
               style={[
                 inputStyle,
                 {
-                  paddingTop: textArea ? 15 : 5,
-                  fontSize: isFocused ? scale(12) : scale(14),
+                  paddingTop: textArea ? 15 : 0,
+                  paddingBottom: textArea ? 15 : 0,
+                  fontSize: isFocused ? fontSize - 2 : fontSize,
                   textAlignVertical: textArea ? 'top' : 'center',
-                  color: color,
+                  color: disabled ? Colors.DISABLE_COLOR : color,
                 },
                 Platform.OS === 'ios' && {minHeight: 45},
               ]}
             />
+            {inputType === 'password' && (
+              <TouchableOpacity
+                onPress={handleSecurePassword}
+                activeOpacity={0.7}>
+                <Icon
+                  as={
+                    <Ionicons
+                      name={secureText ? 'eye-off-outline' : 'eye-outline'}
+                    />
+                  }
+                  size={scale(16)}
+                  color={Colors.BORDER_COLOR}
+                />
+              </TouchableOpacity>
+            )}
             {icon && !isFocused && (
               <Icon
                 size={scale(16)}
@@ -142,7 +197,7 @@ export default React.forwardRef(
             )}
             {rightText && (
               <Text
-                fontSize={scale(14)}
+                fontSize={fontSize}
                 fontFamily={fontFamily.regular}
                 color={disabled ? Colors.DISABLE_COLOR : Colors.RIGHT_TEXT}>
                 {rightText}
@@ -166,5 +221,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontFamily: fontFamily.regular,
+    height: '100%',
   },
 });

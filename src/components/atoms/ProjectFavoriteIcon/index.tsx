@@ -1,39 +1,73 @@
-import React, {useState} from 'react';
-import {TouchableOpacity} from 'react-native';
-import {Icon, Center, Spinner} from 'native-base';
+import React from 'react';
+import {Spinner, IconButton} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {scale} from '~/utils/style';
 import {Colors} from '~/styles';
+import {authStore, userDataStore} from '~/stores';
+import {showMessage} from 'react-native-flash-message';
+import {useProjectLike, useProjectUnLike} from '~/hooks/project';
 
-const ProjectFavoriteIcon = () => {
-  const [isActive, setIsActive] = useState(false);
-  const loading = false;
+const ProjectFavoriteIcon = ({
+  isLiked,
+  projectId,
+  size = 18,
+}: {
+  isLiked?: boolean;
+  projectId: number;
+  size?: number;
+}) => {
+  const {isUserLoggedIn} = authStore(state => state);
+  const {userData} = userDataStore(state => state);
+
+  const {mutate: projectLikeMutate, isLoading: projectLikeLoading} =
+    useProjectLike();
+  const {mutate: projectUnLikeMutate, isLoading: projectUnLikeLoading} =
+    useProjectUnLike();
 
   const onPressHandler = () => {
-    setIsActive(prevState => !prevState);
+    if (isUserLoggedIn) {
+      if (isLiked) {
+        const input = {projectId, userId: userData?.id};
+        projectUnLikeMutate(input, {
+          onSuccess: () => {},
+          onError: () => {},
+        });
+      } else {
+        projectLikeMutate(projectId, {
+          onSuccess: () => {},
+          onError: () => {},
+        });
+      }
+    } else {
+      showMessage({
+        message: 'You are not logged in',
+        type: 'info',
+        icon: 'info',
+        position: 'center',
+      });
+    }
   };
 
+  const loading = projectLikeLoading || projectUnLikeLoading;
+
   return (
-    <TouchableOpacity
+    <IconButton
       disabled={loading}
-      activeOpacity={0.9}
-      onPress={onPressHandler}>
-      <Center p="1" borderRadius="full" bg={Colors.WHITE}>
-        {loading ? (
-          <Spinner size={scale(9)} color={Colors.BLACK} />
+      onPress={onPressHandler}
+      bg={Colors.FAVORITE_RIPPLE_COLOR}
+      colorScheme={Colors.WHITE_RIPPLE_COLOR}
+      borderRadius="full"
+      icon={
+        loading ? (
+          <Spinner size={size} color={Colors.BLACK} />
         ) : (
-          <Icon
-            as={
-              <MaterialCommunityIcons
-                name={isActive ? 'heart' : 'heart-outline'}
-              />
-            }
-            size={scale(11)}
-            color={isActive ? Colors.ERROR : Colors.BLACK}
+          <MaterialCommunityIcons
+            name={isLiked ? 'heart' : 'heart-outline'}
+            color={isLiked ? Colors.ERROR : Colors.BLACK}
+            size={size}
           />
-        )}
-      </Center>
-    </TouchableOpacity>
+        )
+      }
+    />
   );
 };
 

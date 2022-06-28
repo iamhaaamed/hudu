@@ -62,11 +62,7 @@ export default function OnboardingScreen() {
         onPageSelected={e => setPage(e.nativeEvent.position)}>
         {data.map(({title, description, imageUrl}, index: number) => (
           <Box key={index + 1} flex={1} px="4">
-            <HStack
-              h={verticalScale(45)}
-              my="4"
-              alignItems="center"
-              justifyContent="space-between">
+            <HStack my="4" alignItems="center" justifyContent="space-between">
               {index > 0 ? (
                 <IconButton
                   onPress={() => moveBack(viewPager, page, 1)}
@@ -79,7 +75,16 @@ export default function OnboardingScreen() {
                   }
                 />
               ) : (
-                <Box size="2" />
+                <IconButton
+                  disabled={true}
+                  icon={
+                    <Ionicons
+                      name="chevron-back"
+                      color={Colors.TRANSPARENT}
+                      size={24}
+                    />
+                  }
+                />
               )}
               {index < data?.length - 1 && (
                 <TouchableOpacity activeOpacity={0.7} onPress={skipOnPress}>

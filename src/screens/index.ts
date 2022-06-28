@@ -24,6 +24,7 @@ export {default as ReviewsScreen} from './Profile/Reviews';
 export {default as SupportScreen} from './Profile/Support';
 export {default as EditProfileScreen} from './Profile/EditProfile';
 export {default as NotificationScreen} from './Profile/Notification';
+export {default as AuthProfileScreen} from './Profile/AuthProfileScreen';
 
 // Projects
 export {default as ProjectsScreen} from './Projects/ProjectsScreen';
