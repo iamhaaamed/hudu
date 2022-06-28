@@ -1,37 +1,21 @@
 import * as React from 'react';
-import Svg, {G, Path, Rect} from 'react-native-svg';
-import {scale} from '~/utils/style';
+import Svg, {Path} from 'react-native-svg';
 import {Colors} from '~/styles';
 
 export default function ProjectsIconFill({
-  size = scale(35),
   fillColor = Colors.PRIMARY,
-  backGroundColor = Colors.TAB_BAR_SHADOW,
 }: {
-  size?: number;
   fillColor?: string;
-  backGroundColor?: string;
 }) {
   return (
-    <Svg width="35" height="35" viewBox="0 0 35 35">
-      <G id="Group_344" data-name="Group 344" transform="translate(-249 -21.5)">
-        <Rect
-          id="Rectangle_6085"
-          data-name="Rectangle 6085"
-          width="35"
-          height="35"
-          rx="3"
-          transform="translate(249 21.5)"
-          fill={backGroundColor}
-        />
-        <Path
-          id="Union_3"
-          data-name="Union 3"
-          d="M4381,1353.092a3,3,0,0,1-3-3v-14a3,3,0,0,1,3-3h20a3,3,0,0,1,3,3v14a3,3,0,0,1-3,3Zm23.041-18.711h0Zm-3.24-1.806c.012.005-9.649,0-9.649,0l.7-1.669c.2-.342.833-2.586,2.49-2.586h6.457a2.888,2.888,0,0,1,3.242,2.834s0,3.194,0,3.227A3.647,3.647,0,0,0,4400.8,1332.575Z"
-          transform="translate(-4125 -1302.592)"
-          fill={fillColor}
-        />
-      </G>
+    <Svg width="23.813" height="22.654" viewBox="0 0 23.813 22.654">
+      <Path
+        id="Union_5"
+        data-name="Union 5"
+        d="M4381,1350.973a3,3,0,0,1-3-3v-12.29a3,3,0,0,1,3-3h17.776a3,3,0,0,1,3,3v12.29a3,3,0,0,1-3,3Zm20.813-17.111h0Zm-2.962-1.651c.011.005-8.824,0-8.824,0l.64-1.526c.187-.313.763-2.365,2.278-2.365h5.9a2.641,2.641,0,0,1,2.964,2.592v2.951A3.341,3.341,0,0,0,4398.851,1332.21Z"
+        transform="translate(-4378 -1328.318)"
+        fill={fillColor}
+      />
     </Svg>
   );
 }
