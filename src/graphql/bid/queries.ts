@@ -6,8 +6,10 @@ export const BID_GET_BIDS = gql`
     $take: Int
     $where: BidFilterInput
     $order: [BidSortInput!]
+    $projectFilter: ProjectFilter
+    $location: Position
   ) {
-    bid_getBids {
+    bid_getBids(projectFilter: $projectFilter, location: $location) {
       result(skip: $skip, take: $take, where: $where, order: $order) {
         items {
           bidStatus

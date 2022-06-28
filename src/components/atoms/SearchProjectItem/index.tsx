@@ -98,7 +98,7 @@ const SearchProjectItem = ({
             color={Colors.BLACK_1}>
             {item?.project?.bids?.length > 0 && lowBid !== -1
               ? 'Current low bid'
-              : 'Be the first bidder'}
+              : 'Be the first one to bid'}
           </Text>
           {item?.project?.bids?.length > 0 && lowBid !== -1 && (
             <Text

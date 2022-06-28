@@ -102,20 +102,17 @@ const SearchScreen = ({navigation}: any) => {
           <TextInput
             value={userQuery}
             onChangeText={onChange}
-            placeholder="Search project"
+            placeholder="Search projects"
             placeholderTextColor={Colors.BLACK_3}
             style={styles.input}
             autoFocus
           />
-          {userQuery?.length > 0 && (
-            <IconButton
-              onPress={closeOnPress}
-              bg={Colors.WHITE_RIPPLE_COLOR}
-              colorScheme={Colors.WHITE_RIPPLE_COLOR}
-              borderRadius="full"
-              icon={<EvilIcons name="close" color={Colors.BLACK_3} size={18} />}
-            />
-          )}
+          <IconButton
+            onPress={closeOnPress}
+            colorScheme={Colors.WHITE_RIPPLE_COLOR}
+            borderRadius="full"
+            icon={<EvilIcons name="close" color={Colors.BLACK_3} size={18} />}
+          />
         </HStack>
         <FlatList
           refreshing={isRefetching}

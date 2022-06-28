@@ -132,13 +132,15 @@ export default function LoginScreen({navigation}: NavigationProp) {
                 placeholder="Password"
                 {...{formState}}
                 validation
+                inputType="password"
               />
             </VStack>
             <Button
+              mx="1.5"
               variant="link"
               alignSelf="flex-end"
               onPress={() => navigation.navigate('ForgotPassword')}>
-              <Text color={Colors.PRIMARY}>Forgot Password ?</Text>
+              <Text color={Colors.PRIMARY}>Forgot password ?</Text>
             </Button>
             <Box px="4" py="4">
               <CustomButton

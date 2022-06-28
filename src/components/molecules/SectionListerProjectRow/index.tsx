@@ -107,6 +107,7 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
               <CustomImage
                 imageSource={item?.project?.projectImages?.[0]?.imageAddress}
                 style={styles.image}
+                resizeMode="stretch"
               />
               <VStack flex={1} space="1">
                 <HStack alignItems="center">
@@ -135,7 +136,7 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
                     color={Colors.BLACK_1}>
                     {item?.project?.bids?.length > 0 && lowBid !== -1
                       ? 'Current low bid'
-                      : 'Be the first bidder'}
+                      : 'Be the first one to bid'}
                   </Text>
                   {item?.project?.bids?.length > 0 && lowBid !== -1 && (
                     <Text

@@ -23,6 +23,8 @@ import {navigate} from '~/navigation/Methods';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {getLocationFromState, getStateNameFromShortName} from '~/utils/helper';
 import {useGetLocation} from '~/hooks/location';
+import {Config} from 'react-native-config';
+//import MapViewDirections from 'react-native-maps-directions';
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 dayjs.updateLocale('en', {
@@ -116,7 +118,7 @@ const SectionDescriptionRoute = forwardRef(
     const projectDeadLine = dayjs().diff(data?.projectDeadLine, 'day');
 
     useEffect(() => {
-      if (userData?.id === data?.userId || bids?.length > 0) {
+      if (userData?.id === data?.userId && bids?.length > 0) {
         setLocationData(zipCodeLocation);
       } else {
         const locationItem = getLocationFromState(data?.state);
@@ -172,7 +174,7 @@ const SectionDescriptionRoute = forwardRef(
               color={Colors.BLACK_1}>
               {data?.bids?.length > 0 && lowBid !== -1
                 ? 'Current low bid'
-                : 'Be the first bidder'}
+                : 'Be the first one to bid'}
             </Text>
             {data?.bids?.length > 0 && lowBid !== -1 && (
               <Text
@@ -221,44 +223,63 @@ const SectionDescriptionRoute = forwardRef(
             </Text>
           </HStack>
           <Box overflow="hidden" w="100%" borderRadius="lg">
-            <MapView
-              region={{
+            {locationData?.Latitude && locationData?.Longitude && (
+              <MapView
+                showsScale
+                zoomEnabled
+                ref={mapRef}
+                scrollEnabled
+                style={styles.map}
+                showsUserLocation={false}
+                provider={PROVIDER_GOOGLE}
+                showsMyLocationButton={false}
+                region={{
+                  latitude: locationData?.Latitude,
+                  longitude: locationData?.Longitude,
+                  latitudeDelta: 0.99,
+                  longitudeDelta: 0.99,
+                }}
+                onRegionChange={e => {
+                  const coordinate = e;
+                  setLocationData({
+                    Latitude: coordinate?.latitude,
+                    Longitude: coordinate?.longitude,
+                  });
+                }}>
+                {/* <MapViewDirections
+              origin={{
                 latitude: locationData?.Latitude || 40.7128,
                 longitude: locationData?.Longitude || 74.006,
-                latitudeDelta: 0.99,
-                longitudeDelta: 0.99,
+                // latitudeDelta: 0.99,
+                // longitudeDelta: 0.99,
               }}
-              onRegionChange={e => {
-                const coordinate = e;
-                setLocationData({
-                  Latitude: coordinate?.latitude,
-                  Longitude: coordinate?.longitude,
-                });
+              destination={{
+                latitude: 35.0078,
+                longitude: 97.0929,
               }}
-              ref={mapRef}
-              provider={PROVIDER_GOOGLE}
-              style={styles.map}
-              showsMyLocationButton={false}
-              showsUserLocation={false}
-              zoomEnabled
-              scrollEnabled
-              showsScale>
-              <Marker
-                coordinate={{
-                  latitude: locationData?.Latitude || 40.7128,
-                  longitude: locationData?.Longitude || 74.006,
-                }}>
-                <MarkerIcon />
-              </Marker>
-            </MapView>
+              apikey={Config.GOOGLE_MAPS_API_KEY}
+              onError={error => {
+                console.log({error});
+              }}
+            /> */}
+                <Marker
+                  coordinate={{
+                    latitude: locationData?.Latitude,
+                    longitude: locationData?.Longitude,
+                  }}>
+                  <MarkerIcon />
+                </Marker>
+              </MapView>
+            )}
           </Box>
-          {userData?.id !== data?.userId && (
-            <CustomButton
-              onPress={submitBidOnPress}
-              title="Submit bid"
-              height={verticalScale(45)}
-            />
-          )}
+          {userData?.id !== data?.userId &&
+            data?.projectStatus === 'BIDDING' && (
+              <CustomButton
+                onPress={submitBidOnPress}
+                title="Submit bid"
+                height={verticalScale(45)}
+              />
+            )}
         </VStack>
       ),
       [data],

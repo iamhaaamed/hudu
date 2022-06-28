@@ -13,7 +13,9 @@ export default function HudurReviewItem({
   index: number;
   arrayLength: number;
 }) {
-  if (item?.listersComment) {
+  console.log({item});
+
+  if (item?.hudusComment) {
     return (
       <VStack>
         <HStack space="1" minHeight={verticalScale(66)}>
@@ -22,7 +24,7 @@ export default function HudurReviewItem({
               fontSize={scale(13)}
               fontFamily={fontFamily.regular}
               color={Colors.BLACK_1}>
-              Lister :
+              {item?.hudu?.userName}
             </Text>
           </VStack>
           <VStack flex={1}>
@@ -31,13 +33,13 @@ export default function HudurReviewItem({
               fontFamily={fontFamily.regular}
               numberOfLines={3}
               color={Colors.PLACEHOLDER}>
-              {item?.listersComment}
+              {item?.hudusComment}
             </Text>
           </VStack>
           <VStack>
             <RatingStar
               disabled
-              rate={item?.listersRate}
+              rate={item?.hudusRate}
               showRating="right"
               size={12}
             />

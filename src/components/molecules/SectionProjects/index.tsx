@@ -34,10 +34,21 @@ const SectionProjects = () => {
   const today = dayjs(new Date());
 
   const [options, setOptions] = useState({
+    projectFilter: 'NEWEST_TO_OLDEST',
     location: [12, 12],
-    where: {project: {projectDeadLine: {lte: today}}},
+    where: {
+      project: {
+        and: [
+          {projectDeadLine: {lte: today}},
+          {projectStatus: {eq: 'BIDDING'}},
+        ],
+      },
+    },
   });
-  const [currentLocation, setCurrentLocation] = useState({location: [12, 12]});
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 12,
+    longitude: 12,
+  });
 
   useEffect(() => {
     getCurrentLocation();
@@ -72,7 +83,14 @@ const SectionProjects = () => {
       setOptions({
         projectFilter: sort,
         location: [currentLocation?.latitude, currentLocation?.longitude],
-        where: {project: {projectDeadLine: {lte: today}}},
+        where: {
+          project: {
+            and: [
+              {projectDeadLine: {lte: today}},
+              {projectStatus: {eq: 'BIDDING'}},
+            ],
+          },
+        },
       });
     }
   }, [sort]);

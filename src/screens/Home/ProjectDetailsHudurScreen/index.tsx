@@ -222,6 +222,7 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
       <SectionActiveBidsRoute
         ref={ActiveBidsRef}
         data={bids}
+        projectStatus={project?.project?.projectStatus}
         onScroll={activeBidsScrollHandler}
         {...sharedProps}
       />

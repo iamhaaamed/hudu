@@ -1,10 +1,16 @@
 import React, {useState} from 'react';
+import {
+  TextInput,
+  Platform,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+} from 'react-native';
+import {FormControl, Text, HStack, Box, Icon} from 'native-base';
 import {Colors} from '~/styles';
 import {useController} from 'react-hook-form';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TextInput, Platform, StyleSheet, TextStyle} from 'react-native';
-import {FormControl, Text, HStack, Box, Icon} from 'native-base';
 
 export default React.forwardRef(
   (
@@ -28,6 +34,7 @@ export default React.forwardRef(
       labelFontSize = scale(14),
       fontSize = scale(14),
       autoFocus,
+      inputType,
     }: {
       name: any;
       placeholder?: string;
@@ -62,11 +69,17 @@ export default React.forwardRef(
       labelFontSize?: number;
       fontSize?: number;
       autoFocus?: boolean;
+      inputType?: string | undefined;
     },
     ref: any,
   ) => {
     const {field, fieldState} = useController({name});
-    const [isFocused, setIsFocused] = useState(false);
+    const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [secureText, setSecureText] = useState<boolean>(true);
+
+    const handleSecurePassword = () => {
+      setSecureText(prevState => !prevState);
+    };
 
     const isValid = formState?.isValid;
     const isDirty = formState?.isDirty;
@@ -110,7 +123,9 @@ export default React.forwardRef(
               fontSize={labelFontSize}
               fontFamily={fontFamily.regular}
               color={
-                field.value || fieldState.error || disabled
+                disabled
+                  ? Colors.DISABLE_COLOR
+                  : field.value || fieldState.error
                   ? Colors.INPUT_LABEL2
                   : Colors.BLACK_1
               }>
@@ -142,6 +157,7 @@ export default React.forwardRef(
               numberOfLines={textArea ? 4 : 1}
               multiline={textArea ? true : false}
               textAlignVertical={textArea ? 'top' : 'center'}
+              secureTextEntry={inputType === 'password' ? secureText : false}
               placeholderTextColor={
                 disabled ? Colors.DISABLE_COLOR : Colors.PLACEHOLDER2
               }
@@ -152,11 +168,26 @@ export default React.forwardRef(
                   paddingBottom: textArea ? 15 : 0,
                   fontSize: isFocused ? fontSize - 2 : fontSize,
                   textAlignVertical: textArea ? 'top' : 'center',
-                  color: color,
+                  color: disabled ? Colors.DISABLE_COLOR : color,
                 },
                 Platform.OS === 'ios' && {minHeight: 45},
               ]}
             />
+            {inputType === 'password' && (
+              <TouchableOpacity
+                onPress={handleSecurePassword}
+                activeOpacity={0.7}>
+                <Icon
+                  as={
+                    <Ionicons
+                      name={secureText ? 'eye-off-outline' : 'eye-outline'}
+                    />
+                  }
+                  size={scale(16)}
+                  color={Colors.BORDER_COLOR}
+                />
+              </TouchableOpacity>
+            )}
             {icon && !isFocused && (
               <Icon
                 size={scale(16)}

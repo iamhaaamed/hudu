@@ -323,6 +323,7 @@ type Query {
   user_getProfile(userId: Int): ResponseBaseOfUsers
   user_getUsers: ListResponseBaseOfUsers
   user_getAdminDashboard: ResponseBaseOfAdminDashboardDto
+  user_getActiveUsers: ListResponseBaseOfActiveUsers
   message_getConversation(conversationId: Int!): ListResponseBaseOfMessages
   message_getUserMessages: ListResponseBaseOfConversationDto
   message_getConversationForUser(otherUserId: Int!): ResponseBaseOfConversations
@@ -338,7 +339,10 @@ type Query {
     location: Position
   ): ListResponseBaseOfProjectDto
   project_getQuestions: ListResponseBaseOfQuestion
-  bid_getBids: ListResponseBaseOfBid
+  bid_getBids(
+    projectFilter: ProjectFilter
+    location: Position
+  ): ListResponseBaseOfBid
 }
 
 type Mutation {
@@ -411,6 +415,7 @@ type Bid {
   project: Project
   projectId: Int!
   payments: [Payment]
+  notifications: [Notification]
   id: Int!
   isDeleted: Boolean!
   createdDate: DateTime!
@@ -450,7 +455,10 @@ type Notification {
   description: String
   isReaded: Boolean!
   notificationType: NotificationType!
-  entityId: Int
+  project: Project
+  projectId: Int
+  bid: Bid
+  bidId: Int
   userId: Int!
   user: Users
   id: Int!
@@ -489,6 +497,7 @@ type Project {
   questions: [Question]
   projectImages: [ProjectImages]
   userLikeProjects: [UserLikeProject]
+  notifications: [Notification]
   userId: Int!
   user: Users
   id: Int!
@@ -651,12 +660,6 @@ enum UserTypes {
   USER
 }
 
-input NotificationInputsInput {
-  title: String!
-  description: String!
-  userId: Int!
-}
-
 type ResponseBase {
   status: ResponseStatus!
 }
@@ -711,6 +714,14 @@ enum ResponseStatus {
   SELF_BID_NOT_ALLOWED
   USER_IS_NOT_ACTIVE
   SESSION_NOT_FOUND
+  STRIPE_ACCOUNT_NOT_EXIST
+  USER_DONT_HAVE_STRIPE_ACCOUNT
+  USER_DONT_HAVE_ENOUGH_BALANCE_IN_STRIP_ACCOUNT
+  PLAT_FORM_DONT_HAVE_ENOUGH_BALANCE_IN_STRIP_ACCOUNT
+  IN_VALID_AMOUNT_FOR_STRIPE_PAYMENT
+  FAILED_PAYMENT
+  FAILED_TO_WIDTHRAW
+  HUDUR_ACCOUNT_NEEDS_TO_HAVE_TRANSFER_ENABLED
 }
 
 input UserInput {
@@ -811,6 +822,16 @@ type ListResponseBaseOfMessages {
   status: ResponseStatus!
 }
 
+type ListResponseBaseOfActiveUsers {
+  result(
+    skip: Int
+    take: Int
+    where: ActiveUsersFilterInput
+    order: [ActiveUsersSortInput!]
+  ): ActiveUsersCollectionSegment
+  status: ResponseStatus!
+}
+
 type ResponseBaseOfAdminDashboardDto {
   result: AdminDashboardDto
   status: ResponseStatus!
@@ -829,6 +850,12 @@ type ListResponseBaseOfUsers {
 type ResponseBaseOfUsers {
   result: Users
   status: ResponseStatus!
+}
+
+input NotificationInputsInput {
+  title: String!
+  description: String!
+  userId: Int!
 }
 
 type ResponseBaseOfNotification {
@@ -934,6 +961,7 @@ input BidFilterInput {
   project: ProjectFilterInput
   projectId: ComparableInt32OperationFilterInput
   payments: ListFilterInputTypeOfPaymentFilterInput
+  notifications: ListFilterInputTypeOfNotificationFilterInput
   id: ComparableInt32OperationFilterInput
   isDeleted: BooleanOperationFilterInput
   createdDate: ComparableDateTimeOperationFilterInput
@@ -1039,7 +1067,10 @@ input NotificationFilterInput {
   description: StringOperationFilterInput
   isReaded: BooleanOperationFilterInput
   notificationType: NotificationTypeOperationFilterInput
-  entityId: ComparableNullableOfInt32OperationFilterInput
+  project: ProjectFilterInput
+  projectId: ComparableNullableOfInt32OperationFilterInput
+  bid: BidFilterInput
+  bidId: ComparableNullableOfInt32OperationFilterInput
   userId: ComparableInt32OperationFilterInput
   user: UsersFilterInput
   id: ComparableInt32OperationFilterInput
@@ -1052,7 +1083,10 @@ input NotificationSortInput {
   description: SortEnumType
   isReaded: SortEnumType
   notificationType: SortEnumType
-  entityId: SortEnumType
+  project: ProjectSortInput
+  projectId: SortEnumType
+  bid: BidSortInput
+  bidId: SortEnumType
   userId: SortEnumType
   user: UsersSortInput
   id: SortEnumType
@@ -1136,6 +1170,34 @@ input MessagesSortInput {
 
 type MessagesCollectionSegment {
   items: [Messages]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: CollectionSegmentInfo!
+  totalCount: Int!
+}
+
+input ActiveUsersFilterInput {
+  and: [ActiveUsersFilterInput!]
+  or: [ActiveUsersFilterInput!]
+  activeUserCount: ComparableInt32OperationFilterInput
+  activeUsersId: StringOperationFilterInput
+  id: ComparableInt32OperationFilterInput
+  isDeleted: BooleanOperationFilterInput
+  createdDate: ComparableDateTimeOperationFilterInput
+}
+
+input ActiveUsersSortInput {
+  activeUserCount: SortEnumType
+  activeUsersId: SortEnumType
+  id: SortEnumType
+  isDeleted: SortEnumType
+  createdDate: SortEnumType
+}
+
+type ActiveUsersCollectionSegment {
+  items: [ActiveUsers]
 
   """
   Information to aid in pagination.
@@ -1293,6 +1355,7 @@ input ProjectFilterInput {
   questions: ListFilterInputTypeOfQuestionFilterInput
   projectImages: ListFilterInputTypeOfProjectImagesFilterInput
   userLikeProjects: ListFilterInputTypeOfUserLikeProjectFilterInput
+  notifications: ListFilterInputTypeOfNotificationFilterInput
   userId: ComparableInt32OperationFilterInput
   user: UsersFilterInput
   id: ComparableInt32OperationFilterInput
@@ -1304,6 +1367,13 @@ input ListFilterInputTypeOfPaymentFilterInput {
   all: PaymentFilterInput
   none: PaymentFilterInput
   some: PaymentFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfNotificationFilterInput {
+  all: NotificationFilterInput
+  none: NotificationFilterInput
+  some: NotificationFilterInput
   any: Boolean
 }
 
@@ -1454,13 +1524,6 @@ input ListFilterInputTypeOfProjectFilterInput {
   all: ProjectFilterInput
   none: ProjectFilterInput
   some: ProjectFilterInput
-  any: Boolean
-}
-
-input ListFilterInputTypeOfNotificationFilterInput {
-  all: NotificationFilterInput
-  none: NotificationFilterInput
-  some: NotificationFilterInput
   any: Boolean
 }
 

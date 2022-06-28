@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, FlatList} from 'react-native';
 import {HStack, Center, Box, Flex} from 'native-base';
 import {scale} from '~/utils/style';
@@ -14,6 +14,9 @@ import {
 } from '~/components';
 import {useGetBids} from '~/hooks/bid';
 import {authStore, userDataStore} from '~/stores';
+import {requestLocationPermission} from '~/utils/getPermissions';
+import {showMessage} from 'react-native-flash-message';
+import Geolocation from 'react-native-geolocation-service';
 
 const schema = yup.object().shape({
   sort: yup.string(),
@@ -28,22 +31,67 @@ const SectionHuduUrProjects = () => {
     mode: 'onChange',
   });
 
-  const options = isUserLoggedIn
-    ? {where: {huduId: {eq: userData?.id}}}
-    : {enabled: false};
+  const {register, watch} = methods;
+
+  const sort = watch('sort');
+
+  const [options, setOptions] = useState({
+    projectFilter: 'NEWEST_TO_OLDEST',
+    location: [12, 12],
+    where: isUserLoggedIn ? {huduId: {eq: userData?.id}} : {},
+  });
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 12,
+    longitude: 12,
+  });
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  const getCurrentLocation = async () => {
+    if (await requestLocationPermission()) {
+      Geolocation.getCurrentPosition(
+        position => {
+          const {latitude, longitude} = position.coords;
+          setCurrentLocation({
+            latitude,
+            longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.091,
+          });
+        },
+        (error: any) => {
+          showMessage({
+            message: JSON.stringify(error),
+            type: 'danger',
+            icon: 'danger',
+          });
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (sort) {
+      setOptions({
+        projectFilter: sort,
+        location: [currentLocation?.latitude, currentLocation?.longitude],
+        where: {huduId: {eq: userData?.id}},
+      });
+    }
+  }, [sort]);
 
   const {
     isLoading: getBidsLoading,
     data: getBids,
     fetchNextPage: fetchNextPageGetBids,
     hasNextPage: hasNextPageGetBids,
+    isRefetching,
   } = useGetBids(options);
 
   const projects = getBids?.pages ?? [];
-
-  const {register, watch} = methods;
-
-  const sort = watch('sort');
 
   const onLoadMore = () => {
     if (hasNextPageGetBids) {
@@ -72,6 +120,7 @@ const SectionHuduUrProjects = () => {
             </HStack>
           </FormProvider>
           <FlatList
+            refreshing={isRefetching}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.contentContainerStyle}
             data={projects}

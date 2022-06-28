@@ -37,7 +37,10 @@ const SectionListerProjects = () => {
     location: [12, 12],
     where: {project: {userId: {eq: userData?.id}}},
   });
-  const [currentLocation, setCurrentLocation] = useState({location: [12, 12]});
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 12,
+    longitude: 12,
+  });
 
   useEffect(() => {
     getCurrentLocation();

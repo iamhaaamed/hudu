@@ -29,7 +29,7 @@ const SectionSearchBox = () => {
             fontSize={scale(12)}
             fontFamily={fontFamily.regular}
             color={Colors.BLACK_1}>
-            Search project
+            Search projects
           </Text>
         </HStack>
       </TouchableOpacity>

@@ -30,7 +30,9 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   const {mutate: mutateDeleteBid, isLoading: deleteBidLoading} = useDeleteBid();
 
   const itemOnPress = () => {
-    navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
+    if (item?.bidStatus === 'IN_PROGRESS' || item?.bidStatus === 'FINISHED') {
+      navigate('ProjectDetailsHudur', {projectId: item?.projectId});
+    }
   };
 
   const deleteOnPress = () => {
