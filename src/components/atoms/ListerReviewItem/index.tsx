@@ -13,8 +13,6 @@ export default function HudurReviewItem({
   index: number;
   arrayLength: number;
 }) {
-  console.log({item});
-
   if (item?.hudusComment) {
     return (
       <VStack>
