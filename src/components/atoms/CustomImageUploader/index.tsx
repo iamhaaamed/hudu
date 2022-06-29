@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
-import {Center, Icon, Spinner} from 'native-base';
+import {Center, Spinner} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AttachmentPickerModal} from '~/components';
 import {Colors} from '~/styles';
@@ -42,10 +42,10 @@ const CustomImageUploader = ({onUploadImage}: {onUploadImage?: any}) => {
           {isUploading ? (
             <Spinner size={scale(16)} color={Colors.BLACK_3} />
           ) : (
-            <Icon
-              as={<MaterialCommunityIcons name="plus" />}
+            <MaterialCommunityIcons
+              name="plus"
               color={Colors.BLACK_3}
-              size={scale(32)}
+              size={32}
             />
           )}
         </Center>

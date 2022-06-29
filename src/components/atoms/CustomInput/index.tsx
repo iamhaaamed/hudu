@@ -6,7 +6,7 @@ import {
   TextStyle,
   TouchableOpacity,
 } from 'react-native';
-import {FormControl, Text, HStack, Box, Icon} from 'native-base';
+import {FormControl, Text, HStack, Box} from 'native-base';
 import {Colors} from '~/styles';
 import {useController} from 'react-hook-form';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
@@ -177,22 +177,18 @@ export default React.forwardRef(
               <TouchableOpacity
                 onPress={handleSecurePassword}
                 activeOpacity={0.7}>
-                <Icon
-                  as={
-                    <Ionicons
-                      name={secureText ? 'eye-off-outline' : 'eye-outline'}
-                    />
-                  }
-                  size={scale(16)}
+                <Ionicons
+                  name={secureText ? 'eye-off-outline' : 'eye-outline'}
                   color={Colors.BORDER_COLOR}
+                  size={16}
                 />
               </TouchableOpacity>
             )}
             {icon && !isFocused && (
-              <Icon
-                size={scale(16)}
-                as={<Ionicons name={icon} />}
+              <Ionicons
+                name={icon}
                 color={disabled ? Colors.DISABLE_COLOR : Colors.BLACK_3}
+                size={16}
               />
             )}
             {rightText && (

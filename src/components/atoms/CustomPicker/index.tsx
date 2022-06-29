@@ -6,7 +6,6 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {
-  Icon,
   FormControl,
   HStack,
   Box,
@@ -222,9 +221,9 @@ export default React.forwardRef(
                     : placeholder
                   : placeholder}
               </Text>
-              <Icon
-                as={<MaterialCommunityIcons name="chevron-down" />}
-                size={scale(22)}
+              <MaterialCommunityIcons
+                name="chevron-down"
+                size={22}
                 color={Colors.BLACK_2}
               />
             </HStack>
