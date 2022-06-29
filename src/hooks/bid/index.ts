@@ -38,7 +38,7 @@ export const useGetBids = (options: any = {}) => {
     Bid_GetBidsQueryVariables,
     any
   >(
-    [queryKeys.bids, options],
+    [queryKeys.bids],
     async ({pageParam = 0}) => {
       return graphQLClient.request(BID_GET_BIDS, {
         skip: pageParam * PAGE_SIZE,

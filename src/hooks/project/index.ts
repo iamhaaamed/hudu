@@ -68,7 +68,7 @@ export const useGetProject = (options: any = {}) => {
     Project_GetProjectQueryVariables,
     any
   >(
-    [queryKeys.project, options],
+    [queryKeys.project],
     async () => {
       return graphQLClient.request(PROJECT_GET_PROJECT, options);
     },
@@ -89,7 +89,7 @@ export const useGetProjects = (options: any = {}) => {
     Project_GetProjectsQueryVariables,
     any
   >(
-    [queryKeys.projects, options],
+    [queryKeys.projects],
     async ({pageParam = 0}) => {
       return graphQLClient.request(PROJECT_GET_PROJECTS, {
         skip: pageParam * PAGE_SIZE,
@@ -127,7 +127,7 @@ export const useGetQuestions = (options: any = {}) => {
     Project_GetQuestionsQueryVariables,
     any
   >(
-    [queryKeys.questions, options],
+    [queryKeys.questions],
     async ({pageParam = 0}) => {
       return graphQLClient.request(PROJECT_GET_QUESTIONS, {
         skip: pageParam * PAGE_SIZE,
@@ -186,7 +186,7 @@ export const useGetUserLikeProjects = (options: any = {}) => {
     Project_GetUserLikeProjectsQueryVariables,
     any
   >(
-    [queryKeys.userLikeProjects, options],
+    [queryKeys.userLikeProjects],
     async ({pageParam = 0}) => {
       return graphQLClient.request(PROJECT_GET_USER_LIKE_PROJECTS, {
         skip: pageParam * PAGE_SIZE,
@@ -258,17 +258,7 @@ export const useAddProject = () => {
       return graphQLClient.request(PROJECT_ADD_PROJECT, {addProjectInput});
     },
     {
-      onSuccess: successData => {
-        if (
-          successData?.project_addProject?.status === ResponseStatus.Success
-        ) {
-          queryClient.invalidateQueries(queryKeys.projects);
-        } else {
-          showMessage(
-            getResponseMessage(successData?.project_addProject?.status),
-          );
-        }
-      },
+      onSuccess: () => {},
       onError: (errorData: any) => {
         console.log('project_addProjectError=>', errorData);
         showMessage({

@@ -1,10 +1,15 @@
 import React, {forwardRef, useCallback, memo} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {Box, IconButton, VStack} from 'native-base';
 import Animated from 'react-native-reanimated';
 import * as yup from 'yup';
 import {Colors} from '~/styles';
-import {CustomInput, QuestionItem, CustomLoading} from '~/components';
+import {
+  CustomInput,
+  QuestionItem,
+  CustomLoading,
+  EmptyData,
+} from '~/components';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
 import {SendIcon} from '~/assets/icons';
@@ -97,35 +102,40 @@ const SectionQuestionRoute = forwardRef(
             scrollIndicatorInsets,
           }}
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => <EmptyData flex={0.1} />}
           ItemSeparatorComponent={ItemSeparatorComponent}
         />
         {isUserLoggedIn && userData?.id !== listerId && (
-          <VStack px="4" py="4">
-            <FormProvider {...methods}>
-              <CustomInput
-                {...register('message')}
-                placeholder="Cannot find your question? Type it here"
-                backgroundColor={Colors.WHITE}
-                {...{formState}}
-                rightComponent={() => (
-                  <IconButton
-                    onPress={handleSubmit(sendOnPress)}
-                    colorScheme={Colors.WHITE_RIPPLE_COLOR}
-                    borderRadius="full"
-                    icon={
-                      <SendIcon
-                        fillColor={
-                          messageText?.length > 0
-                            ? Colors.PRIMARY
-                            : Colors.BLACK_1
+          <Box position="absolute" bottom="0" w="100%">
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+              <VStack px="4" py="4">
+                <FormProvider {...methods}>
+                  <CustomInput
+                    {...register('message')}
+                    placeholder="Cannot find your question? Type it here"
+                    backgroundColor={Colors.WHITE}
+                    {...{formState}}
+                    rightComponent={() => (
+                      <IconButton
+                        onPress={handleSubmit(sendOnPress)}
+                        colorScheme={Colors.WHITE_RIPPLE_COLOR}
+                        borderRadius="full"
+                        icon={
+                          <SendIcon
+                            fillColor={
+                              messageText?.length > 0
+                                ? Colors.PRIMARY
+                                : Colors.BLACK_1
+                            }
+                          />
                         }
                       />
-                    }
+                    )}
                   />
-                )}
-              />
-            </FormProvider>
-          </VStack>
+                </FormProvider>
+              </VStack>
+            </TouchableWithoutFeedback>
+          </Box>
         )}
       </VStack>
     );
