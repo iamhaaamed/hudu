@@ -8,19 +8,19 @@ export async function requestLocationPermission(): Promise<boolean> {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
 
-      const grantedAllTheTime = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-        //@ts-ignore
-        {
-          title: 'Background Location Permission',
-          message:
-            'Drives And Detours collects location data to record the route you drive even when the app is closed or not in use.',
-        },
-      );
+      // const grantedAllTheTime = await PermissionsAndroid.request(
+      //   PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+      //   //@ts-ignore
+      //   {
+      //     title: 'Background Location Permission',
+      //     message:
+      //       'Hudu collects location data to record the route you drive even when the app is closed or not in use.',
+      //   },
+      // );
 
       return (
-        granted === PermissionsAndroid.RESULTS.GRANTED ||
-        grantedAllTheTime === PermissionsAndroid.RESULTS.GRANTED
+        granted === PermissionsAndroid.RESULTS.GRANTED
+        //|| grantedAllTheTime === PermissionsAndroid.RESULTS.GRANTED
       );
     }
 
@@ -33,6 +33,7 @@ export async function requestLocationPermission(): Promise<boolean> {
   }
   return false;
 }
+
 export async function requestWritePermission() {
   const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
 
