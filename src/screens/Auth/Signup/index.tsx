@@ -134,6 +134,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
               <CustomInput
                 {...register('email')}
                 placeholder="Email"
+                keyboardType="email-address"
                 {...{formState}}
                 validation
               />
