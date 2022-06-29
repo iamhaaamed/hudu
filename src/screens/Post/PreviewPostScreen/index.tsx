@@ -13,8 +13,13 @@ import {resetRoot} from '~/navigation/Methods';
 import {useAddProject} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
 import {useGetLocation} from '~/hooks/location';
+import {showMessage} from 'react-native-flash-message';
+import {getResponseMessage} from '~/utils/helper';
+import queryKeys from '~/constants/queryKeys';
+import {useQueryClient} from 'react-query';
 
 const PreviewPostScreen = ({navigation, route}: any) => {
+  const queryClient = useQueryClient();
   const {params, availability} = route?.params;
 
   const {mutate: addProjectMutate, isLoading: addProjectLoading} =
@@ -46,7 +51,13 @@ const PreviewPostScreen = ({navigation, route}: any) => {
                 successData?.project_addProject?.status ===
                 ResponseStatus.Success
               ) {
+                queryClient.invalidateQueries(queryKeys.projects);
+                queryClient.invalidateQueries(queryKeys.bids);
                 setQuestionModalVisible(true);
+              } else {
+                showMessage(
+                  getResponseMessage(successData?.project_addProject?.status),
+                );
               }
             },
           });

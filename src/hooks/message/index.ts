@@ -33,7 +33,7 @@ export const useGetConversation = (options: any = {}) => {
     Message_GetConversationQueryVariables,
     any
   >(
-    [queryKeys.conversation, options],
+    [queryKeys.conversation],
     async ({pageParam = 0}) => {
       return graphQLClient.request(MESSAGE_GET_CONVERSATION, {
         skip: pageParam * PAGE_SIZE,
@@ -71,7 +71,7 @@ export const useGetUserMessages = (options: any = {}) => {
     Message_GetUserMessagesQueryVariables,
     any
   >(
-    [queryKeys.userMessages, options],
+    [queryKeys.userMessages],
     async ({pageParam = 0}) => {
       return graphQLClient.request(MESSAGE_GET_USER_MESSAGES, {
         skip: pageParam * PAGE_SIZE,
