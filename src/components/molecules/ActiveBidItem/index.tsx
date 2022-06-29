@@ -118,8 +118,8 @@ const ActiveBidItem = ({
           isCancelled
             ? Colors.CANCEL_CARD_BACKGROUND
             : inProgress
-            ? Colors.WHITE
-            : Colors.CANCEL_CARD_BACKGROUND
+            ? Colors.CANCEL_CARD_BACKGROUND
+            : Colors.WHITE
         }
         shadow="2">
         <TouchableOpacity
@@ -187,8 +187,8 @@ const ActiveBidItem = ({
                   isCancelled
                     ? Colors.PLACEHOLDER
                     : inProgress
-                    ? Colors.PRIMARY
-                    : Colors.CANCEL_CARD_BACKGROUND
+                    ? Colors.CANCEL_CARD_BACKGROUND
+                    : Colors.PRIMARY
                 }>
                 $ {item?.amount}
               </Text>
