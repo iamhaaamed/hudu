@@ -1,6 +1,6 @@
 import React, {useMemo, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import {HStack, Text, VStack, Center, Icon} from 'native-base';
+import {HStack, Text, VStack, Center} from 'native-base';
 import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
 import {
@@ -74,8 +74,8 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
           ml="1"
           w={scale(59)}
           borderLeftRadius="lg">
-          <Icon
-            as={<Ionicons name="trash-outline" />}
+          <Ionicons
+            name="trash-outline"
             size={scale(24)}
             color={Colors.DELETE}
           />
@@ -206,9 +206,8 @@ import Feather from 'react-native-vector-icons/Feather';
           mr="1"
           w={scale(59)}
           borderRightRadius="lg">
-          <Icon
-            as={<Feather name="edit" />}
-            size={scale(24)}
+          <Feather name="edit"
+          size={scale(24)}
             color={Colors.BLACK_3}
           />
         </Center>
