@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {VStack, Center} from 'native-base';
 import {
   ModalContainer,
@@ -59,20 +59,30 @@ const ReviewModal = ({
       style={styles.modal}
       loading={loading}>
       <FormProvider {...methods}>
-        <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
-          <ModalHeader text={title} onPress={onCloseHandler} />
-          <Center>
-            <RatingStar spacing={3} size={28} rate={rate} onChange={setRate} />
-          </Center>
-          <CustomInput
-            {...register('review')}
-            placeholder="Your feedback"
-            backgroundColor={Colors.WHITE}
-            textArea
-            {...{formState}}
-          />
-          <CustomButton title="Done" onPress={handleSubmit(onSubmitHandler)} />
-        </VStack>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
+            <ModalHeader text={title} onPress={onCloseHandler} />
+            <Center>
+              <RatingStar
+                spacing={3}
+                size={28}
+                rate={rate}
+                onChange={setRate}
+              />
+            </Center>
+            <CustomInput
+              {...register('review')}
+              placeholder="Your feedback"
+              backgroundColor={Colors.WHITE}
+              textArea
+              {...{formState}}
+            />
+            <CustomButton
+              title="Done"
+              onPress={handleSubmit(onSubmitHandler)}
+            />
+          </VStack>
+        </TouchableWithoutFeedback>
       </FormProvider>
     </ModalContainer>
   );
