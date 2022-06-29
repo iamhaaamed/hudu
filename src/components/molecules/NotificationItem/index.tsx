@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Colors} from '~/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Text, Badge, HStack, IconButton, Spinner, VStack} from 'native-base';
+import {Text, Badge, HStack, Spinner, VStack} from 'native-base';
 import {useDeleteNotification, useReadNotification} from '~/hooks/notification';
 import {TouchableOpacity} from 'react-native';
 import {fontFamily, scale} from '~/utils/style';
@@ -52,7 +52,7 @@ const NotificationItem = ({item}: {item: any}) => {
     <TouchableOpacity activeOpacity={0.7} onPress={onPressHandler}>
       <HStack
         mb="3"
-        px="2"
+        p="2"
         w="100%"
         rounded={10}
         borderWidth="1"
@@ -60,38 +60,25 @@ const NotificationItem = ({item}: {item: any}) => {
         borderColor={Colors.GARY_2}>
         {!item?.isReaded && (
           <Badge
+            mt="1"
             px="1"
-            mr="2"
             h="3"
             w="3"
+            mr="2"
             rounded="full"
             variant="solid"
             colorScheme="warning"
           />
         )}
         <VStack flex={1}>
-          <HStack alignItems="center">
-            <Text
-              color={Colors.BLACK_1}
-              fontFamily={fontFamily.regular}
-              fontSize={scale(13)}
-              flex={1}>
-              {getNotificationType()}
-              {item?.title}
-            </Text>
-            <IconButton
-              rounded="full"
-              onPress={deleteOnPress}
-              colorScheme={Colors.RED_RIPPLE_COLOR}
-              icon={
-                deleteNotificationLoading ? (
-                  <Spinner color={Colors.BLACK_3} size={24} />
-                ) : (
-                  <Icon name="close" color={Colors.BLACK_3} size={24} />
-                )
-              }
-            />
-          </HStack>
+          <Text
+            color={Colors.BLACK_1}
+            fontFamily={fontFamily.regular}
+            fontSize={scale(13)}
+            flex={1}>
+            {getNotificationType()}
+            {item?.title}
+          </Text>
           <Text
             color={Colors.PLACEHOLDER}
             fontFamily={fontFamily.regular}
@@ -100,6 +87,13 @@ const NotificationItem = ({item}: {item: any}) => {
             {item?.project?.title}
           </Text>
         </VStack>
+        <TouchableOpacity activeOpacity={0.7} onPress={deleteOnPress}>
+          {deleteNotificationLoading ? (
+            <Spinner color={Colors.BLACK_3} size={24} />
+          ) : (
+            <Icon name="close" color={Colors.BLACK_3} size={24} />
+          )}
+        </TouchableOpacity>
       </HStack>
     </TouchableOpacity>
   );
