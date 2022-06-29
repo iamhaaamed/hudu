@@ -29,6 +29,13 @@
             {
               "client_id": "1093284278259-bcerm7etc8neu80hup38ii068s5keo0q.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1093284278259-vkl64fe2kfrf160kbsmlnsunl8o5t4b6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.Hudu"
+              }
             }
           ]
         }
