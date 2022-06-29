@@ -4,3 +4,4 @@
 ios/GoogleService-Info.plist merge=ours
 android/app/google-services.json merge=ours
 android/app/key.jks merge=ours
+.env merge=ours
