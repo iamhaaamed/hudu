@@ -46,6 +46,7 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
   const {projectId} = route?.params;
 
   const getBidsOption = {
+    projectFilter: 'NEWEST_TO_OLDEST',
     location: [12, 12],
     where: {projectId: {eq: projectId}},
   };

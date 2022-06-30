@@ -27,11 +27,7 @@ const LinkItem = (props: LinkItemProps) => {
             {props.title}
           </Text>
           {!props.last && (
-            <Icon
-              size={scale(16)}
-              name="chevron-forward"
-              color={Colors.BLACK_3}
-            />
+            <Icon size={16} name="chevron-forward" color={Colors.BLACK_3} />
           )}
         </HStack>
       </TouchableOpacity>

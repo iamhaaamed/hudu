@@ -34,6 +34,7 @@ const SectionListerProjects = () => {
   const sort = watch('sort');
 
   const [options, setOptions] = useState({
+    projectFilter: 'NEWEST_TO_OLDEST',
     location: [12, 12],
     where: {project: {userId: {eq: userData?.id}}},
   });

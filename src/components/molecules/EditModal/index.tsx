@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {VStack} from 'native-base';
 import {
   ModalContainer,
@@ -65,32 +65,34 @@ const EditModal = ({
       style={styles.modal}
       loading={loading}>
       <FormProvider {...methods}>
-        <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
-          <ModalHeader text={title} onPress={onCloseHandler} />
-          <CustomInput
-            autoFocus
-            {...register('amount')}
-            label="Bid amount"
-            placeholder="0"
-            backgroundColor={Colors.WHITE}
-            keyboardType="numeric"
-            rightText="$"
-            {...{formState}}
-          />
-          <CustomInput
-            {...register('description')}
-            label="Describe your proposal"
-            placeholder="Enter Describe your proposal"
-            backgroundColor={Colors.WHITE}
-            textArea
-            inputStyle={styles.input}
-            {...{formState}}
-          />
-          <CustomButton
-            title="Submit bid"
-            onPress={handleSubmit(onSubmitHandler)}
-          />
-        </VStack>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
+            <ModalHeader text={title} onPress={onCloseHandler} />
+            <CustomInput
+              autoFocus
+              {...register('amount')}
+              label="Bid amount"
+              placeholder="0"
+              backgroundColor={Colors.WHITE}
+              keyboardType="numeric"
+              rightText="$"
+              {...{formState}}
+            />
+            <CustomInput
+              {...register('description')}
+              label="Describe your proposal"
+              placeholder="Enter Describe your proposal"
+              backgroundColor={Colors.WHITE}
+              textArea
+              inputStyle={styles.input}
+              {...{formState}}
+            />
+            <CustomButton
+              title="Submit bid"
+              onPress={handleSubmit(onSubmitHandler)}
+            />
+          </VStack>
+        </TouchableWithoutFeedback>
       </FormProvider>
     </ModalContainer>
   );

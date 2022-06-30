@@ -125,6 +125,7 @@ export default function LoginScreen({navigation}: NavigationProp) {
                 {...register('email')}
                 placeholder="Email"
                 {...{formState}}
+                keyboardType="email-address"
                 validation
               />
               <CustomInput

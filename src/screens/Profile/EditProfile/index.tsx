@@ -136,6 +136,7 @@ export default function EditProfileScreen() {
               disabled
               label="Email"
               placeholder="example@gmail.com"
+              keyboardType="email-address"
               {...{formState}}
             />
             <CustomInput

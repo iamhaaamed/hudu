@@ -67,18 +67,20 @@ const SectionDescriptionRoute = forwardRef(
     const mapRef = createRef<MapView>();
 
     const [zipCodeLocation, setZipCodeLocation] = useState({});
-    const getBidsOption = isUserLoggedIn
-      ? {
-          location: [12, 12],
-          where: {
-            and: [
-              {projectId: {eq: data?.id}},
-              {huduId: {eq: userData?.id}},
-              {bidStatus: {eq: 'IN_PROGRESS'}},
-            ],
-          },
-        }
-      : {enabled: false};
+    const getBidsOption =
+      isUserLoggedIn && data
+        ? {
+            projectFilter: 'NEWEST_TO_OLDEST',
+            location: [12, 12],
+            where: {
+              and: [
+                {projectId: {eq: data?.id}},
+                {huduId: {eq: userData?.id}},
+                {bidStatus: {eq: 'IN_PROGRESS'}},
+              ],
+            },
+          }
+        : {enabled: false};
     const {mutate: mutateAddBid, isLoading: addBidLoading} = useAddBid();
     const {mutate: getLocationMutate, isLoading: getLocationLoading} =
       useGetLocation();

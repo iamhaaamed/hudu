@@ -47,6 +47,7 @@ export default function ForgotPasswordScreen({navigation}: NavigationProp) {
                 {...register('email')}
                 placeholder="Email"
                 {...{formState}}
+                keyboardType="email-address"
               />
               <CustomButton
                 title="Send link"

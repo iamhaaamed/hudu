@@ -32,7 +32,7 @@ export const useGetNotifications = (options: any = {}) => {
     Notification_GetNotificationsQueryVariables,
     any
   >(
-    [queryKeys.notifications, options],
+    [queryKeys.notifications],
     async ({pageParam = 0}) => {
       return graphQLClient.request(NOTIFICATION_GET_NOTIFICATIONS, {
         skip: pageParam * PAGE_SIZE,

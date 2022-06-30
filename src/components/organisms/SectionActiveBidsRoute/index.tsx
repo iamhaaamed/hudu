@@ -40,7 +40,7 @@ const SectionActiveBidsRoute = forwardRef(
           scrollEventThrottle,
           scrollIndicatorInsets,
         }}
-        ListEmptyComponent={EmptyData}
+        ListEmptyComponent={() => <EmptyData flex={0.1} />}
         showsVerticalScrollIndicator={false}
       />
     );
