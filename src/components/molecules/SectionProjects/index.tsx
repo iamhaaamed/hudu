@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {HStack, VStack, Box, Center} from 'native-base';
-import {useFocusEffect} from '@react-navigation/native';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -39,7 +38,7 @@ const SectionProjects = () => {
     location: [12, 12],
     where: {
       and: [
-        {project: {projectDeadLine: {lte: today}}},
+        {project: {projectDeadLine: {gt: today}}},
         {project: {projectStatus: {eq: 'BIDDING'}}},
       ],
     },
@@ -84,7 +83,7 @@ const SectionProjects = () => {
         location: [currentLocation?.latitude, currentLocation?.longitude],
         where: {
           and: [
-            {project: {projectDeadLine: {lte: today}}},
+            {project: {projectDeadLine: {gt: today}}},
             {project: {projectStatus: {eq: 'BIDDING'}}},
           ],
         },
@@ -102,12 +101,6 @@ const SectionProjects = () => {
   } = useGetProjects(options);
 
   const projects = getProjects?.pages ?? [];
-
-  useFocusEffect(
-    React.useCallback(() => {
-      refetchProjects();
-    }, []),
-  );
 
   const onLoadMore = () => {
     if (hasNextPageProjects) {

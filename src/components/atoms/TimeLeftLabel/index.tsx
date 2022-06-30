@@ -6,7 +6,10 @@ import dayjs from 'dayjs';
 
 const TimeLeftLabel = ({time}: {time: any}) => {
   const status = useMemo(() => {
-    const projectDeadLine = dayjs().diff(time, 'day');
+    const date1 = dayjs(time);
+    const current = dayjs();
+    const projectDeadLine = date1.diff(current, 'day');
+
     if (projectDeadLine < 1) {
       return {
         days: projectDeadLine,
