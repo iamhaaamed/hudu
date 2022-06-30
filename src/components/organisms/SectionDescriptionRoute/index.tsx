@@ -123,7 +123,9 @@ const SectionDescriptionRoute = forwardRef(
       return res;
     }, []);
 
-    const projectDeadLine = dayjs().diff(data?.projectDeadLine, 'day');
+    const date1 = dayjs(data?.projectDeadLine);
+    const current = dayjs();
+    const projectDeadLine = date1.diff(current, 'day');
 
     const [editModalVisible, setEditModalVisible] = useState(false);
 

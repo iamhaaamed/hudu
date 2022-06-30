@@ -68,7 +68,7 @@ export const useGetProject = (options: any = {}) => {
     Project_GetProjectQueryVariables,
     any
   >(
-    [queryKeys.project],
+    [queryKeys.project, options],
     async () => {
       return graphQLClient.request(PROJECT_GET_PROJECT, options);
     },
@@ -82,19 +82,31 @@ export const useGetProject = (options: any = {}) => {
   };
 };
 
-export const useGetProjects = (options: any = {}) => {
+export const useGetProjects = ({
+  projectFilter,
+  location,
+  where,
+  options = {},
+}: {
+  projectFilter?: any;
+  location?: any;
+  where?: any;
+  options?: any;
+}) => {
   return useInfiniteQuery<
     Project_GetProjectsQuery,
     any,
     Project_GetProjectsQueryVariables,
     any
   >(
-    [queryKeys.projects],
+    [queryKeys.projects, projectFilter, location, where],
     async ({pageParam = 0}) => {
       return graphQLClient.request(PROJECT_GET_PROJECTS, {
         skip: pageParam * PAGE_SIZE,
         take: PAGE_SIZE,
-        ...options,
+        projectFilter,
+        location,
+        where,
       });
     },
     {
@@ -127,7 +139,7 @@ export const useGetQuestions = (options: any = {}) => {
     Project_GetQuestionsQueryVariables,
     any
   >(
-    [queryKeys.questions],
+    [queryKeys.questions, options],
     async ({pageParam = 0}) => {
       return graphQLClient.request(PROJECT_GET_QUESTIONS, {
         skip: pageParam * PAGE_SIZE,

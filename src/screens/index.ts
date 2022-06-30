@@ -16,7 +16,6 @@ export {default as SearchScreen} from './Home/SearchScreen';
 
 // Post
 export {default as PostScreen} from './Post/PostScreen';
-export {default as PreviewPostScreen} from './Post/PreviewPostScreen';
 
 // Profile
 export {default as ProfileScreen} from './Profile/Profile';
@@ -28,7 +27,6 @@ export {default as AuthProfileScreen} from './Profile/AuthProfileScreen';
 
 // Projects
 export {default as ProjectsScreen} from './Projects/ProjectsScreen';
-export {default as ProjectDetailsListerScreen} from './Projects/ProjectDetailsListerScreen';
 export {default as HudurProfileListerScreen} from './Projects/HudurProfileListerScreen';
 
 // Favorite

@@ -31,19 +31,31 @@ import {
   BID_EDIT_BID,
 } from '~/graphql/bid/mutations';
 
-export const useGetBids = (options: any = {}) => {
+export const useGetBids = ({
+  projectFilter,
+  location,
+  where,
+  options = {},
+}: {
+  projectFilter?: any;
+  location?: any;
+  where?: any;
+  options?: any;
+}) => {
   return useInfiniteQuery<
     Bid_GetBidsQuery,
     any,
     Bid_GetBidsQueryVariables,
     any
   >(
-    [queryKeys.bids],
+    [queryKeys.bids, projectFilter, location, where],
     async ({pageParam = 0}) => {
       return graphQLClient.request(BID_GET_BIDS, {
         skip: pageParam * PAGE_SIZE,
         take: PAGE_SIZE,
-        ...options,
+        projectFilter,
+        location,
+        where,
       });
     },
     {

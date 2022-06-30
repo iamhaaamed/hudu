@@ -33,7 +33,7 @@ const FavoriteScreen = () => {
 
   const [options, setOptions] = useState({
     location: [12, 12],
-    where: {project: {projectDeadLine: {lte: today}}},
+    where: {project: {projectDeadLine: {gt: today}}},
   });
 
   const options2 = isUserLoggedIn ? options : {enabled: isUserLoggedIn};
@@ -90,7 +90,7 @@ const FavoriteScreen = () => {
       setOptions({
         projectFilter: sort,
         location: [currentLocation?.latitude, currentLocation?.longitude],
-        where: {project: {projectDeadLine: {lte: today}}},
+        where: {project: {projectDeadLine: {gt: today}}},
       });
     }
   }, [sort]);

@@ -7,27 +7,27 @@ import {LinkItem, CustomIconButton} from '~/components';
 const LINKS = [
   {
     id: 1,
-    title: 'Terms and conditions',
+    title: 'Terms and Conditions',
     navLink: null,
-    url: 'https://heyhudu.com/terms-and-conditions',
+    url: 'https://hudu.heyhudu/terms-and-conditions',
   },
   {
     id: 2,
     title: 'FAQ',
     navLink: null,
-    url: 'https://heyhudu.com/faq',
+    url: 'https://hudu.heyhudu/faq',
   },
   {
     id: 3,
-    title: 'Privacy policy',
+    title: 'Privacy Policy',
     navLink: null,
-    url: 'https://heyhudu.com/privacy',
+    url: 'https://hudu.heyhudu/privacy',
   },
   {
     id: 4,
-    title: 'Manage payment account',
+    title: 'Manage Payment Account',
     navLink: null, // TODO : rollback to this string => 'PaymentAccount',
-    url: 'https://heyhudu.com',
+    url: 'https://hudu.heyhudu.com',
   },
   {
     id: 5,
