@@ -71,3 +71,4 @@ export {default as SectionActiveBidsRoute} from './organisms/SectionActiveBidsRo
 export {default as TabBar} from './organisms/TabBar';
 export {default as Header} from './organisms/Header';
 export {default as SectionProjectImages} from './organisms/SectionProjectImages';
+export {default as PreviewPostModal} from './organisms/PreviewPostModal';

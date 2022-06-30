@@ -16,7 +16,6 @@ export {default as SearchScreen} from './Home/SearchScreen';
 
 // Post
 export {default as PostScreen} from './Post/PostScreen';
-export {default as PreviewPostScreen} from './Post/PreviewPostScreen';
 
 // Profile
 export {default as ProfileScreen} from './Profile/Profile';
