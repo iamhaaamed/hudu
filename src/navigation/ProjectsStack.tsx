@@ -3,7 +3,6 @@ import {CommonActions} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   ProjectsScreen,
-  ProjectDetailsListerScreen,
   HudurProfileListerScreen,
   ListerProfileScreen,
   HudurProfileScreen,
@@ -15,7 +14,6 @@ const Stack = createNativeStackNavigator();
 
 export type ProjectStackParamList = {
   Projects: {pageNumber?: number};
-  ProjectDetailsLister: undefined;
   ProjectDetailsHudur: {projectId?: number};
   ListerProfile: {userId?: number};
   HudurProfile: {userId?: number};
@@ -33,11 +31,6 @@ const screens = [
     component: ProjectsScreen,
     options: publicScreenOption,
     initialParams: {pageNumber: 0},
-  },
-  {
-    name: 'ProjectDetailsLister',
-    component: ProjectDetailsListerScreen,
-    options: publicScreenOption,
   },
   {
     name: 'ProjectDetailsHudur',

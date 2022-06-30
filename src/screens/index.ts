@@ -28,7 +28,6 @@ export {default as AuthProfileScreen} from './Profile/AuthProfileScreen';
 
 // Projects
 export {default as ProjectsScreen} from './Projects/ProjectsScreen';
-export {default as ProjectDetailsListerScreen} from './Projects/ProjectDetailsListerScreen';
 export {default as HudurProfileListerScreen} from './Projects/HudurProfileListerScreen';
 
 // Favorite
