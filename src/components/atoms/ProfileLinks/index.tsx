@@ -27,7 +27,7 @@ const LINKS = [
   },
   {
     id: 4,
-    title: 'Terms and conditions',
+    title: 'Terms and Conditions',
     navLink: null,
     url: 'https://hudu.heyhudu.com/terms-and-conditions',
   },
@@ -39,13 +39,13 @@ const LINKS = [
   },
   {
     id: 6,
-    title: 'Privacy policy',
+    title: 'Privacy Policy',
     navLink: null,
     url: 'https://hudu.heyhudu.com/privacy',
   },
   {
     id: 7,
-    title: 'Manage payment account',
+    title: 'Manage Payment Account',
     navLink: null, // TODO : rollback to this string => 'PaymentAccount',
     url: 'https://hudu.heyhudu.com',
   },

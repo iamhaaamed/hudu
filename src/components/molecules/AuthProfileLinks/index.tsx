@@ -7,7 +7,7 @@ import {LinkItem, CustomIconButton} from '~/components';
 const LINKS = [
   {
     id: 1,
-    title: 'Terms and conditions',
+    title: 'Terms and Conditions',
     navLink: null,
     url: 'https://hudu.heyhudu/terms-and-conditions',
   },
@@ -19,13 +19,13 @@ const LINKS = [
   },
   {
     id: 3,
-    title: 'Privacy policy',
+    title: 'Privacy Policy',
     navLink: null,
     url: 'https://hudu.heyhudu/privacy',
   },
   {
     id: 4,
-    title: 'Manage payment account',
+    title: 'Manage Payment Account',
     navLink: null, // TODO : rollback to this string => 'PaymentAccount',
     url: 'https://hudu.heyhudu.com',
   },
