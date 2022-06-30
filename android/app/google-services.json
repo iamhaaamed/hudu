@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "854018447373-8dp74lf43jlnoi4hjc2ltl1f1jaabnhi.apps.googleusercontent.com",
+          "client_id": "854018447373-spjv83uf5oac33kjt8ap2s69u1sajti9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "io.apsy.hudu",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "64b7bedab53bbfa39fdee0f3f6b333d1039ec456"
           }
         },
         {
@@ -37,6 +37,13 @@
             {
               "client_id": "854018447373-m8vh6ibpda42lj42u633ot9vdnoclnk1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "854018447373-1su9uefjusok97luepkpeci6jvk8vlpp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.Hudu"
+              }
             }
           ]
         }
