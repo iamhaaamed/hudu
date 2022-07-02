@@ -155,41 +155,38 @@ const HudurProfileScreen = ({route}: any) => {
             shadow="2"
             bg={Colors.WHITE}>
             {listerReviews?.map((itm: any, indx: number) => {
-              if (itm?.listersComment) {
-                return (
-                  <VStack key={indx}>
-                    <HStack>
+              return (
+                <VStack key={indx}>
+                  <HStack>
+                    <Text
+                      flex={0.15}
+                      numberOfLines={1}
+                      fontSize={scale(12)}
+                      color={Colors.BLACK_1}
+                      fontFamily={fontFamily.regular}>
+                      {itm?.lister?.userName ?? 'Lister'} :
+                    </Text>
+                    <HStack space="1" flex={0.85}>
                       <Text
-                        flex={0.15}
-                        numberOfLines={1}
+                        flex={1}
                         fontSize={scale(12)}
-                        color={Colors.BLACK_1}
+                        color={Colors.PLACEHOLDER}
                         fontFamily={fontFamily.regular}>
-                        {itm?.lister?.userName ?? 'Lister'} :
+                        {itm?.listersComment}
                       </Text>
-                      <HStack space="1" flex={0.85}>
-                        <Text
-                          flex={1}
-                          fontSize={scale(12)}
-                          color={Colors.PLACEHOLDER}
-                          fontFamily={fontFamily.regular}>
-                          {itm?.listersComment}
-                        </Text>
-                        <VStack space="1">
-                          <RatingStar
-                            rate={itm?.listersRate}
-                            showRating="right"
-                            disabled
-                            size={12}
-                          />
-                        </VStack>
-                      </HStack>
+                      <VStack space="1">
+                        <RatingStar
+                          rate={itm?.listersRate}
+                          showRating="right"
+                          disabled
+                          size={12}
+                        />
+                      </VStack>
                     </HStack>
-                    {indx < listerReviews?.length - 1 && <Divider my="2" />}
-                  </VStack>
-                );
-              }
-              return null;
+                  </HStack>
+                  {indx < listerReviews?.length - 1 && <Divider my="2" />}
+                </VStack>
+              );
             })}
           </VStack>
         )}
