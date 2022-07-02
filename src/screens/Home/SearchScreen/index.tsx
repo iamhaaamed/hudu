@@ -17,7 +17,12 @@ const SearchScreen = ({navigation}: any) => {
 
   const [options, setOptions] = useState({
     location: [12, 12],
-    where: {project: {projectDeadLine: {gt: today}}},
+    where: {
+      and: [
+        {project: {projectDeadLine: {gt: today}}},
+        {project: {projectStatus: {eq: 'BIDDING'}}},
+      ],
+    },
   });
 
   const {
@@ -53,6 +58,7 @@ const SearchScreen = ({navigation}: any) => {
         where: {
           and: [
             {project: {projectDeadLine: {gt: today}}},
+            {project: {projectStatus: {eq: 'BIDDING'}}},
             {
               or: [
                 {project: {title: {contains: query}}},
@@ -66,7 +72,12 @@ const SearchScreen = ({navigation}: any) => {
       setSearchText(query);
       setOptions({
         location: [12, 12],
-        where: {project: {projectDeadLine: {gt: today}}},
+        where: {
+          and: [
+            {project: {projectDeadLine: {gt: today}}},
+            {project: {projectStatus: {eq: 'BIDDING'}}},
+          ],
+        },
       });
     }
   };
