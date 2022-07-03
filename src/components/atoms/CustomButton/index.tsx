@@ -1,6 +1,6 @@
 import React from 'react';
-import {TouchableOpacity, ActivityIndicator} from 'react-native';
-import {Colors, Spacing} from '~/styles';
+import {TouchableOpacity} from 'react-native';
+import {Colors} from '~/styles';
 import {Box, Center, Spinner, Text} from 'native-base';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 
@@ -18,6 +18,7 @@ export default function CustomButton({
   borderRadius = 'lg',
   fontSize = scale(14),
   font_family = fontFamily.regular,
+  mt,
 }: {
   title: string | undefined;
   loading?: boolean;
@@ -32,6 +33,7 @@ export default function CustomButton({
   borderRadius?: any;
   fontSize?: number;
   font_family?: any;
+  mt?: string | number;
 }) {
   const onPressHandler = () => {
     onPress?.();
@@ -39,6 +41,7 @@ export default function CustomButton({
 
   return (
     <Box
+      mt={mt}
       w={width}
       h={height}
       overflow="hidden"

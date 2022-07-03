@@ -277,7 +277,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
           contentContainerStyle={styles.contentContainerStyle}>
           <VStack py="4" space="6">
             <SectionProjectImages {...register('projectImages')} />
-            <VStack px="4" space="3" flex={1}>
+            <VStack px="4" space="1" flex={1}>
               <CustomInput
                 {...register('title')}
                 placeholder="Title"
@@ -313,7 +313,11 @@ const PostScreen = ({navigation}: NavigationProp) => {
                   {...{formState}}
                 />
               )}
-              <CustomSwitch {...register('location')} data={locationData} />
+              <CustomSwitch
+                mt="2"
+                {...register('location')}
+                data={locationData}
+              />
               {location === 'NEW_ADDRESS' && (
                 <>
                   <CustomInput
@@ -331,7 +335,6 @@ const PostScreen = ({navigation}: NavigationProp) => {
                         placeholder="City"
                         {...{formState}}
                         height={verticalScale(45)}
-                        isHorizontal
                       />
                     </Center>
                     <Center flex={1}>
@@ -341,7 +344,6 @@ const PostScreen = ({navigation}: NavigationProp) => {
                         placeholder="State"
                         height={verticalScale(45)}
                         textStyle={styles.input}
-                        isHorizontal
                         valueKey="value"
                         titleKey="title"
                       />
@@ -359,6 +361,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 </>
               )}
               <CustomButton
+                mt="3"
                 title="Preview"
                 onPress={handleSubmit(previewOnPress)}
                 height={verticalScale(45)}

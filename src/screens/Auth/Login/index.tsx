@@ -120,7 +120,7 @@ export default function LoginScreen({navigation}: NavigationProp) {
             />
           </VStack>
           <Flex flex={1} justifyContent="flex-end" pb="6">
-            <VStack pt="4" px="4" space="6">
+            <VStack pt="4" px="4" space="1">
               <CustomInput
                 {...register('email')}
                 placeholder="Email"
