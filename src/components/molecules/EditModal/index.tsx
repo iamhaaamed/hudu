@@ -66,7 +66,7 @@ const EditModal = ({
       loading={loading}>
       <FormProvider {...methods}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
+          <VStack bg={Colors.WHITE} px="2" py="4" space="1" borderRadius="md">
             <ModalHeader text={title} onPress={onCloseHandler} />
             <CustomInput
               autoFocus
@@ -88,6 +88,7 @@ const EditModal = ({
               {...{formState}}
             />
             <CustomButton
+              mt="3"
               title="Submit bid"
               onPress={handleSubmit(onSubmitHandler)}
             />

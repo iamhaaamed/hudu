@@ -57,8 +57,8 @@ export default function SupportScreen() {
               backgroundColor={Colors.WHITE}
             />
           </VStack>
-          <VStack flex={1} py="4" px="4" space="6">
-            <Text color={Colors.BLACK_2} fontSize="md" px="2">
+          <VStack flex={1} py="4" px="4" space="1">
+            <Text mb="3" color={Colors.BLACK_2} fontSize="md" px="2">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </Text>
