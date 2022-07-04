@@ -38,7 +38,8 @@ import {verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {useGetProject, useGetQuestions} from '~/hooks/project';
 import {useGetBids} from '~/hooks/bid';
-import {Center, Flex} from 'native-base';
+import {Center} from 'native-base';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const TAB_BAR_HEIGHT = verticalScale(35);
 const HEADER_HEIGHT = 0;
@@ -285,22 +286,26 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
   }
 
   return (
-    <CustomContainer isLoading={loading}>
-      <Animated.View onLayout={handleHeaderLayout} style={headerContainerStyle}>
-        <Header
-          title={project?.project?.title}
-          images={project?.project?.projectImages}
-          user={tabIndex === 0 ? project?.project?.user : null}
-          isLiked={project?.isLiked}
-          projectId={project?.project?.id}
-        />
-      </Animated.View>
-      <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">
-        <Tab.Screen name="Description">{renderDescription}</Tab.Screen>
-        <Tab.Screen name="Question">{renderQuestion}</Tab.Screen>
-        <Tab.Screen name="Active bids">{renderActiveBids}</Tab.Screen>
-      </Tab.Navigator>
-    </CustomContainer>
+    <KeyboardAwareScrollView contentContainerStyle={{flex: 1}}>
+      <CustomContainer isLoading={loading}>
+        <Animated.View
+          onLayout={handleHeaderLayout}
+          style={headerContainerStyle}>
+          <Header
+            title={project?.project?.title}
+            images={project?.project?.projectImages}
+            user={tabIndex === 0 ? project?.project?.user : null}
+            isLiked={project?.isLiked}
+            projectId={project?.project?.id}
+          />
+        </Animated.View>
+        <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">
+          <Tab.Screen name="Description">{renderDescription}</Tab.Screen>
+          <Tab.Screen name="Question">{renderQuestion}</Tab.Screen>
+          <Tab.Screen name="Active bids">{renderActiveBids}</Tab.Screen>
+        </Tab.Navigator>
+      </CustomContainer>
+    </KeyboardAwareScrollView>
   );
 };
 

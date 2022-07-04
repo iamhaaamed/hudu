@@ -94,6 +94,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
   const appleOnPress = async () => {
     setLoading(true);
     const res = await signInWithApple();
+    console.log({res});
     if (res?.data) {
       completeSignUp();
     } else {

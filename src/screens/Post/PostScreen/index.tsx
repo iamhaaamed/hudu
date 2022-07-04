@@ -217,6 +217,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
               ) {
                 queryClient.invalidateQueries(queryKeys.projects);
                 queryClient.invalidateQueries(queryKeys.bids);
+                setPreviewPostModalVisible(false);
                 setQuestionModalVisible(true);
               } else {
                 showMessage(

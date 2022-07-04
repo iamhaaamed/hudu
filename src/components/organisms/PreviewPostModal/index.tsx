@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, FlatList, ScrollView} from 'react-native';
+import {StyleSheet, FlatList, ScrollView, Platform} from 'react-native';
 import {VStack, Center, Text, HStack} from 'native-base';
 import {ModalContainer, CustomButton, ImageBoxViewer} from '~/components';
 import {scale, fontFamily, verticalScale} from '~/utils/style';
@@ -120,6 +120,7 @@ export default PreviewPostModal;
 const styles = StyleSheet.create({
   modal: {
     flex: 1,
+    ...(Platform.OS == 'ios' && {paddingTop: 50}),
   },
   contentContainerStyle: {
     flexGrow: 1,
