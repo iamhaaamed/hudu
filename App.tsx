@@ -17,7 +17,12 @@ import graphQLClient from 'src/graphql/graphQLClient';
 import React, {useEffect, useState, useCallback} from 'react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
-import {QueryClient, QueryClientProvider, QueryCache} from 'react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+  MutationCache,
+} from 'react-query';
 
 LogBox.ignoreLogs([
   'ViewPropTypes will be removed',
@@ -94,11 +99,57 @@ const App = () => {
         const first = data[apiName];
         const status = first?.status;
 
+        console.log({data});
+
         if (
           status === ResponseStatus.AuthenticationFailed ||
           (Array.isArray(first) &&
             first[0][Object.keys(first[0])[0]].status ===
-              ResponseStatus.AuthenticationFailed)
+              ResponseStatus.AuthenticationFailed) ||
+          first[0][Object.keys(first[0])[0]].status ===
+            ResponseStatus.UserNotFound
+        ) {
+          try {
+            await auth().signOut();
+          } catch (error) {
+            setIsUserLoggedIn(false);
+            setUserData({});
+          }
+        }
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: async (error: any) => {
+        console.log(
+          'AppEr',
+          error?.response,
+          error?.response?.errors?.[0]?.extensions?.code,
+        );
+        if (
+          error?.response?.errors?.[0]?.extensions?.code ===
+          ResponseStatus.AuthenticationFailed
+        ) {
+          try {
+            await auth().signOut();
+          } catch (err) {
+            setIsUserLoggedIn(false);
+            setUserData({});
+          }
+        } else {
+          showMessage({
+            message: `Something went wrong: ${error?.message}`,
+            type: 'danger',
+          });
+        }
+      },
+      onSuccess: async (data: any) => {
+        const apiName = Object.keys(data)[0];
+        const first = data[apiName];
+        const status = first?.status;
+
+        if (
+          status === ResponseStatus.AuthenticationFailed ||
+          status === ResponseStatus.UserNotFound
         ) {
           try {
             await auth().signOut();
