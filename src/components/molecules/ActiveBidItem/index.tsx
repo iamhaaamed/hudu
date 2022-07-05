@@ -103,7 +103,10 @@ const ActiveBidItem = ({
   };
 
   const isCancelled = item?.bidStatus === 'CANCELL';
+  const isNotLucky = item?.bidStatus === 'NOT_LUCKY';
   const inProgress = item?.bidStatus === 'IN_PROGRESS';
+  const isFinished = projectStatus === 'FINISHED';
+  const isBidding = projectStatus === 'BIDDING';
 
   return (
     <>
@@ -115,14 +118,15 @@ const ActiveBidItem = ({
         py="4"
         borderRadius="lg"
         bg={
-          isCancelled
+          isCancelled || isNotLucky
             ? Colors.CANCEL_CARD_BACKGROUND
-            : inProgress
-            ? Colors.CANCEL_CARD_BACKGROUND
-            : Colors.WHITE
+            : inProgress || isFinished || isBidding
+            ? Colors.WHITE
+            : Colors.CANCEL_CARD_BACKGROUND
         }
         shadow="2">
         <TouchableOpacity
+          disabled={isCancelled || isNotLucky || (!inProgress && !isFinished)}
           activeOpacity={0.7}
           style={styles.item}
           onPress={onPressHandler}>
@@ -149,11 +153,11 @@ const ActiveBidItem = ({
                   total={totalReview}
                   disabled
                   fillColor={
-                    isCancelled
+                    isCancelled || isNotLucky
                       ? Colors.PLACEHOLDER
-                      : inProgress
-                      ? Colors.CANCEL_CARD_BACKGROUND
-                      : Colors.GOLDEN
+                      : inProgress || isFinished
+                      ? Colors.GOLDEN
+                      : Colors.CANCEL_CARD_BACKGROUND
                   }
                 />
               </VStack>
@@ -184,11 +188,11 @@ const ActiveBidItem = ({
                 fontSize={scale(14)}
                 fontFamily={fontFamily.regular}
                 color={
-                  isCancelled
+                  isCancelled || isNotLucky
                     ? Colors.PLACEHOLDER
-                    : inProgress
-                    ? Colors.CANCEL_CARD_BACKGROUND
-                    : Colors.PRIMARY
+                    : inProgress || isFinished
+                    ? Colors.PRIMARY
+                    : Colors.PLACEHOLDER
                 }>
                 $ {item?.amount}
               </Text>
