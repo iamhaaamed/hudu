@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    height: 50,
+    height: 55,
   },
   button: {
     height: 0.7,
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   label: {fontSize: verticalScale(14)},
   topLine: {
     width: '70%',
-    height: 1.5,
+    height: 1.8,
     backgroundColor: Colors.PRIMARY,
   },
   activeLine: {
