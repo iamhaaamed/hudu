@@ -9,6 +9,7 @@ import {
   SectionChooseHudur,
   SectionFinishProject,
   QuestionModal,
+  SectionBidAmount,
 } from '~/components';
 import {navigate} from '~/navigation/Methods';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -17,15 +18,35 @@ import {useDeleteProject} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
 
 const SectionListerProjectRow = ({item}: {item: any}) => {
-  const lowBid = useMemo(() => {
-    let res = -1;
-    if (item?.project?.bids?.length > 0) {
-      res = Math.min.apply(
-        Math,
-        item?.project?.bids?.map(function (object: any) {
-          return object?.amount;
-        }),
-      );
+  const currentBid = useMemo(() => {
+    let res = {
+      amount: -1,
+      id: undefined,
+      bidStatus: undefined,
+      description: undefined,
+    };
+    if (item?.project?.projectStatus === 'BIDDING') {
+      if (item?.project?.bids?.length > 0) {
+        let filteredBids = item?.project?.bids.filter(
+          (element: any) =>
+            element?.bidStatus === 'IN_PROGRESS' ||
+            element?.bidStatus === 'WAITING',
+        );
+        if (filteredBids?.length > 0) {
+          res = item?.project?.bids.reduce(function (prev: any, curr: any) {
+            return prev?.amount < curr?.amount ? prev : curr;
+          });
+        }
+      }
+    } else {
+      res = item?.project?.bids?.find(function (object: any) {
+        if (
+          object?.bidStatus === 'IN_PROGRESS' ||
+          object?.bidStatus === 'FINISHED'
+        ) {
+          return object;
+        }
+      });
     }
     return res;
   }, [item]);
@@ -130,29 +151,29 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
                   {item?.project?.description}
                 </Text>
                 <HStack alignItems="center" justifyContent="space-between">
-                  <Text
-                    fontSize={scale(14)}
-                    fontFamily={fontFamily.regular}
-                    color={Colors.BLACK_1}>
-                    {item?.project?.bids?.length > 0 && lowBid !== -1
-                      ? 'Current low bid'
-                      : 'Be the first one to bid'}
-                  </Text>
-                  {item?.project?.bids?.length > 0 && lowBid !== -1 && (
-                    <Text
-                      fontSize={scale(16)}
-                      fontFamily={fontFamily.regular}
-                      color={Colors.INFO}>
-                      ${lowBid}
-                    </Text>
-                  )}
+                  <SectionBidAmount
+                    {...{
+                      projectStatus: item?.project?.projectStatus,
+                      currentBid,
+                      bids: item?.project?.bids,
+                    }}
+                  />
+                  {item?.project?.bids?.length > 0 &&
+                    currentBid?.amount !== -1 && (
+                      <Text
+                        fontSize={scale(16)}
+                        fontFamily={fontFamily.regular}
+                        color={Colors.INFO}>
+                        ${currentBid?.amount}
+                      </Text>
+                    )}
                 </HStack>
                 {item?.project?.projectStatus === 'BIDDING' && (
                   <SectionChooseHudur {...{projectId: item?.project?.id}} />
                 )}
                 {item?.project?.projectStatus === 'IN_PROGRESS' && (
                   <SectionFinishProject
-                    {...{projectId: item?.project?.id, bidId: item?.id}}
+                    {...{projectId: item?.project?.id, currentBid}}
                   />
                 )}
               </VStack>

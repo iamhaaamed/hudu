@@ -15,7 +15,7 @@ import {Colors} from '~/styles';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
-import {CustomButton, EditModal} from '~/components';
+import {CustomButton, EditModal, SectionBidAmount} from '~/components';
 import {LocationIcon, MarkerIcon} from '~/assets/icons';
 import {useAddBid, useGetBids} from '~/hooks/bid';
 import {authStore, userDataStore} from '~/stores';
@@ -110,19 +110,6 @@ const SectionDescriptionRoute = forwardRef(
       });
     };
 
-    const lowBid = useMemo(() => {
-      let res = -1;
-      if (data?.bids?.length > 0) {
-        res = Math.min.apply(
-          Math,
-          data?.bids?.map(function (object: any) {
-            return object?.amount;
-          }),
-        );
-      }
-      return res;
-    }, []);
-
     const date1 = dayjs(data?.projectDeadLine);
     const current = dayjs();
     const projectDeadLine = date1.diff(current, 'day');
@@ -175,24 +162,10 @@ const SectionDescriptionRoute = forwardRef(
             color={Colors.PLACEHOLDER}>
             {data?.description}
           </Text>
-          <HStack alignItems="center" justifyContent="space-between">
-            <Text
-              fontSize={scale(16)}
-              fontFamily={fontFamily.regular}
-              color={Colors.BLACK_1}>
-              {data?.bids?.length > 0 && lowBid !== -1
-                ? 'Current low bid'
-                : 'Be the first one to bid'}
-            </Text>
-            {data?.bids?.length > 0 && lowBid !== -1 && (
-              <Text
-                fontSize={scale(16)}
-                fontFamily={fontFamily.regular}
-                color={Colors.PRIMARY}>
-                ${lowBid}
-              </Text>
-            )}
-          </HStack>
+
+          <SectionBids
+            {...{projectStatus: data?.projectStatus, projectId: data?.id}}
+          />
           <HStack alignItems="center" justifyContent="space-between">
             <Text
               fontSize={scale(16)}
@@ -319,6 +292,81 @@ const SectionDescriptionRoute = forwardRef(
 );
 
 export default memo(SectionDescriptionRoute);
+
+const SectionBids = ({
+  projectStatus,
+  projectId,
+}: {
+  projectStatus: string;
+  projectId: number;
+}) => {
+  const getBidsOption = {
+    projectFilter: 'NEWEST_TO_OLDEST',
+    location: [12, 12],
+    where: {
+      and: [
+        {projectId: {eq: projectId}},
+        {
+          or: [
+            {bidStatus: {eq: 'WAITING'}},
+            {bidStatus: {eq: 'IN_PROGRESS'}},
+            {bidStatus: {eq: 'FINISHED'}},
+          ],
+        },
+      ],
+    },
+  };
+
+  const {isLoading: getBidsLoading, data: getBids} = useGetBids(getBidsOption);
+
+  const bids = getBids?.pages ?? [];
+
+  const currentBid = useMemo(() => {
+    let res = {
+      amount: -1,
+      id: undefined,
+      bidStatus: undefined,
+      description: undefined,
+    };
+    if (projectStatus === 'BIDDING') {
+      if (bids?.length > 0) {
+        res = bids.reduce(function (prev: any, curr: any) {
+          return prev?.amount < curr?.amount ? prev : curr;
+        });
+      }
+    } else {
+      res = bids?.find(function (object: any) {
+        if (
+          object?.bidStatus === 'IN_PROGRESS' ||
+          object?.bidStatus === 'FINISHED'
+        ) {
+          return object;
+        }
+      });
+    }
+    return res;
+  }, [bids]);
+
+  return (
+    <HStack alignItems="center" justifyContent="space-between">
+      <SectionBidAmount
+        {...{
+          currentBid,
+          bids: bids,
+          projectStatus,
+        }}
+      />
+      {bids?.length > 0 && currentBid?.amount !== -1 && (
+        <Text
+          fontSize={scale(16)}
+          fontFamily={fontFamily.regular}
+          color={Colors.PRIMARY}>
+          ${currentBid?.amount}
+        </Text>
+      )}
+    </HStack>
+  );
+};
 
 const styles = StyleSheet.create({
   image: {

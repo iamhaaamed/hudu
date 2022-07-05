@@ -385,6 +385,7 @@ export const useFailProject = () => {
 };
 
 export const useFinishProject = () => {
+  const queryClient = useQueryClient();
   return useMutation<
     Project_FinisheProjectMutation,
     any,
@@ -398,6 +399,7 @@ export const useFinishProject = () => {
         if (
           successData?.project_finisheProject?.status === ResponseStatus.Success
         ) {
+          queryClient.invalidateQueries(queryKeys.projects);
         } else {
           showMessage(
             getResponseMessage(successData?.project_finisheProject?.status),

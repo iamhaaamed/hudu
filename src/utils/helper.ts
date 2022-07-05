@@ -76,7 +76,7 @@ export const getResponseMessage = (response: string = '') => {
         icon: 'danger',
       };
     case ResponseStatus.UserNotFound:
-      return {type: 'danger', message: 'User not found', icon: 'danger'};
+      return {type: 'danger', message: 'User is de active', icon: 'danger'};
     default:
       return {type: 'danger', message: 'Unknown Error', icon: 'danger'};
   }

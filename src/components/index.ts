@@ -30,6 +30,7 @@ export {default as SectionBidLabel} from './atoms/SectionBidLabel';
 export {default as CustomSwitch} from './atoms/CustomSwitch';
 export {default as CustomIconButton} from './atoms/CustomIconButton';
 export {default as TimeLeftLabel} from './atoms/TimeLeftLabel';
+export {default as SectionBidAmount} from './atoms/SectionBidAmount';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';

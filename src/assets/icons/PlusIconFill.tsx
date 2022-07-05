@@ -8,24 +8,24 @@ export default function PlusIconFill({
   fillColor?: string;
 }) {
   return (
-    <Svg width="22" height="22" viewBox="0 0 22 22">
+    <Svg width="27" height="27" viewBox="0 0 27 27">
       <G
         id="Group_24052"
         data-name="Group 24052"
-        transform="translate(-173.5 -8.5)">
+        transform="translate(-172.5 -8.5)">
         <Rect
           id="Rectangle_18139"
           data-name="Rectangle 18139"
-          width="22"
-          height="22"
+          width="27"
+          height="27"
           rx="4"
-          transform="translate(173.5 8.5)"
+          transform="translate(172.5 8.5)"
           fill={fillColor}
         />
         <G
           id="Group_181"
           data-name="Group 181"
-          transform="translate(178.181 13.18)">
+          transform="translate(179.353 15.353)">
           <Line
             id="Line_1"
             data-name="Line 1"

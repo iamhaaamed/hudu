@@ -159,14 +159,14 @@ const HudurProfileScreen = ({route}: any) => {
                 <VStack key={indx}>
                   <HStack>
                     <Text
-                      flex={0.15}
+                      flex={0.2}
                       numberOfLines={1}
                       fontSize={scale(12)}
                       color={Colors.BLACK_1}
                       fontFamily={fontFamily.regular}>
                       {itm?.lister?.userName ?? 'Lister'} :
                     </Text>
-                    <HStack space="1" flex={0.85}>
+                    <HStack space="1" flex={0.8}>
                       <Text
                         flex={1}
                         fontSize={scale(12)}
