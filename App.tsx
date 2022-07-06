@@ -99,8 +99,6 @@ const App = () => {
         const first = data[apiName];
         const status = first?.status;
 
-        console.log({data});
-
         if (
           status === ResponseStatus.AuthenticationFailed ||
           (Array.isArray(first) &&
