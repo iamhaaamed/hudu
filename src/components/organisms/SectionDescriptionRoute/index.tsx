@@ -15,7 +15,12 @@ import {Colors} from '~/styles';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
-import {CustomButton, EditModal, SectionBidAmount} from '~/components';
+import {
+  CustomButton,
+  EditModal,
+  SectionBidAmountLabel,
+  TimeLeftLabel,
+} from '~/components';
 import {LocationIcon, MarkerIcon} from '~/assets/icons';
 import {useAddBid, useGetBids} from '~/hooks/bid';
 import {authStore, userDataStore} from '~/stores';
@@ -110,10 +115,6 @@ const SectionDescriptionRoute = forwardRef(
       });
     };
 
-    const date1 = dayjs(data?.projectDeadLine);
-    const current = dayjs();
-    const projectDeadLine = date1.diff(current, 'day');
-
     const [editModalVisible, setEditModalVisible] = useState(false);
 
     const locationData = getLocationFromState(data?.state);
@@ -164,22 +165,15 @@ const SectionDescriptionRoute = forwardRef(
           </Text>
 
           <SectionBids
-            {...{projectStatus: data?.projectStatus, projectId: data?.id}}
+            {...{
+              projectStatus: data?.projectStatus,
+              projectId: data?.id,
+              listerId: data?.userId,
+            }}
           />
-          <HStack alignItems="center" justifyContent="space-between">
-            <Text
-              fontSize={scale(16)}
-              fontFamily={fontFamily.regular}
-              color={Colors.BLACK_1}>
-              Time left
-            </Text>
-            <Text
-              fontSize={scale(16)}
-              fontFamily={fontFamily.regular}
-              color={Colors.BLACK_3}>
-              {`${projectDeadLine} Days`}
-            </Text>
-          </HStack>
+          <TimeLeftLabel
+            {...{time: data?.projectDeadLine, type: 'projectDetails'}}
+          />
           <HStack alignItems="center" justifyContent="space-between">
             <HStack alignItems="center" space="1">
               <LocationIcon />
@@ -217,8 +211,8 @@ const SectionDescriptionRoute = forwardRef(
                 region={{
                   latitude: location?.Latitude,
                   longitude: location?.Longitude,
-                  latitudeDelta: 0.99,
-                  longitudeDelta: 0.99,
+                  latitudeDelta: 1.6,
+                  longitudeDelta: 1.0,
                 }}>
                 {/* <MapViewDirections
               origin={{
@@ -296,9 +290,11 @@ export default memo(SectionDescriptionRoute);
 const SectionBids = ({
   projectStatus,
   projectId,
+  listerId,
 }: {
   projectStatus: string;
   projectId: number;
+  listerId: number;
 }) => {
   const getBidsOption = {
     projectFilter: 'NEWEST_TO_OLDEST',
@@ -349,10 +345,11 @@ const SectionBids = ({
 
   return (
     <HStack alignItems="center" justifyContent="space-between">
-      <SectionBidAmount
+      <SectionBidAmountLabel
         {...{
           currentBid,
           bids: bids,
+          listerId,
           projectStatus,
         }}
       />
