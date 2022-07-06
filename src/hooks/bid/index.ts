@@ -94,6 +94,8 @@ export const useAcceptBid = () => {
         if (successData?.bid_acceptBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
           queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.project);
+          queryClient.invalidateQueries(queryKeys.userLikeProjects);
           showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
@@ -126,6 +128,8 @@ export const useRejectBid = () => {
         if (successData?.bid_rejectBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
           queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.project);
+          queryClient.invalidateQueries(queryKeys.userLikeProjects);
           showMessage(getResponseMessage(successData?.bid_rejectBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_rejectBid?.status));
@@ -153,6 +157,9 @@ export const useAddBid = () => {
       onSuccess: successData => {
         if (successData?.bid_addBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.project);
+          queryClient.invalidateQueries(queryKeys.userLikeProjects);
           showMessage(getResponseMessage(successData?.bid_addBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_addBid?.status));
@@ -184,6 +191,9 @@ export const useCancelBid = () => {
       onSuccess: successData => {
         if (successData?.bid_cancellBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.project);
+          queryClient.invalidateQueries(queryKeys.userLikeProjects);
           showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_cancellBid?.status));
@@ -216,6 +226,8 @@ export const useDeleteBid = () => {
         if (successData?.bid_DeleteBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
           queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.project);
+          queryClient.invalidateQueries(queryKeys.userLikeProjects);
           showMessage(getResponseMessage(successData?.bid_DeleteBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_DeleteBid?.status));
@@ -245,6 +257,8 @@ export const useEditBid = () => {
           showMessage(getResponseMessage(successData?.bid_editBid?.status));
           queryClient.invalidateQueries(queryKeys.bids);
           queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.project);
+          queryClient.invalidateQueries(queryKeys.userLikeProjects);
         } else {
           showMessage(getResponseMessage(successData?.bid_editBid?.status));
         }

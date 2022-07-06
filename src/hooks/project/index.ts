@@ -298,10 +298,11 @@ export const useAddQuestion = () => {
         if (
           successData?.project_addQuestion?.status === ResponseStatus.Success
         ) {
+          queryClient.invalidateQueries(queryKeys.questions);
+        } else {
           showMessage(
             getResponseMessage(successData?.project_addQuestion?.status),
           );
-          queryClient.invalidateQueries(queryKeys.questions);
         }
       },
       onError: (errorData: any) => {

@@ -1,6 +1,6 @@
-import React, {forwardRef, useCallback, memo} from 'react';
+import React, {forwardRef, useCallback, memo, useEffect} from 'react';
 import {FlatList, Keyboard, TouchableWithoutFeedback} from 'react-native';
-import {Box, IconButton, VStack} from 'native-base';
+import {Box, IconButton, VStack, Spinner} from 'native-base';
 import Animated from 'react-native-reanimated';
 import * as yup from 'yup';
 import {Colors} from '~/styles';
@@ -16,6 +16,7 @@ import {SendIcon} from '~/assets/icons';
 import {authStore, userDataStore} from '~/stores';
 import {useAddQuestion} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
+import {scale} from '~/utils/style';
 
 const schema = yup.object().shape({
   message: yup.string(),
@@ -36,6 +37,7 @@ const SectionQuestionRoute = forwardRef(
       scrollIndicatorInsets,
       onScroll,
       projectId,
+      isRefetching,
     }: any,
     ref,
   ) => {
@@ -83,7 +85,11 @@ const SectionQuestionRoute = forwardRef(
 
     const messageText = watch('message');
 
-    const loading = addQuestionLoading;
+    const loading = false;
+
+    useEffect(() => {
+      ref.current.scrollToEnd({animated: true});
+    }, [isRefetching]);
 
     return (
       <VStack flex={1} pt={4} pb={6} bg={Colors.WHITE}>
@@ -102,8 +108,11 @@ const SectionQuestionRoute = forwardRef(
             scrollIndicatorInsets,
           }}
           showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => <EmptyData flex={0.1} />}
+          ListEmptyComponent={() => (
+            <EmptyData flex={0.1} text="No questions" />
+          )}
           ItemSeparatorComponent={ItemSeparatorComponent}
+          onLayout={() => ref.current.scrollToEnd({animated: true})}
         />
         {isUserLoggedIn && userData?.id !== listerId && (
           <Box position="absolute" bottom="0" w="100%">
@@ -117,17 +126,22 @@ const SectionQuestionRoute = forwardRef(
                     {...{formState}}
                     rightComponent={() => (
                       <IconButton
+                        disabled={addQuestionLoading}
                         onPress={handleSubmit(sendOnPress)}
                         colorScheme={Colors.WHITE_RIPPLE_COLOR}
                         borderRadius="full"
                         icon={
-                          <SendIcon
-                            fillColor={
-                              messageText?.length > 0
-                                ? Colors.PRIMARY
-                                : Colors.BLACK_1
-                            }
-                          />
+                          addQuestionLoading ? (
+                            <Spinner size={scale(13)} color={Colors.PRIMARY} />
+                          ) : (
+                            <SendIcon
+                              fillColor={
+                                messageText?.length > 0
+                                  ? Colors.PRIMARY
+                                  : Colors.BLACK_1
+                              }
+                            />
+                          )
                         }
                       />
                     )}
