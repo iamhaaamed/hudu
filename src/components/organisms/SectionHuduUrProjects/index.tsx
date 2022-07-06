@@ -31,7 +31,7 @@ const SectionHuduUrProjects = () => {
     mode: 'onChange',
   });
 
-  const {register, watch} = methods;
+  const {register, watch, setValue} = methods;
 
   const sort = watch('sort');
 
@@ -44,6 +44,10 @@ const SectionHuduUrProjects = () => {
     latitude: 12,
     longitude: 12,
   });
+
+  useEffect(() => {
+    setValue('sort', undefined);
+  }, [isUserLoggedIn]);
 
   useEffect(() => {
     getCurrentLocation();

@@ -31,6 +31,7 @@ import {resetRoot} from '~/navigation/Methods';
 const availabilityData = [
   {id: 0, title: 'Specific time', value: 'SPECIFIC_TIME'},
   {id: 1, title: 'Flexible', value: 'FLEXIBLE'},
+  {id: 2, title: 'Some flexibility', value: 'SOME_FLEXIBILITY'},
 ];
 
 const locationData = [

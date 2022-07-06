@@ -16,18 +16,20 @@ import {requestLocationPermission} from '~/utils/getPermissions';
 import {showMessage} from 'react-native-flash-message';
 import Geolocation from 'react-native-geolocation-service';
 import dayjs from 'dayjs';
+import {authStore} from '~/stores';
 
 const schema = yup.object().shape({
   sort: yup.string(),
 });
 
 const SectionProjects = () => {
+  const {isLoadingLogin} = authStore(state => state);
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const {register, watch} = methods;
+  const {register, watch, setValue} = methods;
 
   const sort = watch('sort');
 
@@ -47,6 +49,10 @@ const SectionProjects = () => {
     latitude: 12,
     longitude: 12,
   });
+
+  useEffect(() => {
+    setValue('sort', undefined);
+  }, [isLoadingLogin]);
 
   useEffect(() => {
     getCurrentLocation();
