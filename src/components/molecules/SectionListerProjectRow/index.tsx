@@ -9,7 +9,7 @@ import {
   SectionChooseHudur,
   SectionFinishProject,
   QuestionModal,
-  SectionBidAmount,
+  SectionBidAmountLabel,
 } from '~/components';
 import {navigate} from '~/navigation/Methods';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -33,7 +33,7 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
             element?.bidStatus === 'WAITING',
         );
         if (filteredBids?.length > 0) {
-          res = item?.project?.bids.reduce(function (prev: any, curr: any) {
+          res = filteredBids.reduce(function (prev: any, curr: any) {
             return prev?.amount < curr?.amount ? prev : curr;
           });
         }
@@ -151,9 +151,10 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
                   {item?.project?.description}
                 </Text>
                 <HStack alignItems="center" justifyContent="space-between">
-                  <SectionBidAmount
+                  <SectionBidAmountLabel
                     {...{
                       projectStatus: item?.project?.projectStatus,
+                      listerId: item?.project?.userId,
                       currentBid,
                       bids: item?.project?.bids,
                     }}
@@ -168,9 +169,10 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
                       </Text>
                     )}
                 </HStack>
-                {item?.project?.projectStatus === 'BIDDING' && (
-                  <SectionChooseHudur {...{projectId: item?.project?.id}} />
-                )}
+                {item?.project?.projectStatus === 'BIDDING' &&
+                  currentBid?.amount !== -1 && (
+                    <SectionChooseHudur {...{projectId: item?.project?.id}} />
+                  )}
                 {item?.project?.projectStatus === 'IN_PROGRESS' && (
                   <SectionFinishProject
                     {...{projectId: item?.project?.id, currentBid}}

@@ -1,24 +1,21 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Box, VStack, HStack} from 'native-base';
 import {Colors} from '~/styles';
-import {CustomImage, ProjectFavoriteIcon, TimeLeftLabel} from '~/components';
+import {
+  CustomImage,
+  ProjectFavoriteIcon,
+  TimeLeftLabel,
+  SectionBidAmount,
+} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {navigate} from '~/navigation/Methods';
+import {userDataStore} from '~/stores';
 
 const ProjectItem = ({item}: {item?: any}) => {
-  const lowBid = useMemo(() => {
-    let res = -1;
-    if (item?.project?.bids?.length > 0) {
-      res = Math.min.apply(
-        Math,
-        item?.project?.bids?.map(function (object: any) {
-          return object?.amount;
-        }),
-      );
-    }
-    return res;
-  }, []);
+  const {userData} = userDataStore(state => state);
+
+  const isLister = userData?.id === item?.project?.userId;
 
   const onPressHandler = () => {
     navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
@@ -38,9 +35,11 @@ const ProjectItem = ({item}: {item?: any}) => {
         resizeMode="stretch">
         <VStack flex={1} justifyContent="space-between">
           <HStack w="100%" px="2" py="2">
-            <ProjectFavoriteIcon
-              {...{isLiked: item?.isLiked, projectId: item?.project?.id}}
-            />
+            {!isLister && (
+              <ProjectFavoriteIcon
+                {...{isLiked: item?.isLiked, projectId: item?.project?.id}}
+              />
+            )}
           </HStack>
           <TimeLeftLabel {...{time: item?.project?.projectDeadLine}} />
         </VStack>
@@ -64,26 +63,13 @@ const ProjectItem = ({item}: {item?: any}) => {
             {item?.project?.description}
           </Text>
         </VStack>
-        <HStack pb="2" px="2" justifyContent="space-between">
-          <Text
-            fontSize={scale(11)}
-            fontFamily={fontFamily.regular}
-            numberOfLines={1}
-            color={Colors.BLACK_1}>
-            {item?.project?.bids?.length > 0 && lowBid !== -1
-              ? 'Current low bid'
-              : 'Be the first one to bid'}
-          </Text>
-          {item?.project?.bids?.length > 0 && lowBid !== -1 && (
-            <Text
-              fontSize={scale(11)}
-              fontFamily={fontFamily.regular}
-              color={Colors.INFO}
-              numberOfLines={1}>
-              $ {lowBid}
-            </Text>
-          )}
-        </HStack>
+        <SectionBidAmount
+          {...{
+            projectStatus: item?.project?.projectStatus,
+            bids: item?.project?.bids,
+            listerId: item?.project?.userId,
+          }}
+        />
       </TouchableOpacity>
     </Box>
   );
