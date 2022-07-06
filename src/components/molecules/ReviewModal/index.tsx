@@ -60,9 +60,9 @@ const ReviewModal = ({
       loading={loading}>
       <FormProvider {...methods}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <VStack bg={Colors.WHITE} px="2" py="4" space="4" borderRadius="md">
+          <VStack bg={Colors.WHITE} px="2" py="4" space="1" borderRadius="md">
             <ModalHeader text={title} onPress={onCloseHandler} />
-            <Center>
+            <Center mt="2">
               <RatingStar
                 spacing={3}
                 size={28}
@@ -78,6 +78,7 @@ const ReviewModal = ({
               {...{formState}}
             />
             <CustomButton
+              mt="3"
               title="Done"
               onPress={handleSubmit(onSubmitHandler)}
             />

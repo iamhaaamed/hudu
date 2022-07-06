@@ -31,19 +31,31 @@ import {
   BID_EDIT_BID,
 } from '~/graphql/bid/mutations';
 
-export const useGetBids = (options: any = {}) => {
+export const useGetBids = ({
+  projectFilter,
+  location,
+  where,
+  options = {},
+}: {
+  projectFilter?: any;
+  location?: any;
+  where?: any;
+  options?: any;
+}) => {
   return useInfiniteQuery<
     Bid_GetBidsQuery,
     any,
     Bid_GetBidsQueryVariables,
     any
   >(
-    [queryKeys.bids],
+    [queryKeys.bids, projectFilter, location, where],
     async ({pageParam = 0}) => {
       return graphQLClient.request(BID_GET_BIDS, {
         skip: pageParam * PAGE_SIZE,
         take: PAGE_SIZE,
-        ...options,
+        projectFilter,
+        location,
+        where,
       });
     },
     {
@@ -81,6 +93,7 @@ export const useAcceptBid = () => {
       onSuccess: successData => {
         if (successData?.bid_acceptBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.projects);
           showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_acceptBid?.status));
@@ -112,6 +125,7 @@ export const useRejectBid = () => {
       onSuccess: successData => {
         if (successData?.bid_rejectBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.projects);
           showMessage(getResponseMessage(successData?.bid_rejectBid?.status));
         } else {
           showMessage(getResponseMessage(successData?.bid_rejectBid?.status));

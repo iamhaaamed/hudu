@@ -19,6 +19,7 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
+import {useIsFocused} from '@react-navigation/native';
 import useScrollSync from '~/hooks/useScrollSync';
 import {ScrollPair} from '~/types/ScrollPair';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -31,11 +32,14 @@ import {
   SectionQuestionRoute,
   TabBar,
   Header,
+  CustomLoading,
 } from '~/components';
 import {verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {useGetProject, useGetQuestions} from '~/hooks/project';
 import {useGetBids} from '~/hooks/bid';
+import {Center} from 'native-base';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const TAB_BAR_HEIGHT = verticalScale(35);
 const HEADER_HEIGHT = 0;
@@ -43,6 +47,7 @@ const HEADER_HEIGHT = 0;
 const Tab = createMaterialTopTabNavigator();
 
 const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
+  const isFocused = useIsFocused();
   const {projectId} = route?.params;
 
   const getBidsOption = {
@@ -75,8 +80,14 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
   const ActiveBidsRef = useRef<FlatList>(null);
 
   const [tabIndex, setTabIndex] = useState(0);
-
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  React.useLayoutEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, [isFocused]);
 
   const defaultHeaderHeight = top + HEADER_HEIGHT;
 
@@ -266,23 +277,35 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
 
   const loading = getProjectLoading || getBidsLoading || getQuestionLoading;
 
+  if (isLoading) {
+    return (
+      <Center flex={1}>
+        <CustomLoading />
+      </Center>
+    );
+  }
+
   return (
-    <CustomContainer isLoading={loading}>
-      <Animated.View onLayout={handleHeaderLayout} style={headerContainerStyle}>
-        <Header
-          title={project?.project?.title}
-          images={project?.project?.projectImages}
-          user={tabIndex === 0 ? project?.project?.user : null}
-          isLiked={project?.isLiked}
-          projectId={project?.project?.id}
-        />
-      </Animated.View>
-      <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">
-        <Tab.Screen name="Description">{renderDescription}</Tab.Screen>
-        <Tab.Screen name="Question">{renderQuestion}</Tab.Screen>
-        <Tab.Screen name="Active bids">{renderActiveBids}</Tab.Screen>
-      </Tab.Navigator>
-    </CustomContainer>
+    <KeyboardAwareScrollView contentContainerStyle={{flex: 1}}>
+      <CustomContainer isLoading={loading}>
+        <Animated.View
+          onLayout={handleHeaderLayout}
+          style={headerContainerStyle}>
+          <Header
+            title={project?.project?.title}
+            images={project?.project?.projectImages}
+            user={tabIndex === 0 ? project?.project?.user : null}
+            isLiked={project?.isLiked}
+            projectId={project?.project?.id}
+          />
+        </Animated.View>
+        <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">
+          <Tab.Screen name="Description">{renderDescription}</Tab.Screen>
+          <Tab.Screen name="Question">{renderQuestion}</Tab.Screen>
+          <Tab.Screen name="Active bids">{renderActiveBids}</Tab.Screen>
+        </Tab.Navigator>
+      </CustomContainer>
+    </KeyboardAwareScrollView>
   );
 };
 

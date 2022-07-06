@@ -112,7 +112,7 @@ export default function EditProfileScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}>
           <ProfilePicker {...register('imageAddress')} />
-          <VStack py="4" px="4" space="6">
+          <VStack py="4" px="4" space="2">
             <CustomInput
               {...register('firstName')}
               label="First name"
@@ -160,7 +160,6 @@ export default function EditProfileScreen() {
                   placeholder="City"
                   {...{formState}}
                   height={verticalScale(45)}
-                  isHorizontal
                 />
               </VStack>
               <VStack flex={1} h="100%">
@@ -171,7 +170,6 @@ export default function EditProfileScreen() {
                   placeholder="Select"
                   height={verticalScale(45)}
                   {...{formState}}
-                  isHorizontal
                   valueKey="value"
                   titleKey="title"
                 />
@@ -186,6 +184,7 @@ export default function EditProfileScreen() {
               validation
             />
             <CustomButton
+              mt="3"
               title="Save"
               height={verticalScale(45)}
               onPress={handleSubmit(onEdit)}

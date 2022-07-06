@@ -39,7 +39,6 @@ export default React.forwardRef(
       textStyle = styles.title,
       textColor = Colors.BLACK_2,
       formState,
-      isHorizontal = false,
       validation = false,
       valueKey = 'value',
       titleKey = 'title',
@@ -67,7 +66,6 @@ export default React.forwardRef(
       textStyle?: any;
       textColor?: any;
       formState?: any;
-      isHorizontal?: boolean;
       validation?: boolean;
       valueKey?: string;
       titleKey?: string;
@@ -78,7 +76,6 @@ export default React.forwardRef(
     const {height: screenHeight} = useWindowDimensions();
     const {field, fieldState} = useController({name});
 
-    const isValid = formState?.isValid;
     const isDirty = formState?.isDirty;
 
     const [visible, setVisible] = useState(false);
@@ -96,19 +93,13 @@ export default React.forwardRef(
       DropdownButton?.current?.measure((_fx, _fy, _w, h, _px, py) => {
         if (screenHeight - (py + h) > maxHeight) {
           setDropdownPosition({
-            top:
-              field.value || fieldState.error || isHorizontal
-                ? py + h
-                : py + h + 12,
+            top: py + h,
             bottom: undefined,
           });
         } else if (py > maxHeight) {
           setDropdownPosition({
             top: undefined,
-            bottom:
-              field.value || fieldState.error
-                ? screenHeight - py + 5 - h / 2
-                : screenHeight - py + 5 - h / 2 + 14,
+            bottom: screenHeight - py + 5 - h / 2,
           });
         } else {
           setDropdownPosition({
@@ -172,12 +163,7 @@ export default React.forwardRef(
 
     return (
       <FormControl isInvalid={fieldState.error} w={{base: '100%'}}>
-        <Box
-          mt={
-            visible || field.value || fieldState.error || isHorizontal
-              ? '3'
-              : '0'
-          }>
+        <Box mt="3">
           {(visible || field.value || fieldState.error) && (
             <Text
               position="absolute"

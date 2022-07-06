@@ -37,12 +37,10 @@ const SectionProjects = () => {
     projectFilter: 'NEWEST_TO_OLDEST',
     location: [12, 12],
     where: {
-      project: {
-        and: [
-          {projectDeadLine: {lte: today}},
-          {projectStatus: {eq: 'BIDDING'}},
-        ],
-      },
+      and: [
+        {project: {projectDeadLine: {gt: today}}},
+        {project: {projectStatus: {eq: 'BIDDING'}}},
+      ],
     },
   });
   const [currentLocation, setCurrentLocation] = useState({
@@ -84,12 +82,10 @@ const SectionProjects = () => {
         projectFilter: sort,
         location: [currentLocation?.latitude, currentLocation?.longitude],
         where: {
-          project: {
-            and: [
-              {projectDeadLine: {lte: today}},
-              {projectStatus: {eq: 'BIDDING'}},
-            ],
-          },
+          and: [
+            {project: {projectDeadLine: {gt: today}}},
+            {project: {projectStatus: {eq: 'BIDDING'}}},
+          ],
         },
       });
     }

@@ -29,7 +29,6 @@ export default React.forwardRef(
       rightComponent,
       formState,
       validation = false,
-      isHorizontal = false,
       height = verticalScale(45),
       labelFontSize = scale(14),
       fontSize = scale(14),
@@ -65,7 +64,6 @@ export default React.forwardRef(
       formState?: any;
       validation?: boolean;
       height?: number;
-      isHorizontal?: boolean;
       labelFontSize?: number;
       fontSize?: number;
       autoFocus?: boolean;
@@ -81,7 +79,6 @@ export default React.forwardRef(
       setSecureText(prevState => !prevState);
     };
 
-    const isValid = formState?.isValid;
     const isDirty = formState?.isDirty;
 
     const borderColor = disabled
@@ -105,12 +102,7 @@ export default React.forwardRef(
 
     return (
       <FormControl isInvalid={fieldState.error} w={{base: '100%'}}>
-        <Box
-          mt={
-            isFocused || field.value || fieldState.error || isHorizontal
-              ? '3'
-              : '0'
-          }>
+        <Box mt="3">
           {(isFocused || field.value || fieldState.error || disabled) && (
             <Text
               pl="2"
@@ -133,7 +125,7 @@ export default React.forwardRef(
             </Text>
           )}
           <HStack
-            h={textArea ? undefined : height}
+            h={textArea ? height * 2 : height}
             px="2"
             borderWidth="0.7"
             borderRadius="md"

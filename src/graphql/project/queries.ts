@@ -26,6 +26,7 @@ export const PROJECT_GET_PROJECT = gql`
             id
           }
           bids {
+            id
             bidStatus
             amount
             description
@@ -113,6 +114,7 @@ export const PROJECT_GET_PROJECTS = gql`
               bidStatus
               amount
               description
+              id
             }
           }
           isLiked

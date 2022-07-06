@@ -22,6 +22,7 @@ export const USER_LOGIN = gql`
         id
         isDeleted
         createdDate
+        isActive
       }
       status
     }

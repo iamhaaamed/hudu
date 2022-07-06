@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1093284278259-vkl64fe2kfrf160kbsmlnsunl8o5t4b6.apps.googleusercontent.com</string>
+	<string>1093284278259-c4npuejm0julg032fldg102dsi8vreed.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1093284278259-vkl64fe2kfrf160kbsmlnsunl8o5t4b6</string>
+	<string>com.googleusercontent.apps.1093284278259-c4npuejm0julg032fldg102dsi8vreed</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1093284278259-5kmhhuhti2ipohnucbm61bt8nb6om5oo.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyD0WCsxocC7QUEMFqzhegeH51NgZqO-SlI</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.reactjs.native.example.Hudu</string>
+	<string>io.apsy.hudu</string>
 	<key>PROJECT_ID</key>
 	<string>aps-hudu-qa</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1093284278259:ios:12167a3e2b7d59c2e9ec86</string>
+	<string>1:1093284278259:ios:a5744714963384f9e9ec86</string>
 </dict>
 </plist>

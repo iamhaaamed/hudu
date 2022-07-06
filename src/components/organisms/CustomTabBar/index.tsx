@@ -99,7 +99,8 @@ export default CustomTabBar;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: 50,
+    height: 55,
     backgroundColor: Colors.WHITE_F,
+    alignItems: 'center',
   },
 });

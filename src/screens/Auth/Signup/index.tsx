@@ -94,6 +94,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
   const appleOnPress = async () => {
     setLoading(true);
     const res = await signInWithApple();
+    console.log({res});
     if (res?.data) {
       completeSignUp();
     } else {
@@ -130,7 +131,7 @@ export default function SignUpScreen({navigation}: NavigationProp) {
             />
           </VStack>
           <Flex flex={1} justifyContent="flex-end" pb="6">
-            <VStack py="4" px="4" space="6">
+            <VStack py="4" px="4" space="1">
               <CustomInput
                 {...register('email')}
                 placeholder="Email"

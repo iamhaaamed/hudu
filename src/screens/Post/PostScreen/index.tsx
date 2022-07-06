@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {VStack, Center, HStack} from 'native-base';
 import {
@@ -9,6 +9,8 @@ import {
   CustomButton,
   SectionProjectImages,
   CustomSwitch,
+  QuestionModal,
+  PreviewPostModal,
 } from '~/components';
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -18,6 +20,13 @@ import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {stateList} from '~/constants/mockData';
 import {userDataStore} from '~/stores';
 import {showMessage} from 'react-native-flash-message';
+import {useAddProject} from '~/hooks/project';
+import {ResponseStatus} from '~/generated/graphql';
+import {useGetLocation} from '~/hooks/location';
+import {getResponseMessage} from '~/utils/helper';
+import queryKeys from '~/constants/queryKeys';
+import {useQueryClient} from 'react-query';
+import {resetRoot} from '~/navigation/Methods';
 
 const availabilityData = [
   {id: 0, title: 'Specific time', value: 'SPECIFIC_TIME'},
@@ -68,7 +77,10 @@ const schema = yup.object().shape({
 });
 
 const PostScreen = ({navigation}: NavigationProp) => {
+  const queryClient = useQueryClient();
+
   const {userData} = userDataStore(state => state);
+
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
@@ -77,10 +89,22 @@ const PostScreen = ({navigation}: NavigationProp) => {
     },
   });
 
-  const {handleSubmit, register, watch, formState} = methods;
+  const {handleSubmit, register, watch, formState, reset} = methods;
 
   const availability = watch('availability');
   const location = watch('location');
+
+  const [questionModalVisible, setQuestionModalVisible] =
+    useState<boolean>(false);
+  const [previewPostModalVisible, setPreviewPostModalVisible] =
+    useState<boolean>(false);
+  const [inputData, setInputData] = useState();
+  const [availabilityInput, setAvailabilityInput] = useState();
+
+  const {mutate: addProjectMutate, isLoading: addProjectLoading} =
+    useAddProject();
+  const {mutate: getLocationMutate, isLoading: getLocationLoading} =
+    useGetLocation();
 
   const previewOnPress = (formData: any) => {
     if (availability !== 'SPECIFIC_TIME') {
@@ -172,12 +196,79 @@ const PostScreen = ({navigation}: NavigationProp) => {
     }
   };
 
-  const goToNext = (input: any, availabilityInput: string) => {
-    navigation.navigate('PreviewPost', {
-      params: input,
-      availability: availabilityInput,
+  const goToNext = (input: any, availabilityInputData: any) => {
+    setInputData(input);
+    setAvailabilityInput(availabilityInputData);
+    setPreviewPostModalVisible(true);
+  };
+
+  const listProjectOnPress = () => {
+    getLocationMutate(inputData?.zipCode, {
+      onSuccess: (success: any) => {
+        if (success?.status === 1) {
+          const lat = parseFloat(success?.output?.[0]?.latitude);
+          const long = parseFloat(success?.output?.[0]?.longitude);
+          const input = {...inputData, point: [lat, long]};
+          addProjectMutate(input, {
+            onSuccess: successData => {
+              if (
+                successData?.project_addProject?.status ===
+                ResponseStatus.Success
+              ) {
+                queryClient.invalidateQueries(queryKeys.projects);
+                queryClient.invalidateQueries(queryKeys.bids);
+                setPreviewPostModalVisible(false);
+                setQuestionModalVisible(true);
+              } else {
+                showMessage(
+                  getResponseMessage(successData?.project_addProject?.status),
+                );
+              }
+            },
+          });
+        }
+      },
+      onError: error => {
+        console.log({error});
+      },
     });
   };
+
+  const onCloseQuestionModal = () => {
+    setQuestionModalVisible(false);
+  };
+
+  const onClosePreviewPostModal = () => {
+    setPreviewPostModalVisible(false);
+  };
+
+  const option1OnPress = () => {
+    setQuestionModalVisible(false);
+    setPreviewPostModalVisible(false);
+    reset({location: 'NEW_ADDRESS'});
+    navigation.navigate('ProjectsStack');
+  };
+
+  const option2OnPress = () => {
+    setQuestionModalVisible(false);
+    setPreviewPostModalVisible(false);
+    reset({location: 'NEW_ADDRESS'});
+    navigation.navigate('ProjectsStack', {
+      screen: 'Projects',
+      params: {pageNumber: 1},
+    });
+  };
+
+  const editOnPress = () => {
+    setPreviewPostModalVisible(false);
+  };
+
+  const cancelOnPress = () => {
+    setPreviewPostModalVisible(false);
+    resetRoot('HomeStack');
+  };
+
+  const loading = addProjectLoading || getLocationLoading;
 
   return (
     <CustomContainer>
@@ -187,7 +278,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
           contentContainerStyle={styles.contentContainerStyle}>
           <VStack py="4" space="6">
             <SectionProjectImages {...register('projectImages')} />
-            <VStack px="4" space="3" flex={1}>
+            <VStack px="4" space="1" flex={1}>
               <CustomInput
                 {...register('title')}
                 placeholder="Title"
@@ -223,7 +314,11 @@ const PostScreen = ({navigation}: NavigationProp) => {
                   {...{formState}}
                 />
               )}
-              <CustomSwitch {...register('location')} data={locationData} />
+              <CustomSwitch
+                mt="2"
+                {...register('location')}
+                data={locationData}
+              />
               {location === 'NEW_ADDRESS' && (
                 <>
                   <CustomInput
@@ -241,7 +336,6 @@ const PostScreen = ({navigation}: NavigationProp) => {
                         placeholder="City"
                         {...{formState}}
                         height={verticalScale(45)}
-                        isHorizontal
                       />
                     </Center>
                     <Center flex={1}>
@@ -251,7 +345,6 @@ const PostScreen = ({navigation}: NavigationProp) => {
                         placeholder="State"
                         height={verticalScale(45)}
                         textStyle={styles.input}
-                        isHorizontal
                         valueKey="value"
                         titleKey="title"
                       />
@@ -269,6 +362,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
                 </>
               )}
               <CustomButton
+                mt="3"
                 title="Preview"
                 onPress={handleSubmit(previewOnPress)}
                 height={verticalScale(45)}
@@ -277,6 +371,25 @@ const PostScreen = ({navigation}: NavigationProp) => {
           </VStack>
         </CustomKeyboardAwareScrollView>
       </FormProvider>
+      <QuestionModal
+        visible={questionModalVisible}
+        onClose={onCloseQuestionModal}
+        title="Congratulations, your project has been listed"
+        option1="Take me to my Project"
+        option2="Take me to my HUDU"
+        option1OnPress={option1OnPress}
+        option2OnPress={option2OnPress}
+      />
+      <PreviewPostModal
+        visible={previewPostModalVisible}
+        onClose={onClosePreviewPostModal}
+        availability={availabilityInput}
+        data={inputData}
+        listProjectOnPress={listProjectOnPress}
+        editOnPress={editOnPress}
+        cancelOnPress={cancelOnPress}
+        loading={loading}
+      />
     </CustomContainer>
   );
 };

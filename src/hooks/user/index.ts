@@ -205,14 +205,18 @@ export const useLogin = () => {
     {
       onSuccess: successData => {
         if (successData.user_login?.status === ResponseStatus.Success) {
-          setUserData(successData.user_login?.result);
-          setIsUserLoggedIn(true);
-          showMessage({
-            message: 'You are logged in successfully',
-            type: 'success',
-            icon: 'success',
-          });
-          resetRoot('MainTabs');
+          if (successData.user_login?.result?.isActive) {
+            setUserData(successData.user_login?.result);
+            setIsUserLoggedIn(true);
+            showMessage({
+              message: 'You are logged in successfully',
+              type: 'success',
+              icon: 'success',
+            });
+            resetRoot('MainTabs');
+          } else {
+            showMessage(getResponseMessage(ResponseStatus.UserNotFound));
+          }
         } else {
           showMessage(getResponseMessage(successData.user_login?.status));
         }

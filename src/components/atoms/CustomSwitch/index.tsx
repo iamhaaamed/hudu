@@ -10,9 +10,11 @@ export default React.forwardRef(
     {
       name,
       data,
+      mt,
     }: {
       name: any;
       data?: any;
+      mt?: number | string;
     },
     ref: any,
   ) => {
@@ -24,7 +26,7 @@ export default React.forwardRef(
 
     return (
       <FormControl isInvalid={fieldState.error} w={{base: '100%'}}>
-        <Box>
+        <Box mt={mt}>
           <HStack
             p="2"
             space="2"

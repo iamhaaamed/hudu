@@ -30,6 +30,7 @@ export {default as SectionBidLabel} from './atoms/SectionBidLabel';
 export {default as CustomSwitch} from './atoms/CustomSwitch';
 export {default as CustomIconButton} from './atoms/CustomIconButton';
 export {default as TimeLeftLabel} from './atoms/TimeLeftLabel';
+export {default as SectionBidAmount} from './atoms/SectionBidAmount';
 
 //molecules
 export {default as SectionUserRow} from './molecules/SectionUserRow';
@@ -68,9 +69,7 @@ export {default as SectionListerReviews} from './organisms/SectionListerReviews'
 export {default as SectionDescriptionRoute} from './organisms/SectionDescriptionRoute';
 export {default as SectionQuestionRoute} from './organisms/SectionQuestionRoute';
 export {default as SectionActiveBidsRoute} from './organisms/SectionActiveBidsRoute';
-export {default as SectionDescriptionRouteLister} from './organisms/SectionDescriptionRouteLister';
-export {default as SectionQuestionRouteLister} from './organisms/SectionQuestionRouteLister';
-export {default as SectionActiveBidsRouteLister} from './organisms/SectionActiveBidsRouteLister';
 export {default as TabBar} from './organisms/TabBar';
 export {default as Header} from './organisms/Header';
 export {default as SectionProjectImages} from './organisms/SectionProjectImages';
+export {default as PreviewPostModal} from './organisms/PreviewPostModal';
