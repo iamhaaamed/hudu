@@ -58,9 +58,13 @@ const FavoriteScreen = () => {
 
   const userLikeProjects = getUserLikeProjects?.pages ?? [];
 
-  const {register, watch} = methods;
+  const {register, watch, setValue} = methods;
 
   const sort = watch('sort');
+
+  useEffect(() => {
+    setValue('sort', undefined);
+  }, [isUserLoggedIn]);
 
   useEffect(() => {
     getCurrentLocation();

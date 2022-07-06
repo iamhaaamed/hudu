@@ -62,7 +62,7 @@ const AuthProfileLinks = () => {
         ))}
       </VStack>
       <CustomIconButton
-        name="log-out-outline"
+        name="log-in-outline"
         title="Log in"
         onPress={onLogOutPressHandler}
       />

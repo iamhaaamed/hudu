@@ -13,7 +13,7 @@ import {
   EmptyData,
 } from '~/components';
 import {useGetProjects} from '~/hooks/project';
-import {userDataStore} from '~/stores';
+import {authStore, userDataStore} from '~/stores';
 import {requestLocationPermission} from '~/utils/getPermissions';
 import {showMessage} from 'react-native-flash-message';
 import Geolocation from 'react-native-geolocation-service';
@@ -23,13 +23,14 @@ const schema = yup.object().shape({
 });
 
 const SectionListerProjects = () => {
+  const {isUserLoggedIn} = authStore(state => state);
   const {userData} = userDataStore(state => state);
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const {register, watch} = methods;
+  const {register, watch, setValue} = methods;
 
   const sort = watch('sort');
 
@@ -42,6 +43,10 @@ const SectionListerProjects = () => {
     latitude: 12,
     longitude: 12,
   });
+
+  useEffect(() => {
+    setValue('sort', undefined);
+  }, [isUserLoggedIn]);
 
   useEffect(() => {
     getCurrentLocation();

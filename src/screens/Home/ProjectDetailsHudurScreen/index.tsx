@@ -63,8 +63,11 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
     projectId,
   });
   const {isLoading: getBidsLoading, data: getBids} = useGetBids(getBidsOption);
-  const {isLoading: getQuestionLoading, data: getQuestions} =
-    useGetQuestions(getQuestionsOptions);
+  const {
+    isLoading: getQuestionLoading,
+    data: getQuestions,
+    isRefetching: isRefetchingQuestions,
+  } = useGetQuestions(getQuestionsOptions);
 
   const bids = getBids?.pages ?? [];
   const questions = getQuestions?.pages ?? [];
@@ -219,6 +222,7 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
         listerId={project?.project?.userId}
         projectId={projectId}
         onScroll={suggestionsScrollHandler}
+        isRefetching={isRefetchingQuestions}
         {...sharedProps}
       />
     ),
@@ -286,7 +290,8 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
   }
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={{flex: 1}}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.contentContainerStyle}>
       <CustomContainer isLoading={loading}>
         <Animated.View
           onLayout={handleHeaderLayout}
@@ -301,7 +306,7 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
         </Animated.View>
         <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">
           <Tab.Screen name="Description">{renderDescription}</Tab.Screen>
-          <Tab.Screen name="Question">{renderQuestion}</Tab.Screen>
+          <Tab.Screen name="Questions">{renderQuestion}</Tab.Screen>
           <Tab.Screen name="Active bids">{renderActiveBids}</Tab.Screen>
         </Tab.Navigator>
       </CustomContainer>
@@ -326,4 +331,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
   },
+  contentContainerStyle: {flex: 1},
 });

@@ -58,8 +58,8 @@ const ReviewModal = ({
       onClose={onCloseHandler}
       style={styles.modal}
       loading={loading}>
-      <FormProvider {...methods}>
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <FormProvider {...methods}>
           <VStack bg={Colors.WHITE} px="2" py="4" space="1" borderRadius="md">
             <ModalHeader text={title} onPress={onCloseHandler} />
             <Center mt="2">
@@ -83,8 +83,8 @@ const ReviewModal = ({
               onPress={handleSubmit(onSubmitHandler)}
             />
           </VStack>
-        </TouchableWithoutFeedback>
-      </FormProvider>
+        </FormProvider>
+      </TouchableWithoutFeedback>
     </ModalContainer>
   );
 };

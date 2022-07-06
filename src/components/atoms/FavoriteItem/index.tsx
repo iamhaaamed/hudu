@@ -1,25 +1,17 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Box, VStack, HStack} from 'native-base';
 import {Colors} from '~/styles';
-import {CustomImage, FavoriteIcon, TimeLeftLabel} from '~/components';
+import {
+  CustomImage,
+  FavoriteIcon,
+  TimeLeftLabel,
+  SectionBidAmount,
+} from '~/components';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {navigate} from '~/navigation/Methods';
 
 const FavoriteItem = ({item}: {item?: any}) => {
-  const lowBid = useMemo(() => {
-    let res = -1;
-    if (item?.project?.bids?.length > 0) {
-      res = Math.min.apply(
-        Math,
-        item?.project?.bids?.map(function (object: any) {
-          return object?.amount;
-        }),
-      );
-    }
-    return res;
-  }, [item]);
-
   const onPressHandler = () => {
     navigate('ProjectDetailsHudur', {projectId: item?.project?.id});
   };
@@ -64,26 +56,13 @@ const FavoriteItem = ({item}: {item?: any}) => {
             {item?.project?.description}
           </Text>
         </VStack>
-        <HStack pb="2" px="2" justifyContent="space-between">
-          <Text
-            fontSize={scale(11)}
-            fontFamily={fontFamily.regular}
-            numberOfLines={1}
-            color={Colors.BLACK_1}>
-            {item?.project?.bids?.length > 0 && lowBid !== -1
-              ? 'Current low bid'
-              : 'Be the first one to bid'}
-          </Text>
-          {item?.project?.bids?.length > 0 && lowBid !== -1 && (
-            <Text
-              fontSize={scale(11)}
-              fontFamily={fontFamily.regular}
-              color={Colors.INFO}
-              numberOfLines={1}>
-              $ {lowBid}
-            </Text>
-          )}
-        </HStack>
+        <SectionBidAmount
+          {...{
+            projectStatus: item?.project?.projectStatus,
+            bids: item?.project?.bids,
+            listerId: item?.project?.userId,
+          }}
+        />
       </TouchableOpacity>
     </Box>
   );

@@ -55,7 +55,9 @@ const Header = ({title, images, user, isLiked, projectId}: any) => {
               <Ionicons name="chevron-back" color={Colors.BLACK_3} size={24} />
             }
           />
-          <ProjectFavoriteIcon {...{isLiked, projectId, size: 24}} />
+          {!isLister && (
+            <ProjectFavoriteIcon {...{isLiked, projectId, size: 24}} />
+          )}
         </HStack>
         <CustomCarousel height={verticalScale(302)} data={images} />
       </VStack>
