@@ -1,24 +1,11 @@
 import React from 'react';
 import {CommonActions} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  ProjectsScreen,
-  HudurProfileListerScreen,
-  ListerProfileScreen,
-  HudurProfileScreen,
-} from '~/screens';
-import {CustomHeader} from '~/components';
-import ProjectDetailsHudurScreen from './../screens/Home/ProjectDetailsHudurScreen/index';
+import {ProjectsScreen} from '~/screens';
 
 const Stack = createNativeStackNavigator();
 
-export type ProjectStackParamList = {
-  Projects: {pageNumber?: number};
-  ProjectDetailsHudur: {projectId?: number};
-  ListerProfile: {userId?: number};
-  HudurProfile: {userId?: number};
-  HudurProfileLister: undefined;
-};
+export type ProjectStackParamList = {Projects: {pageNumber?: number}};
 
 const publicScreenOption = {
   headerShown: false,
@@ -31,38 +18,6 @@ const screens = [
     component: ProjectsScreen,
     options: publicScreenOption,
     initialParams: {pageNumber: 0},
-  },
-  {
-    name: 'ProjectDetailsHudur',
-    component: ProjectDetailsHudurScreen,
-    options: publicScreenOption,
-  },
-  {
-    name: 'ListerProfile',
-    component: ListerProfileScreen,
-    options: {
-      headerTitle: 'Profile',
-      headerShown: true,
-      header: (props: any) => <CustomHeader {...props} />,
-    },
-  },
-  {
-    name: 'HudurProfile',
-    component: HudurProfileScreen,
-    options: {
-      headerTitle: 'Profile',
-      headerShown: true,
-      header: (props: any) => <CustomHeader {...props} />,
-    },
-  },
-  {
-    name: 'HudurProfileLister',
-    component: HudurProfileListerScreen,
-    options: {
-      headerTitle: 'Profile',
-      headerShown: true,
-      header: (props: any) => <CustomHeader {...props} />,
-    },
   },
 ];
 
