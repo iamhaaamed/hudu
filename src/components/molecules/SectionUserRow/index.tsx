@@ -17,8 +17,6 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
   const {userData} = userDataStore(state => state);
   const {count, setCount} = notificationsStore(state => state);
 
-  const cnt = count;
-
   const [notificationData, setNotificationData] = useState(undefined);
 
   useNotificationSubscription({
