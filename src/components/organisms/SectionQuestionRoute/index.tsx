@@ -123,6 +123,7 @@ const SectionQuestionRoute = forwardRef(
                     {...register('message')}
                     placeholder="Cannot find your question? Type it here"
                     backgroundColor={Colors.WHITE}
+                    fontSize={scale(15)}
                     {...{formState}}
                     rightComponent={() => (
                       <IconButton
