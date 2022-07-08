@@ -99,7 +99,7 @@ const ListerProfileScreen = ({navigation, route}: any) => {
             <CustomImage
               style={styles.avatar}
               imageSource={profile?.imageAddress}
-              resizeMode="stretch"
+              resizeMode="cover"
               errorImage={images.avatarErrorImage}
               zoomable
             />

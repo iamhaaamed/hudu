@@ -69,7 +69,7 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
         <CustomImage
           imageSource={data?.imageAddress}
           style={styles.image}
-          resizeMode="stretch"
+          resizeMode="cover"
           errorImage={images.avatarErrorImage}
         />
         <VStack flex={1}>

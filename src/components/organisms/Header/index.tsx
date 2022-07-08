@@ -93,7 +93,7 @@ const Header = ({title, images, user, isLiked, projectId, userId}: any) => {
                 <CustomImage
                   imageSource={user?.imageAddress}
                   style={styles.avatar}
-                  resizeMode="stretch"
+                  resizeMode="cover"
                   errorImage={assetsImages.avatarErrorImage}
                 />
                 <Text

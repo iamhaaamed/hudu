@@ -18,7 +18,7 @@ export default function AuthScreen({navigation}: NavigationProp) {
         <CustomImage
           local
           style={styles.image}
-          resizeMode="stretch"
+          resizeMode="cover"
           imageSource={images.huduLogo1}
           backgroundColor={Colors.TRANSPARENT}
         />

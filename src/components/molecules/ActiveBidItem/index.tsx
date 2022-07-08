@@ -134,7 +134,7 @@ const ActiveBidItem = ({
             <HStack space="2" alignItems="center">
               <CustomImage
                 imageSource={item?.hudu?.imageAddress}
-                resizeMode="stretch"
+                resizeMode="cover"
                 style={styles.avatar}
                 errorImage={images.avatarErrorImage}
               />

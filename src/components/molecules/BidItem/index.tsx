@@ -39,7 +39,7 @@ const BidItem = ({item}: {item?: any}) => {
           <CustomImage
             imageSource={item?.hudu?.imageAddress}
             style={styles.avatar}
-            resizeMode="stretch"
+            resizeMode="cover"
             errorImage={images.avatarErrorImage}
           />
           <Text

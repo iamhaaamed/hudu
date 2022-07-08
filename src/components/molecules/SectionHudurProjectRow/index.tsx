@@ -156,7 +156,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
               <CustomImage
                 imageSource={item?.project?.projectImages?.[0]?.imageAddress}
                 style={styles.image}
-                resizeMode="stretch"
+                resizeMode="cover"
               />
               <VStack flex={1} space="1">
                 <HStack alignItems="center">
