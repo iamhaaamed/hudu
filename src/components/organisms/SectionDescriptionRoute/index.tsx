@@ -240,14 +240,6 @@ const SectionDescriptionRoute = forwardRef(
               </MapView>
             )}
           </Box>
-          {userData?.id !== data?.userId &&
-            data?.projectStatus === 'BIDDING' && (
-              <CustomButton
-                onPress={submitBidOnPress}
-                title="Submit bid"
-                height={verticalScale(45)}
-              />
-            )}
         </VStack>
       ),
       [data],
@@ -273,6 +265,15 @@ const SectionDescriptionRoute = forwardRef(
           }}
           showsVerticalScrollIndicator={false}
         />
+        {userData?.id !== data?.userId && data?.projectStatus === 'BIDDING' && (
+          <VStack px="4" py="4" bg={Colors.WHITE}>
+            <CustomButton
+              onPress={submitBidOnPress}
+              title="Submit bid"
+              height={verticalScale(45)}
+            />
+          </VStack>
+        )}
         <EditModal
           visible={editModalVisible}
           onClose={closeEditModal}
