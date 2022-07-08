@@ -6,8 +6,11 @@ import {useDeleteNotification, useReadNotification} from '~/hooks/notification';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {fontFamily, scale} from '~/utils/style';
 import {navigate} from '~/navigation/Methods';
+import {notificationsStore} from '~/stores';
+import {ResponseStatus} from '~/generated/graphql';
 
 const NotificationItem = ({item}: {item: any}) => {
+  const {count, setCount} = notificationsStore(state => state);
   const {mutate: mutateReadNotification, isLoading: readNotificationLoading} =
     useReadNotification();
   const {
@@ -18,7 +21,14 @@ const NotificationItem = ({item}: {item: any}) => {
   useEffect(() => {
     if (item?.id && !item?.isReaded) {
       mutateReadNotification(item?.id, {
-        onSuccess: () => {},
+        onSuccess: successData => {
+          if (
+            successData?.notification_readNotification?.status ===
+            ResponseStatus.Success
+          ) {
+            setCount(count - 1);
+          }
+        },
         onError: () => {},
       });
     }

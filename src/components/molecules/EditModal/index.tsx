@@ -44,7 +44,7 @@ const EditModal = ({
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, formState, setValue} = methods;
+  const {handleSubmit, register, formState, setValue, reset} = methods;
 
   useEffect(() => {
     defaultData?.amount && setValue('amount', String(defaultData?.amount));
@@ -57,7 +57,7 @@ const EditModal = ({
   };
 
   const onSubmitHandler = (formData: any) => {
-    onSubmit?.(formData);
+    onSubmit?.(formData, reset);
   };
 
   return (

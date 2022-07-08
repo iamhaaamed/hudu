@@ -128,7 +128,7 @@ const SectionDescriptionRoute = forwardRef(
       setEditModalVisible(false);
     };
 
-    const submitEditModal = (formData: any) => {
+    const submitEditModal = (formData: any, reset: any) => {
       const input = {
         description: formData?.description,
         projectId: data?.id,
@@ -137,6 +137,7 @@ const SectionDescriptionRoute = forwardRef(
       mutateAddBid(input, {
         onSuccess: () => {
           setEditModalVisible(false);
+          reset();
         },
         onError: () => {
           setEditModalVisible(false);

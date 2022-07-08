@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
-import {Text, HStack, VStack, IconButton} from 'native-base';
+import {Text, HStack, VStack, IconButton, Center, Box} from 'native-base';
 import {fontFamily, scale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {CustomImage, RatingStar} from '~/components';
@@ -8,13 +8,16 @@ import {BellIcon} from '~/assets/icons';
 import {navigate} from '~/navigation/Methods';
 import images from '~/assets/images';
 import {useNotificationSubscription} from '~/hooks/notification';
-import {userDataStore} from '~/stores';
+import {notificationsStore, userDataStore} from '~/stores';
 import {useQueryClient} from 'react-query';
 import queryKeys from '~/constants/queryKeys';
 
 const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
   const queryClient = useQueryClient();
   const {userData} = userDataStore(state => state);
+  const {count, setCount} = notificationsStore(state => state);
+
+  const cnt = count;
 
   const [notificationData, setNotificationData] = useState(undefined);
 
@@ -25,6 +28,9 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
 
   useEffect(() => {
     closeNotification();
+    if (notificationData) {
+      setCount(count + 1);
+    }
   }, [notificationData]);
 
   const closeNotification = () => {
@@ -89,7 +95,26 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
             <RatingStar disabled showRating="right" rate={data?.averageRate} />
           </HStack>
         </VStack>
-        <IconButton onPress={notificationOnPress} icon={<BellIcon />} />
+        <Box>
+          <IconButton onPress={notificationOnPress} icon={<BellIcon />} />
+          {count > 0 && (
+            <Center
+              position="absolute"
+              h="3"
+              w="3"
+              rounded="full"
+              bg={Colors.FINISHED_COLOR}
+              right="2"
+              top="2.5">
+              <Text
+                fontFamily={fontFamily.regular}
+                color={Colors.WHITE}
+                fontSize={scale(8)}>
+                {count}
+              </Text>
+            </Center>
+          )}
+        </Box>
       </HStack>
     </VStack>
   );
