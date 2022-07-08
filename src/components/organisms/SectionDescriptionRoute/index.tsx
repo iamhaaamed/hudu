@@ -176,9 +176,10 @@ const SectionDescriptionRoute = forwardRef(
             {...{time: data?.projectDeadLine, type: 'projectDetails'}}
           />
           <HStack alignItems="center" justifyContent="space-between">
-            <HStack alignItems="center" space="1">
+            <HStack flex={1} alignItems="center" space="1">
               <LocationIcon />
               <Text
+                flex={1}
                 fontSize={scale(16)}
                 fontFamily={fontFamily.regular}
                 color={Colors.PRIMARY}>

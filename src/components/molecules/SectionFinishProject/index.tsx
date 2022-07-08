@@ -4,6 +4,8 @@ import {Colors} from '~/styles';
 import {CustomButton, ReviewModal, QuestionModal} from '~/components';
 import {useAddFeedBack, useFinishProject} from '~/hooks/project';
 import {ResponseStatus} from '~/generated/graphql';
+import {useQueryClient} from 'react-query';
+import queryKeys from '~/constants/queryKeys';
 
 const SectionFinishProject = ({
   projectId,
@@ -12,6 +14,7 @@ const SectionFinishProject = ({
   projectId: number;
   currentBid: any;
 }) => {
+  const queryClient = useQueryClient();
   const {mutate: mutateFinishProject, isLoading: finishProjectLoading} =
     useFinishProject();
   const {mutate: mutateAddFeedBack, isLoading: addFeedBackLoading} =
@@ -35,13 +38,16 @@ const SectionFinishProject = ({
           successData?.project_finisheProject?.status === ResponseStatus.Success
         ) {
           setFinishModalVisible(false);
-          setReviewModalVisible(true);
+          setTimeout(() => {
+            setReviewModalVisible(true);
+          }, 100);
         }
       },
     });
   };
 
   const onCloseReviewModal = () => {
+    queryClient.invalidateQueries(queryKeys.projects);
     setReviewModalVisible(false);
   };
 
@@ -58,6 +64,7 @@ const SectionFinishProject = ({
         if (
           successData?.project_addFeedBack?.status === ResponseStatus.Success
         ) {
+          queryClient.invalidateQueries(queryKeys.projects);
           setReviewModalVisible(false);
         }
       },
@@ -72,7 +79,6 @@ const SectionFinishProject = ({
         onPress={finishProjectOnPress}
         color={Colors.BLACK_3}
         height={verticalScale(35)}
-        loading={finishProjectLoading}
         spinnerColor={Colors.BLACK_3}
       />
       <QuestionModal

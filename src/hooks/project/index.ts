@@ -400,7 +400,8 @@ export const useFinishProject = () => {
         if (
           successData?.project_finisheProject?.status === ResponseStatus.Success
         ) {
-          queryClient.invalidateQueries(queryKeys.projects);
+          queryClient.invalidateQueries(queryKeys.bids);
+          queryClient.invalidateQueries(queryKeys.userLikeProjects);
         } else {
           showMessage(
             getResponseMessage(successData?.project_finisheProject?.status),
