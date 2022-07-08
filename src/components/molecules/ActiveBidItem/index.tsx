@@ -233,7 +233,7 @@ const ActiveBidItem = ({
       <QuestionModal
         visible={cancelBidModalVisible}
         onClose={onCloseCancelBidModal}
-        title="Are you sur you want cancel this bid?"
+        title="Are you sure you want cancel this bid?"
         option1="No"
         option2="Yes"
         option1OnPress={onCloseCancelBidModal}
@@ -243,7 +243,7 @@ const ActiveBidItem = ({
       <QuestionModal
         visible={awardModalVisible}
         onClose={onCloseAwardModal}
-        title="Are you sur you want award this bid?"
+        title="Are you sure you want award this bid?"
         option1="No"
         option2="Yes"
         option1OnPress={onCloseAwardModal}
@@ -253,7 +253,7 @@ const ActiveBidItem = ({
       <QuestionModal
         visible={rejectModalVisible}
         onClose={onCloseRejectModal}
-        title="Are you sur you want reject this bid?"
+        title="Are you sure you want reject this bid?"
         option1="No"
         option2="Yes"
         option1OnPress={onCloseRejectModal}

@@ -78,7 +78,7 @@ const SectionFinishProject = ({
       <QuestionModal
         visible={finishModalVisible}
         onClose={onCloseFinishModal}
-        title="Are you sur you want finish this project?"
+        title="Are you sure you want finish this project?"
         option1="No"
         option2="Yes"
         option1OnPress={onCloseFinishModal}
