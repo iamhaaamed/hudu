@@ -79,6 +79,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
       id: item?.id,
       amount: formData?.amount,
       description: formData?.description,
+      bidStatus: item?.bidStatus,
     };
     mutateEditBid(input, {
       onSuccess: successData => {
