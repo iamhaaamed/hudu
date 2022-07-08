@@ -138,11 +138,11 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
                 resizeMode="cover"
               />
               <VStack flex={1} space="1">
-                <HStack alignItems="center">
+                <HStack alignItems="center" space="1">
                   <Text
                     flex={1}
                     numberOfLines={1}
-                    fontSize={scale(16)}
+                    fontSize={scale(15)}
                     fontFamily={fontFamily.medium}
                     color={Colors.BLACK_1}>
                     {item?.project?.title}
@@ -208,8 +208,8 @@ export default SectionListerProjectRow;
 
 const styles = StyleSheet.create({
   image: {
-    height: '100%',
-    width: scale(107),
+    minHeight: scale(97),
+    width: scale(97),
     borderRadius: 10,
   },
   item: {

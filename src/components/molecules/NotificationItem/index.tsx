@@ -26,7 +26,9 @@ const NotificationItem = ({item}: {item: any}) => {
             successData?.notification_readNotification?.status ===
             ResponseStatus.Success
           ) {
-            setCount(count - 1);
+            if (count > 0) {
+              setCount(count - 1);
+            }
           }
         },
         onError: () => {},
