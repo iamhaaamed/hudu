@@ -31,7 +31,7 @@ const ReviewModal = ({
   title: string;
   loading?: boolean;
 }) => {
-  const [rate, setRate] = useState(3);
+  const [rate, setRate] = useState(0);
 
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),

@@ -205,6 +205,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
         onClose={closeEditModal}
         onSubmit={submitEditModal}
         title="Bid details"
+        buttonTitle="Save"
         loading={editBidLoading}
         defaultData={{
           amount: item?.amount,
