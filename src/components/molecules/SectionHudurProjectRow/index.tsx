@@ -48,6 +48,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   };
 
   const onCloseQuestionModal = () => {
+    discardSwipe();
     setQuestionModalVisible(false);
   };
 
@@ -55,6 +56,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
     mutateDeleteBid(item?.id, {
       onSuccess: successData => {
         if (successData?.bid_deleteBid?.status === ResponseStatus.Success) {
+          discardSwipe();
           setQuestionModalVisible(false);
         }
       },
@@ -68,6 +70,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   };
 
   const closeEditModal = () => {
+    discardSwipe();
     setEditModalVisible(false);
   };
 
@@ -82,10 +85,15 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
         if (successData?.bid_editBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.projects);
           queryClient.invalidateQueries(queryKeys.bids);
+          discardSwipe();
           setEditModalVisible(false);
         }
       },
     });
+  };
+
+  const discardSwipe = () => {
+    swipeable.current?.close();
   };
 
   const renderRightActions = () => {
@@ -128,7 +136,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
     <>
       <Swipeable
         ref={swipeable}
-        renderRightActions={renderRightActions}
+        renderRightActions={item?.bidStatus === 'WAITING' && renderRightActions}
         renderLeftActions={renderLeftActions}>
         <Center
           px="2"

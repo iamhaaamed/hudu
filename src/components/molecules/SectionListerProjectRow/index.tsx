@@ -66,6 +66,7 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
   };
 
   const onCloseQuestionModal = () => {
+    discardSwipe();
     setQuestionModalVisible(false);
   };
 
@@ -75,10 +76,15 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
         if (
           successData?.project_deleteProject?.status === ResponseStatus.Success
         ) {
+          discardSwipe();
           setQuestionModalVisible(false);
         }
       },
     });
+  };
+
+  const discardSwipe = () => {
+    swipeable.current?.close();
   };
 
   const itemOnPress = () => {
@@ -109,8 +115,9 @@ const SectionListerProjectRow = ({item}: {item: any}) => {
     <>
       <Swipeable
         ref={swipeable}
-        //renderRightActions={renderRightActions}
-        renderLeftActions={renderLeftActions}>
+        renderLeftActions={
+          item?.project?.projectStatus === 'BIDDING' && renderLeftActions
+        }>
         <Center
           px="2"
           py="2"
@@ -210,32 +217,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-/*
-
-
-import Feather from 'react-native-vector-icons/Feather';
-
-
-  const editOnPress = () => {};
-
-  const renderRightActions = () => {
-    return (
-      <TouchableOpacity activeOpacity={1} onPress={editOnPress}>
-        <Center
-          flex={1}
-          bg={Colors.RIGHT_ACTION_BACKGROUND}
-          my="1"
-          mr="1"
-          w={scale(59)}
-          borderRightRadius="lg">
-          <Feather name="edit"
-          size={scale(24)}
-            color={Colors.BLACK_3}
-          />
-        </Center>
-      </TouchableOpacity>
-    );
-  };
-
-*/
