@@ -35,6 +35,7 @@ export const TIME_LEFT_RED = '#F44848';
 export const TIME_LEFT_ORANGE = '#FDA500';
 export const FAVORITE_RIPPLE_COLOR = 'rgba(232,231,231,0.85)';
 export const TAB_BAR_ICON = '#a5a6af';
+export const DOT_RIPPLE_COLOR = 'rgba(255, 255, 255, 0.92)';
 
 export const PRIMARY = '#0342FE';
 export const SECONDARY = '#E6F2FF';
