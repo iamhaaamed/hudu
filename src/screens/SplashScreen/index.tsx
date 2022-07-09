@@ -22,7 +22,7 @@ export default function SplashScreen() {
 
 const styles = StyleSheet.create({
   image: {
-    height: verticalScale(61),
-    width: scale(275),
+    height: 61,
+    width: 275,
   },
 });
