@@ -2,8 +2,8 @@ import {HomeStackParamList} from './HomeStack';
 import {FavoriteStackParamList} from './FavoriteStack';
 import {PostStackParamList} from './PostStack';
 import {ProjectStackParamList} from './ProjectsStack';
-import {ProfileStackParamList} from './ProfileStack';
 import {MainStackParamList} from './MainStack';
+import {ProfileStackParamList} from './ProfileStack';
 
 export type RootStackParamList = MainStackParamList &
   HomeStackParamList &
