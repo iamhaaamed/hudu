@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {ActivityIndicator} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {OnboardingScreen, SplashScreen} from '~/screens';
@@ -10,6 +11,23 @@ const Stack = createNativeStackNavigator();
 
 const navigatorOptions = {
   headerShown: false,
+};
+
+const linking = {
+  prefixes: ['hudu://hudu'],
+  config: {
+    screens: {
+      MainStack: {
+        screens: {
+          AuthStack: {
+            screens: {
+              PaymentResult: 'PaymentResult/:data',
+            },
+          },
+        },
+      },
+    },
+  },
 };
 
 export default function AppNavigator() {
@@ -33,7 +51,10 @@ export default function AppNavigator() {
   }
 
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer
+      linking={linking}
+      fallback={<ActivityIndicator color="blue" size="large" />}
+      ref={navigationRef}>
       <Stack.Navigator screenOptions={navigatorOptions}>
         {!isOnboardingViewed && (
           <Stack.Screen name={'onBoarding'} component={OnboardingScreen} />

@@ -1,5 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {CommonActions} from '@react-navigation/native';
 import {
   ReviewsScreen,
   EditProfileScreen,
@@ -9,6 +10,8 @@ import {
   SignUpScreen,
   ForgotPasswordScreen,
   AuthScreen,
+  PaymentResultScreen,
+  ProfileScreen,
 } from '~/screens';
 import {CustomHeader} from '~/components';
 import {authStore} from '~/stores';
@@ -24,9 +27,20 @@ export type ProfileStackParamList = {
   SignUp: undefined;
   ForgotPassword: undefined;
   Auth: undefined;
+  PaymentResult: undefined;
+};
+
+const publicScreenOption = {
+  headerShown: false,
+  ...CommonActions,
 };
 
 const profileScreens = [
+  {
+    name: 'Profile',
+    component: ProfileScreen,
+    options: publicScreenOption,
+  },
   {
     name: 'EditProfile',
     component: EditProfileScreen,
@@ -69,6 +83,14 @@ const profileScreens = [
       header: ({route, options, navigation}: any) => (
         <CustomHeader back {...{route, options, navigation}} />
       ),
+    },
+  },
+  {
+    name: 'PaymentResult',
+    component: PaymentResultScreen,
+    options: {
+      headerTitle: 'Payment',
+      headerShown: false,
     },
   },
 ];

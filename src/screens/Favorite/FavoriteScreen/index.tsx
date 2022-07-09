@@ -98,7 +98,7 @@ const FavoriteScreen = () => {
     if (sort) {
       setOptions({
         projectFilter: sort,
-        location: [currentLocation?.latitude, currentLocation?.longitude],
+        location: [currentLocation?.longitude, currentLocation?.latitude],
         where: {
           and: [
             {project: {projectDeadLine: {gt: today}}},
