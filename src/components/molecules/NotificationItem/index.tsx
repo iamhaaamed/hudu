@@ -6,11 +6,12 @@ import {useDeleteNotification, useReadNotification} from '~/hooks/notification';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {fontFamily, scale} from '~/utils/style';
 import {navigate} from '~/navigation/Methods';
-import {notificationsStore} from '~/stores';
 import {ResponseStatus} from '~/generated/graphql';
+import {useQueryClient} from 'react-query';
+import queryKeys from '~/constants/queryKeys';
 
 const NotificationItem = ({item}: {item: any}) => {
-  const {count, setCount} = notificationsStore(state => state);
+  const queryClient = useQueryClient();
   const {mutate: mutateReadNotification, isLoading: readNotificationLoading} =
     useReadNotification();
   const {
@@ -26,9 +27,7 @@ const NotificationItem = ({item}: {item: any}) => {
             successData?.notification_readNotification?.status ===
             ResponseStatus.Success
           ) {
-            if (count > 0) {
-              setCount(count - 1);
-            }
+            queryClient.invalidateQueries(queryKeys.unReadNotifications);
           }
         },
         onError: () => {},

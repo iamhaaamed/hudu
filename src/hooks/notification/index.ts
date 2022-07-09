@@ -58,6 +58,46 @@ export const useGetNotifications = (options: any = {}) => {
           pages: data?.pages
             ?.map(a => a?.notification_getNotifications?.result?.items)
             .flat(),
+        };
+      },
+      ...options,
+    },
+  );
+};
+
+export const useGetUnreadNotifications = (options: any = {}) => {
+  return useInfiniteQuery<
+    Notification_GetNotificationsQuery,
+    any,
+    Notification_GetNotificationsQueryVariables,
+    any
+  >(
+    [queryKeys.unReadNotifications],
+    async ({pageParam = 0}) => {
+      return graphQLClient.request(NOTIFICATION_GET_NOTIFICATIONS, {
+        skip: pageParam * PAGE_SIZE,
+        take: PAGE_SIZE,
+        ...options,
+      });
+    },
+    {
+      getNextPageParam: (
+        lastPage: Notification_GetNotificationsQuery,
+        allPages: Notification_GetNotificationsQuery[],
+      ) => {
+        if (
+          lastPage?.notification_getNotifications?.result?.pageInfo?.hasNextPage
+        ) {
+          return allPages.length;
+        }
+        return undefined;
+      },
+      select: data => {
+        return {
+          ...data,
+          pages: data?.pages
+            ?.map(a => a?.notification_getNotifications?.result?.items)
+            .flat(),
           totalCount:
             data?.pages?.[0]?.notification_getNotifications?.result?.totalCount,
         };

@@ -8,30 +8,25 @@ import {BellIcon} from '~/assets/icons';
 import {navigate} from '~/navigation/Methods';
 import images from '~/assets/images';
 import {
-  useGetNotifications,
+  useGetUnreadNotifications,
   useNotificationSubscription,
 } from '~/hooks/notification';
-import {notificationsStore, userDataStore} from '~/stores';
+import {userDataStore} from '~/stores';
 import {useQueryClient} from 'react-query';
 import queryKeys from '~/constants/queryKeys';
 
 const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
   const queryClient = useQueryClient();
   const {userData} = userDataStore(state => state);
-  const {count, setCount} = notificationsStore(state => state);
 
   const [notificationData, setNotificationData] = useState(undefined);
 
   const options = {where: {isReaded: {eq: false}}};
 
   const {isLoading: getNotificationsLoading, data: getNotifications} =
-    useGetNotifications(options);
+    useGetUnreadNotifications(options);
 
   const totalCount = getNotifications?.totalCount ?? 0;
-
-  useEffect(() => {
-    setCount(totalCount);
-  }, [totalCount]);
 
   useNotificationSubscription({
     userId: userData?.id,
@@ -40,9 +35,6 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
 
   useEffect(() => {
     closeNotification();
-    if (notificationData) {
-      setCount(count + 1);
-    }
   }, [notificationData]);
 
   const closeNotification = () => {
@@ -60,6 +52,7 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
     ) {
       setNotificationData(res?.payload?.data?.notificationAdded);
       queryClient.invalidateQueries(queryKeys.notifications);
+      queryClient.invalidateQueries(queryKeys.unReadNotifications);
     }
   };
 
@@ -109,7 +102,7 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
         </VStack>
         <Box>
           <IconButton onPress={notificationOnPress} icon={<BellIcon />} />
-          {count > 0 && (
+          {totalCount > 0 && (
             <Center
               position="absolute"
               h="3"
@@ -122,7 +115,7 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
                 fontFamily={fontFamily.regular}
                 color={Colors.WHITE}
                 fontSize={scale(8)}>
-                {count}
+                {totalCount}
               </Text>
             </Center>
           )}

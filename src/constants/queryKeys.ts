@@ -10,6 +10,7 @@ const queryKeys = {
   userMessages: 'userMessages',
   notifications: 'notifications',
   myProfile: 'myProfile',
+  unReadNotifications: 'unReadNotifications',
 };
 
 export default queryKeys;
