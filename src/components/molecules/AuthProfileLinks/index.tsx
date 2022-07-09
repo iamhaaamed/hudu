@@ -25,12 +25,6 @@ const LINKS = [
   },
   {
     id: 4,
-    title: 'Manage Payment Account',
-    navLink: null, // TODO : rollback to this string => 'PaymentAccount',
-    url: 'https://hudu.heyhudu.com',
-  },
-  {
-    id: 5,
     title: 'Support',
     navLink: 'Support',
     url: null,
