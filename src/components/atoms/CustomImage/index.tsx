@@ -74,6 +74,7 @@ const CustomImage = ({
           }
           onProgress={onProgress}
           onLoadEnd={onLoadEnd}
+          onError={onLoadEnd}
           resizeMode={resizeMode}>
           {loading && (
             <Spinner
