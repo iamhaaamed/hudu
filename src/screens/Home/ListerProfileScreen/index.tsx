@@ -18,17 +18,14 @@ import {
 } from '~/components';
 import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
-import {userDataStore} from '~/stores';
 import {useGetProfile} from '~/hooks/user';
 import {useGetBids} from '~/hooks/bid';
 import images from '~/assets/images';
 
-const ListerProfileScreen = ({navigation, route}: any) => {
-  const {userData} = userDataStore(state => state);
-
+const ListerProfileScreen = ({route}: any) => {
   const {userId} = route?.params;
 
-  const options = userId === userData?.id ? {} : {userId};
+  const options = {userId};
 
   const {isLoading: getProfileLoading, data: getProfile} =
     useGetProfile(options);
@@ -98,7 +95,7 @@ const ListerProfileScreen = ({navigation, route}: any) => {
           <Center position="absolute" alignSelf="center" zIndex={6} top="-32">
             <CustomImage
               style={styles.avatar}
-              imageSource={profile?.imageAddress}
+              imageSource={profile?.imageAddress ?? ''}
               resizeMode="cover"
               errorImage={images.avatarErrorImage}
               zoomable

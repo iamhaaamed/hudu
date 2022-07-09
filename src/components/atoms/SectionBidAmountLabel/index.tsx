@@ -27,7 +27,7 @@ const SectionBidAmountLabel = ({
       color={Colors.BLACK_1}>
       {bids?.length > 0 && currentBid?.amount !== -1
         ? isFinished || isInProgress
-          ? 'Bid amount'
+          ? 'Award bid'
           : 'Current low bid'
         : isLister
         ? 'No bid yet'

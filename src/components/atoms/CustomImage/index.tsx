@@ -7,6 +7,7 @@ import {Colors} from '~/styles';
 import ModalContainer from '../ModalContainer';
 import FastImage from 'react-native-fast-image';
 import images from '~/assets/images';
+import {Spinner} from 'native-base';
 
 const CustomImage = ({
   imageSource,
@@ -30,6 +31,7 @@ const CustomImage = ({
   errorImage?: any;
 }) => {
   const [imageZoom, setImageZoom] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onPressHandler = () => {
     setImageZoom(true);
@@ -37,6 +39,14 @@ const CustomImage = ({
 
   const oncloseZoomModal = () => {
     setImageZoom(false);
+  };
+
+  const onProgress = () => {
+    setLoading(true);
+  };
+
+  const onLoadEnd = () => {
+    setLoading(false);
   };
 
   return (
@@ -62,7 +72,18 @@ const CustomImage = ({
                 }
               : errorImage
           }
+          onProgress={onProgress}
+          onLoadEnd={onLoadEnd}
+          onError={onLoadEnd}
           resizeMode={resizeMode}>
+          {loading && (
+            <Spinner
+              position="absolute"
+              alignSelf="center"
+              size={24}
+              color={Colors.PRIMARY}
+            />
+          )}
           {children && children}
         </FastImage>
       </TouchableOpacity>

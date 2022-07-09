@@ -120,7 +120,7 @@ const SearchScreen = ({navigation}: any) => {
           />
           <IconButton
             onPress={closeOnPress}
-            colorScheme={Colors.WHITE_RIPPLE_COLOR}
+            colorScheme={Colors.WHITE_RIPPLE}
             borderRadius="full"
             icon={<EvilIcons name="close" color={Colors.BLACK_3} size={18} />}
           />

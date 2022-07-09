@@ -48,8 +48,8 @@ const Header = ({title, images, user, isLiked, projectId, userId}: any) => {
           justifyContent="space-between">
           <IconButton
             onPress={backOnPress}
-            bg={Colors.FAVORITE_RIPPLE_COLOR}
-            colorScheme={Colors.WHITE_RIPPLE_COLOR}
+            bg={Colors.FAVORITE_RIPPLE}
+            colorScheme={Colors.WHITE_RIPPLE}
             borderRadius="full"
             icon={
               <Ionicons name="chevron-back" color={Colors.BLACK_3} size={24} />

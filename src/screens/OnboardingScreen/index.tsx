@@ -133,7 +133,7 @@ export default function OnboardingScreen() {
                 borderRadius="2"
                 height="2"
                 width={isActive ? '24' : '6'}
-                bg={isActive ? Colors.PRIMARY : Colors.DISABLE_COLOR}
+                bg={isActive ? Colors.PRIMARY : Colors.DISABLE}
               />
             );
           })}

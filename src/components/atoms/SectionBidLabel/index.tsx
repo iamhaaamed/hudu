@@ -28,7 +28,7 @@ const SectionBidLabel = ({item}: {item?: any}) => {
         return {
           text: 'Finished',
           backgroundColor: Colors.FINISHED_BACKGROUND,
-          color: Colors.FINISHED_COLOR,
+          color: Colors.FINISHED,
         };
       case 'NOT_LUCKY':
         return {

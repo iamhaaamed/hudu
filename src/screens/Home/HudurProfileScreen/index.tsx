@@ -18,7 +18,7 @@ import {
 import {scale, fontFamily} from '~/utils/style';
 import {Colors} from '~/styles';
 import {userDataStore} from '~/stores';
-import {useGetProfile} from '~/hooks/user';
+import {useGetMeProfile, useGetProfile} from '~/hooks/user';
 import {useGetBids} from '~/hooks/bid';
 import images from '~/assets/images';
 
@@ -26,13 +26,18 @@ const HudurProfileScreen = ({route}: any) => {
   const {userId} = route?.params;
   const {userData} = userDataStore(state => state);
 
-  const options = userId === userData?.id ? {} : {userId};
+  const currentUser = userId === userData?.id;
+
+  const options = currentUser ? {enabled: false} : {userId};
+  const getMeOptions = currentUser ? {} : {enabled: false};
   const listerReviewOption = {
     where: {bidStatus: {eq: 'FINISHED'}, huduId: {eq: userId}},
   };
 
   const {isLoading: getProfileLoading, data: getProfile} =
     useGetProfile(options);
+  const {isLoading: getMeProfileLoading, data: getMeProfile} =
+    useGetMeProfile(getMeOptions);
 
   const {
     isLoading: getListerReviewsLoading,
@@ -44,15 +49,18 @@ const HudurProfileScreen = ({route}: any) => {
   } = useGetBids(listerReviewOption);
 
   const profile = getProfile?.user_getProfile?.result ?? {};
+  const myProfile = getMeProfile?.user_getProfile?.result ?? {};
+
+  const data = currentUser ? myProfile || {} : profile || {};
 
   const listerReviews = getListerReviews?.pages ?? [];
 
   const totalReview = useMemo(() => {
-    const listerCounts = profile?.listersWhoRatedToMeCount;
-    const hudurCounts = profile?.huduersWhoRatedToMeCount;
+    const listerCounts = data?.listersWhoRatedToMeCount;
+    const hudurCounts = data?.huduersWhoRatedToMeCount;
     const reviews = Number(listerCounts) + Number(hudurCounts);
     return reviews ? reviews : 0;
-  }, [profile]);
+  }, [data]);
 
   const isCloseToBottom = ({
     layoutMeasurement,
@@ -72,7 +80,8 @@ const HudurProfileScreen = ({route}: any) => {
     }
   };
 
-  const loading = getProfileLoading || getListerReviewsLoading;
+  const loading =
+    getProfileLoading || getListerReviewsLoading || getMeProfileLoading;
 
   return (
     <CustomContainer isLoading={loading}>
@@ -94,7 +103,7 @@ const HudurProfileScreen = ({route}: any) => {
         <Box mt="12">
           <Center position="absolute" alignSelf="center" zIndex={6} top="-32">
             <CustomImage
-              imageSource={profile?.imageAddress}
+              imageSource={data?.imageAddress}
               style={styles.avatar}
               resizeMode="cover"
               zoomable
@@ -116,12 +125,12 @@ const HudurProfileScreen = ({route}: any) => {
               fontSize={scale(14)}
               fontFamily={fontFamily.medium}
               color={Colors.BLACK_1}>
-              {profile?.userName ?? 'Hudur'}
+              {data?.userName ?? 'Hudur'}
             </Text>
             <VStack alignItems="flex-end">
               <RatingStar
                 size={12}
-                rate={profile?.averageRate}
+                rate={data?.averageRate}
                 showRating="right"
                 disabled
                 total={totalReview}
@@ -134,7 +143,7 @@ const HudurProfileScreen = ({route}: any) => {
                 color={Colors.BLACK_1}>
                 Bio:
               </Text>
-              <CustomCollapseText numberOfLines={2} text={profile?.bio} />
+              <CustomCollapseText numberOfLines={2} text={data?.bio} />
             </HStack>
           </VStack>
         </Box>

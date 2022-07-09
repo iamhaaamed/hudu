@@ -8,6 +8,7 @@ import {
   LoginScreen,
   SignUpScreen,
   ForgotPasswordScreen,
+  AuthScreen,
 } from '~/screens';
 import {CustomHeader} from '~/components';
 import {authStore} from '~/stores';
@@ -22,6 +23,7 @@ export type ProfileStackParamList = {
   Login: undefined;
   SignUp: undefined;
   ForgotPassword: undefined;
+  Auth: undefined;
 };
 
 const profileScreens = [
@@ -72,6 +74,17 @@ const profileScreens = [
 ];
 
 const authScreens = [
+  {
+    name: 'Auth',
+    component: AuthScreen,
+    options: {
+      headerTitle: '',
+      headerShown: true,
+      header: ({route, options, navigation}: any) => (
+        <CustomHeader back {...{route, options, navigation}} />
+      ),
+    },
+  },
   {
     name: 'Login',
     component: LoginScreen,

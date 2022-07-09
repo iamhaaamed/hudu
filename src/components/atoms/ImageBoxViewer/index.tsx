@@ -37,7 +37,7 @@ const ImageBoxViewer = ({item, onDelete}: {item: any; onDelete?: any}) => {
             rounded="full"
             onPress={openDeleteModal}
             size={scale(36)}
-            bg={Colors.WHITE_RIPPLE_COLOR}
+            bg={Colors.WHITE_RIPPLE}
             icon={
               <Ionicons
                 name="trash-outline"

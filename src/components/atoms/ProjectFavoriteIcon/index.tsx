@@ -53,8 +53,8 @@ const ProjectFavoriteIcon = ({
     <IconButton
       disabled={loading}
       onPress={onPressHandler}
-      bg={Colors.FAVORITE_RIPPLE_COLOR}
-      colorScheme={Colors.WHITE_RIPPLE_COLOR}
+      bg={Colors.FAVORITE_RIPPLE}
+      colorScheme={Colors.WHITE_RIPPLE}
       borderRadius="full"
       icon={
         loading ? (

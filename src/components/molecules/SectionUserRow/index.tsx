@@ -7,17 +7,26 @@ import {CustomImage, RatingStar} from '~/components';
 import {BellIcon} from '~/assets/icons';
 import {navigate} from '~/navigation/Methods';
 import images from '~/assets/images';
-import {useNotificationSubscription} from '~/hooks/notification';
-import {notificationsStore, userDataStore} from '~/stores';
+import {
+  useGetUnreadNotifications,
+  useNotificationSubscription,
+} from '~/hooks/notification';
+import {userDataStore} from '~/stores';
 import {useQueryClient} from 'react-query';
 import queryKeys from '~/constants/queryKeys';
 
 const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
   const queryClient = useQueryClient();
   const {userData} = userDataStore(state => state);
-  const {count, setCount} = notificationsStore(state => state);
 
   const [notificationData, setNotificationData] = useState(undefined);
+
+  const options = {where: {isReaded: {eq: false}}};
+
+  const {isLoading: getNotificationsLoading, data: getNotifications} =
+    useGetUnreadNotifications(options);
+
+  const totalCount = getNotifications?.totalCount ?? 0;
 
   useNotificationSubscription({
     userId: userData?.id,
@@ -26,9 +35,6 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
 
   useEffect(() => {
     closeNotification();
-    if (notificationData) {
-      setCount(count + 1);
-    }
   }, [notificationData]);
 
   const closeNotification = () => {
@@ -46,6 +52,7 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
     ) {
       setNotificationData(res?.payload?.data?.notificationAdded);
       queryClient.invalidateQueries(queryKeys.notifications);
+      queryClient.invalidateQueries(queryKeys.unReadNotifications);
     }
   };
 
@@ -95,20 +102,20 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
         </VStack>
         <Box>
           <IconButton onPress={notificationOnPress} icon={<BellIcon />} />
-          {count > 0 && (
+          {totalCount > 0 && (
             <Center
               position="absolute"
               h="3"
               w="3"
               rounded="full"
-              bg={Colors.FINISHED_COLOR}
+              bg={Colors.FINISHED}
               right="2"
               top="2.5">
               <Text
                 fontFamily={fontFamily.regular}
                 color={Colors.WHITE}
                 fontSize={scale(8)}>
-                {count}
+                {totalCount}
               </Text>
             </Center>
           )}

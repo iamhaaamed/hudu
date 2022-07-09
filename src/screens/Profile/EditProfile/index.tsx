@@ -8,7 +8,7 @@ import {useGetLocation} from '~/hooks/location';
 import {authStore, userDataStore} from '~/stores';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {FormProvider, useForm} from 'react-hook-form';
-import {useGetProfile, useUpdateProfile} from '~/hooks/user';
+import {useGetMeProfile, useUpdateProfile} from '~/hooks/user';
 import {
   CustomInput,
   CustomButton,
@@ -41,7 +41,7 @@ export default function EditProfileScreen() {
   const {isUserLoggedIn} = authStore(state => state);
   const {userData, setUserData} = userDataStore(state => state);
 
-  const {isLoading: getProfileLoading, data: getProfile} = useGetProfile({
+  const {isLoading: getProfileLoading, data: getProfile} = useGetMeProfile({
     enabled: isUserLoggedIn,
   });
 

@@ -43,7 +43,7 @@ export default function AuthScreen({navigation}: NavigationProp) {
 
 const styles = StyleSheet.create({
   image: {
-    height: verticalScale(61),
-    width: scale(275),
+    height: 61,
+    width: 275,
   },
 });
