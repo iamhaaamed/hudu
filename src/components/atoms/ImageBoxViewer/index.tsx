@@ -27,7 +27,7 @@ const ImageBoxViewer = ({item, onDelete}: {item: any; onDelete?: any}) => {
       <CustomImage
         style={styles.image}
         imageSource={item?.imageAddress}
-        resizeMode="stretch"
+        resizeMode="cover"
         zoomable>
         {onDelete && (
           <IconButton

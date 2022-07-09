@@ -96,7 +96,7 @@ const HudurProfileScreen = ({route}: any) => {
             <CustomImage
               imageSource={profile?.imageAddress}
               style={styles.avatar}
-              resizeMode="stretch"
+              resizeMode="cover"
               zoomable
               errorImage={images.avatarErrorImage}
             />

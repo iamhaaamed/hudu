@@ -108,7 +108,7 @@ export default function OnboardingScreen() {
               <CustomImage
                 imageSource={imageUrl}
                 style={styles.image}
-                resizeMode="stretch"
+                resizeMode="cover"
                 local
                 backgroundColor={Colors.TRANSPARENT}
               />

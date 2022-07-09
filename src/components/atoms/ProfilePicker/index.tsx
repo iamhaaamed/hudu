@@ -39,7 +39,7 @@ export default React.forwardRef(({name}: ProfilePickerProps, ref: any) => {
         <CustomImage
           imageSource={field.value}
           style={styles.image}
-          resizeMode="stretch"
+          resizeMode="cover"
           zoomable
         />
       ) : (

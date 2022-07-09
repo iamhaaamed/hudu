@@ -122,7 +122,10 @@ const PostScreen = ({navigation}: NavigationProp) => {
           state: formData?.state,
           zipCode: formData?.zipCode,
         };
-        goToNext(input, 'Flexible');
+        goToNext(
+          input,
+          availability === 'FLEXIBLE' ? 'Flexible' : 'Some flexible',
+        );
       } else {
         if (
           userData?.streetAddress &&
@@ -143,7 +146,10 @@ const PostScreen = ({navigation}: NavigationProp) => {
             state: userData?.state,
             zipCode: userData?.zipCode,
           };
-          goToNext(input, 'Flexible');
+          goToNext(
+            input,
+            availability === 'FLEXIBLE' ? 'Flexible' : 'Some flexible',
+          );
         } else {
           showMessage({
             message: 'Please complete your profile',
@@ -254,10 +260,7 @@ const PostScreen = ({navigation}: NavigationProp) => {
     setQuestionModalVisible(false);
     setPreviewPostModalVisible(false);
     reset({location: 'NEW_ADDRESS'});
-    navigation.navigate('ProjectsStack', {
-      screen: 'Projects',
-      params: {pageNumber: 1},
-    });
+    navigation.navigate('ProfileStack');
   };
 
   const editOnPress = () => {

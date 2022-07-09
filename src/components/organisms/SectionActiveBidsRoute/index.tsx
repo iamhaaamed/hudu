@@ -26,13 +26,24 @@ const SectionActiveBidsRoute = forwardRef(
       <ActiveBidItem {...{item, index, projectStatus}} />
     );
 
+    function dynamicSort(a: any, b: any) {
+      let statusOrder =
+        a.bidStatus === 'WAITING' ||
+        a.bidStatus === 'IN_PROGRESS' ||
+        a.bidStatus === 'FINSHED'
+          ? -1
+          : 1;
+      let dateOrder = Number(b.createdDate) - Number(a.createdDate);
+      return statusOrder || dateOrder;
+    }
+
     return (
       <AnimatedFlatList
         ref={ref}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        data={data.sort(dynamicSort)}
         {...{
-          data,
           onScroll,
           contentContainerStyle,
           onMomentumScrollEnd,

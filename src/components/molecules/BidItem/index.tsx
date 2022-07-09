@@ -33,13 +33,20 @@ const BidItem = ({item}: {item?: any}) => {
   };
 
   return (
-    <VStack borderRadius="md" shadow="1" p="4" mx="4" my="2" space="2">
+    <VStack
+      borderRadius="md"
+      shadow="3"
+      p="4"
+      mx="4"
+      my="2"
+      space="2"
+      bg={Colors.WHITE}>
       <HStack alignItems="center" justifyContent="space-between">
         <HStack alignItems="center" space="2">
           <CustomImage
             imageSource={item?.hudu?.imageAddress}
             style={styles.avatar}
-            resizeMode="stretch"
+            resizeMode="cover"
             errorImage={images.avatarErrorImage}
           />
           <Text

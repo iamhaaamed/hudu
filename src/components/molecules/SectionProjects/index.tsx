@@ -10,7 +10,7 @@ import {
   EmptyData,
   CustomContainer,
 } from '~/components';
-import {scale} from '~/utils/style';
+import {scale, verticalScale} from '~/utils/style';
 import {useGetProjects} from '~/hooks/project';
 import {requestLocationPermission} from '~/utils/getPermissions';
 import {showMessage} from 'react-native-flash-message';
@@ -119,7 +119,7 @@ const SectionProjects = () => {
   return (
     <CustomContainer isLoading={getProjectLoading}>
       <FormProvider {...methods}>
-        <VStack space="3" flex={1}>
+        <VStack space="1" flex={1}>
           <HStack px="4" justifyContent="flex-end">
             <Box flex={1} />
             <Center w={scale(120)}>
@@ -158,5 +158,6 @@ const styles = StyleSheet.create({
   },
   contentContainerStyle: {
     flexGrow: 1,
+    paddingVertical: verticalScale(8),
   },
 });

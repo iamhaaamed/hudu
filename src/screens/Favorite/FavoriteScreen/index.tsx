@@ -10,7 +10,7 @@ import {
 import {FormProvider, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {fontFamily, scale} from '~/utils/style';
+import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {Colors} from '~/styles';
 import {useGetUserLikeProjects} from '~/hooks/project';
 import {authStore} from '~/stores';
@@ -122,7 +122,7 @@ const FavoriteScreen = () => {
   return (
     <CustomContainer isLoading={loading}>
       <FormProvider {...methods}>
-        <VStack space="3" py="4" flex={1}>
+        <VStack space="1" py="4" flex={1}>
           <HStack px="4" justifyContent="flex-end">
             <Text
               flex={1}
@@ -167,5 +167,6 @@ const styles = StyleSheet.create({
   },
   contentContainerStyle: {
     flexGrow: 1,
+    paddingVertical: verticalScale(8),
   },
 });

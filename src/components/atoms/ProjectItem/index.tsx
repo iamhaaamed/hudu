@@ -32,7 +32,7 @@ const ProjectItem = ({item}: {item?: any}) => {
       <CustomImage
         imageSource={item?.project?.projectImages?.[0]?.imageAddress}
         style={styles.image}
-        resizeMode="stretch">
+        resizeMode="cover">
         <VStack flex={1} justifyContent="space-between">
           <HStack w="100%" px="2" py="2">
             {!isLister && (

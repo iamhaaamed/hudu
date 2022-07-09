@@ -44,7 +44,7 @@ const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
       <HStack space="4" px="4">
         <Text
           numberOfLines={1}
-          flex={0.15}
+          flex={0.25}
           fontSize={scale(14)}
           fontFamily={fontFamily.medium}
           color={Colors.BLACK_1}>
@@ -56,10 +56,10 @@ const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
           :
         </Text>
         <Text
-          flex={0.85}
+          flex={0.75}
           fontSize={scale(14)}
           fontFamily={fontFamily.regular}
-          color={Colors.PLACEHOLDER}>
+          color={Colors.PLACEHOLDER2}>
           {item?.text}
         </Text>
       </HStack>
@@ -74,7 +74,7 @@ const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
               space="1"
               flex={0.7}
               alignItems="center"
-              borderBottomColor={Colors.PLACEHOLDER}
+              borderBottomColor={Colors.PLACEHOLDER2}
               borderBottomWidth="1">
               <TextInput
                 value={replyText}
@@ -82,7 +82,7 @@ const QuestionItem = ({item, listerId}: {item: any; listerId: number}) => {
                 placeholder="Reply to HUDUr"
                 onChangeText={setReplyText}
                 multiline={false}
-                placeholderTextColor={Colors.PLACEHOLDER}
+                placeholderTextColor={Colors.PLACEHOLDER2}
                 style={styles.input}
               />
               {replyText?.length > 0 && (
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     paddingBottom: 0,
     fontFamily: fontFamily.regular,
-    fontSize: scale(10),
+    fontSize: scale(12),
     color: Colors.PLACEHOLDER,
   },
 });

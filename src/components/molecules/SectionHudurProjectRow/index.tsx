@@ -48,6 +48,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   };
 
   const onCloseQuestionModal = () => {
+    discardSwipe();
     setQuestionModalVisible(false);
   };
 
@@ -55,6 +56,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
     mutateDeleteBid(item?.id, {
       onSuccess: successData => {
         if (successData?.bid_deleteBid?.status === ResponseStatus.Success) {
+          discardSwipe();
           setQuestionModalVisible(false);
         }
       },
@@ -68,6 +70,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
   };
 
   const closeEditModal = () => {
+    discardSwipe();
     setEditModalVisible(false);
   };
 
@@ -76,16 +79,22 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
       id: item?.id,
       amount: formData?.amount,
       description: formData?.description,
+      bidStatus: item?.bidStatus,
     };
     mutateEditBid(input, {
       onSuccess: successData => {
         if (successData?.bid_editBid?.status === ResponseStatus.Success) {
           queryClient.invalidateQueries(queryKeys.projects);
           queryClient.invalidateQueries(queryKeys.bids);
+          discardSwipe();
           setEditModalVisible(false);
         }
       },
     });
+  };
+
+  const discardSwipe = () => {
+    swipeable.current?.close();
   };
 
   const renderRightActions = () => {
@@ -128,7 +137,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
     <>
       <Swipeable
         ref={swipeable}
-        renderRightActions={renderRightActions}
+        renderRightActions={item?.bidStatus === 'WAITING' && renderRightActions}
         renderLeftActions={renderLeftActions}>
         <Center
           px="2"
@@ -147,14 +156,14 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
               <CustomImage
                 imageSource={item?.project?.projectImages?.[0]?.imageAddress}
                 style={styles.image}
-                resizeMode="stretch"
+                resizeMode="cover"
               />
               <VStack flex={1} space="1">
-                <HStack alignItems="center">
+                <HStack alignItems="center" space="1">
                   <Text
                     flex={1}
                     numberOfLines={1}
-                    fontSize={scale(16)}
+                    fontSize={scale(15)}
                     fontFamily={fontFamily.medium}
                     color={Colors.BLACK_1}>
                     {item?.project?.title}
@@ -196,6 +205,7 @@ const SectionHudurProjectRow = ({item}: {item: any}) => {
         onClose={closeEditModal}
         onSubmit={submitEditModal}
         title="Bid details"
+        buttonTitle="Save"
         loading={editBidLoading}
         defaultData={{
           amount: item?.amount,
@@ -220,8 +230,8 @@ export default SectionHudurProjectRow;
 
 const styles = StyleSheet.create({
   image: {
-    height: '100%',
-    width: scale(107),
+    minHeight: scale(97),
+    width: scale(97),
     borderRadius: 10,
   },
   item: {

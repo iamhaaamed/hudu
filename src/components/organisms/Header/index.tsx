@@ -16,10 +16,10 @@ import {userDataStore} from '~/stores';
 
 export const PHOTO_SIZE = 120;
 
-const Header = ({title, images, user, isLiked, projectId}: any) => {
+const Header = ({title, images, user, isLiked, projectId, userId}: any) => {
   const {userData} = userDataStore(state => state);
 
-  const isLister = userData?.id === user?.id;
+  const isLister = userData?.id === userId;
 
   const totalReview = useMemo(() => {
     const listerCounts = user?.listersWhoRatedToMeCount;
@@ -93,7 +93,7 @@ const Header = ({title, images, user, isLiked, projectId}: any) => {
                 <CustomImage
                   imageSource={user?.imageAddress}
                   style={styles.avatar}
-                  resizeMode="stretch"
+                  resizeMode="cover"
                   errorImage={assetsImages.avatarErrorImage}
                 />
                 <Text

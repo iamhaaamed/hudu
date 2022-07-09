@@ -128,7 +128,7 @@ const SectionDescriptionRoute = forwardRef(
       setEditModalVisible(false);
     };
 
-    const submitEditModal = (formData: any) => {
+    const submitEditModal = (formData: any, reset: any) => {
       const input = {
         description: formData?.description,
         projectId: data?.id,
@@ -137,6 +137,7 @@ const SectionDescriptionRoute = forwardRef(
       mutateAddBid(input, {
         onSuccess: () => {
           setEditModalVisible(false);
+          reset();
         },
         onError: () => {
           setEditModalVisible(false);
@@ -175,9 +176,10 @@ const SectionDescriptionRoute = forwardRef(
             {...{time: data?.projectDeadLine, type: 'projectDetails'}}
           />
           <HStack alignItems="center" justifyContent="space-between">
-            <HStack alignItems="center" space="1">
+            <HStack flex={1} alignItems="center" space="1">
               <LocationIcon />
               <Text
+                flex={1}
                 fontSize={scale(16)}
                 fontFamily={fontFamily.regular}
                 color={Colors.PRIMARY}>
@@ -240,14 +242,6 @@ const SectionDescriptionRoute = forwardRef(
               </MapView>
             )}
           </Box>
-          {userData?.id !== data?.userId &&
-            data?.projectStatus === 'BIDDING' && (
-              <CustomButton
-                onPress={submitBidOnPress}
-                title="Submit bid"
-                height={verticalScale(45)}
-              />
-            )}
         </VStack>
       ),
       [data],
@@ -273,6 +267,15 @@ const SectionDescriptionRoute = forwardRef(
           }}
           showsVerticalScrollIndicator={false}
         />
+        {userData?.id !== data?.userId && data?.projectStatus === 'BIDDING' && (
+          <VStack px="4" py="4" bg={Colors.WHITE}>
+            <CustomButton
+              onPress={submitBidOnPress}
+              title="Submit bid"
+              height={verticalScale(45)}
+            />
+          </VStack>
+        )}
         <EditModal
           visible={editModalVisible}
           onClose={closeEditModal}

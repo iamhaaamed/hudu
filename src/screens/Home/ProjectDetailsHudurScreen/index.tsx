@@ -302,6 +302,7 @@ const ProjectDetailsHudurScreen = ({route}: {route: any}) => {
             user={tabIndex === 0 ? project?.project?.user : null}
             isLiked={project?.isLiked}
             projectId={project?.project?.id}
+            userId={project?.project?.userId}
           />
         </Animated.View>
         <Tab.Navigator tabBar={renderTabBar} backBehavior="firstRoute">

@@ -29,6 +29,7 @@ const EditModal = ({
   title,
   loading,
   defaultData,
+  buttonTitle = 'Submit bid',
 }: {
   visible: boolean;
   onClose: any;
@@ -36,13 +37,14 @@ const EditModal = ({
   title: string;
   loading?: boolean;
   defaultData?: any;
+  buttonTitle?: string;
 }) => {
   const {...methods} = useForm<Record<string, any>, object>({
     resolver: yupResolver<yup.AnyObjectSchema>(schema),
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, formState, setValue} = methods;
+  const {handleSubmit, register, formState, setValue, reset} = methods;
 
   useEffect(() => {
     defaultData?.amount && setValue('amount', String(defaultData?.amount));
@@ -55,7 +57,7 @@ const EditModal = ({
   };
 
   const onSubmitHandler = (formData: any) => {
-    onSubmit?.(formData);
+    onSubmit?.(formData, reset);
   };
 
   return (
@@ -89,7 +91,7 @@ const EditModal = ({
             />
             <CustomButton
               mt="3"
-              title="Submit bid"
+              title={buttonTitle}
               onPress={handleSubmit(onSubmitHandler)}
             />
           </VStack>

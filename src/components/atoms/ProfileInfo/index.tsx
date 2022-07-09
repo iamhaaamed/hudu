@@ -24,7 +24,7 @@ export default function ProfileInfo({data}: {data: any}) {
       <CustomImage
         style={styles.avatar}
         imageSource={data?.imageAddress}
-        resizeMode="stretch"
+        resizeMode="cover"
         errorImage={images.avatarErrorImage}
       />
       <Text fontFamily={fontFamily.bold}>{data?.userName}</Text>
