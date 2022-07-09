@@ -34,7 +34,7 @@ const SectionProjectLabel = ({item}: {item?: any}) => {
         return {
           text: 'Finished',
           backgroundColor: Colors.FINISHED_BACKGROUND,
-          color: Colors.FINISHED_COLOR,
+          color: Colors.FINISHED,
         };
       default:
         return {

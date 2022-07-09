@@ -124,10 +124,10 @@ export default React.forwardRef(
     const borderColor = fieldState.error
       ? Colors.ERROR
       : !validation
-      ? Colors.BORDER_COLOR
+      ? Colors.BORDER
       : isDirty
       ? Colors.SUCCESS
-      : Colors.BORDER_COLOR;
+      : Colors.BORDER;
 
     const renderItem = ({item, index}: {item: any; index: number}) => {
       const isEnable = item?.[valueKey] === field.value;

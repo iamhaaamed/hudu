@@ -101,7 +101,7 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
               h="3"
               w="3"
               rounded="full"
-              bg={Colors.FINISHED_COLOR}
+              bg={Colors.FINISHED}
               right="2"
               top="2.5">
               <Text

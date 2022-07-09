@@ -82,14 +82,14 @@ export default React.forwardRef(
     const isDirty = formState?.isDirty;
 
     const borderColor = disabled
-      ? Colors.DISABLE_COLOR
+      ? Colors.DISABLE
       : fieldState.error
       ? Colors.ERROR
       : !validation
-      ? Colors.BORDER_COLOR
+      ? Colors.BORDER
       : isDirty
       ? Colors.SUCCESS
-      : Colors.BORDER_COLOR;
+      : Colors.BORDER;
 
     const handleFocus = () => {
       setIsFocused(true);
@@ -116,7 +116,7 @@ export default React.forwardRef(
               fontFamily={fontFamily.regular}
               color={
                 disabled
-                  ? Colors.DISABLE_COLOR
+                  ? Colors.DISABLE
                   : field.value || fieldState.error
                   ? Colors.INPUT_LABEL2
                   : Colors.BLACK_1
@@ -151,7 +151,7 @@ export default React.forwardRef(
               textAlignVertical={textArea ? 'top' : 'center'}
               secureTextEntry={inputType === 'password' ? secureText : false}
               placeholderTextColor={
-                disabled ? Colors.DISABLE_COLOR : Colors.PLACEHOLDER2
+                disabled ? Colors.DISABLE : Colors.PLACEHOLDER2
               }
               style={[
                 inputStyle,
@@ -160,7 +160,7 @@ export default React.forwardRef(
                   paddingBottom: textArea ? 15 : 0,
                   fontSize: isFocused ? fontSize - 2 : fontSize,
                   textAlignVertical: textArea ? 'top' : 'center',
-                  color: disabled ? Colors.DISABLE_COLOR : color,
+                  color: disabled ? Colors.DISABLE : color,
                 },
                 Platform.OS === 'ios' && {minHeight: 45},
               ]}
@@ -171,7 +171,7 @@ export default React.forwardRef(
                 activeOpacity={0.7}>
                 <Ionicons
                   name={secureText ? 'eye-off-outline' : 'eye-outline'}
-                  color={Colors.BORDER_COLOR}
+                  color={Colors.BORDER}
                   size={16}
                 />
               </TouchableOpacity>
@@ -179,7 +179,7 @@ export default React.forwardRef(
             {icon && !isFocused && (
               <Ionicons
                 name={icon}
-                color={disabled ? Colors.DISABLE_COLOR : Colors.BLACK_3}
+                color={disabled ? Colors.DISABLE : Colors.BLACK_3}
                 size={16}
               />
             )}
@@ -187,7 +187,7 @@ export default React.forwardRef(
               <Text
                 fontSize={fontSize}
                 fontFamily={fontFamily.regular}
-                color={disabled ? Colors.DISABLE_COLOR : Colors.RIGHT_TEXT}>
+                color={disabled ? Colors.DISABLE : Colors.RIGHT_TEXT}>
                 {rightText}
               </Text>
             )}

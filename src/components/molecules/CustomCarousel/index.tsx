@@ -89,6 +89,6 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     marginHorizontal: 0.5,
-    backgroundColor: Colors.DOT_RIPPLE_COLOR,
+    backgroundColor: Colors.DOT_RIPPLE,
   },
 });

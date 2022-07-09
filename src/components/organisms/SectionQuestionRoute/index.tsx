@@ -129,7 +129,7 @@ const SectionQuestionRoute = forwardRef(
                       <IconButton
                         disabled={addQuestionLoading}
                         onPress={handleSubmit(sendOnPress)}
-                        colorScheme={Colors.WHITE_RIPPLE_COLOR}
+                        colorScheme={Colors.WHITE_RIPPLE}
                         borderRadius="full"
                         icon={
                           addQuestionLoading ? (
