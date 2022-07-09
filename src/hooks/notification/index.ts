@@ -58,6 +58,8 @@ export const useGetNotifications = (options: any = {}) => {
           pages: data?.pages
             ?.map(a => a?.notification_getNotifications?.result?.items)
             .flat(),
+          totalCount:
+            data?.pages?.[0]?.notification_getNotifications?.result?.totalCount,
         };
       },
       ...options,

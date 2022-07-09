@@ -7,7 +7,10 @@ import {CustomImage, RatingStar} from '~/components';
 import {BellIcon} from '~/assets/icons';
 import {navigate} from '~/navigation/Methods';
 import images from '~/assets/images';
-import {useNotificationSubscription} from '~/hooks/notification';
+import {
+  useGetNotifications,
+  useNotificationSubscription,
+} from '~/hooks/notification';
 import {notificationsStore, userDataStore} from '~/stores';
 import {useQueryClient} from 'react-query';
 import queryKeys from '~/constants/queryKeys';
@@ -18,6 +21,17 @@ const SectionUserRow = ({data, loading}: {data: any; loading?: boolean}) => {
   const {count, setCount} = notificationsStore(state => state);
 
   const [notificationData, setNotificationData] = useState(undefined);
+
+  const options = {where: {isReaded: {eq: false}}};
+
+  const {isLoading: getNotificationsLoading, data: getNotifications} =
+    useGetNotifications(options);
+
+  const totalCount = getNotifications?.totalCount ?? 0;
+
+  useEffect(() => {
+    setCount(totalCount);
+  }, [totalCount]);
 
   useNotificationSubscription({
     userId: userData?.id,
