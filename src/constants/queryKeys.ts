@@ -9,6 +9,7 @@ const queryKeys = {
   conversation: 'conversation',
   userMessages: 'userMessages',
   notifications: 'notifications',
+  myProfile: 'myProfile',
 };
 
 export default queryKeys;

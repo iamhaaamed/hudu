@@ -3,7 +3,7 @@ import {Box} from 'native-base';
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {CustomContainer, ProfileInfo, ProfileLinks} from '~/components';
-import {useGetProfile} from '~/hooks/user';
+import {useGetMeProfile} from '~/hooks/user';
 import {authStore} from '~/stores';
 import {Colors} from '~/styles';
 
@@ -15,7 +15,7 @@ const ProfileScreen = () => {
     isLoading: getProfileLoading,
     data: getProfile,
     refetch,
-  } = useGetProfile({
+  } = useGetMeProfile({
     enabled: isUserLoggedIn,
   });
 

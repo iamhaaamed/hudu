@@ -10,12 +10,12 @@ import {
 import {Colors} from '~/styles';
 import {fontFamily, scale, verticalScale} from '~/utils/style';
 import {authStore} from '~/stores';
-import {useGetProfile} from '~/hooks/user';
+import {useGetMeProfile} from '~/hooks/user';
 
 const HomeScreen = ({navigation}: {navigation: any}) => {
   const {isUserLoggedIn} = authStore(state => state);
 
-  const {isLoading: getProfileLoading, data: getProfile} = useGetProfile({
+  const {isLoading: getProfileLoading, data: getProfile} = useGetMeProfile({
     enabled: isUserLoggedIn,
   });
 

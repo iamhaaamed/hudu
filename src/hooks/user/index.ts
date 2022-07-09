@@ -194,6 +194,27 @@ export const useGetProfile = (options: any = {}) => {
   };
 };
 
+export const useGetMeProfile = (options: any = {}) => {
+  const res = useQuery<
+    User_GetProfileQuery,
+    any,
+    User_GetProfileQueryVariables,
+    any
+  >(
+    [queryKeys.myProfile],
+    async () => {
+      return graphQLClient.request(USER_GET_PROFILE, options);
+    },
+    {
+      ...options,
+    },
+  );
+
+  return {
+    ...res,
+  };
+};
+
 export const useLogin = () => {
   const {setIsUserLoggedIn} = authStore(state => state);
   const {setUserData} = userDataStore(state => state);
