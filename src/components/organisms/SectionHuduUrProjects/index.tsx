@@ -81,7 +81,7 @@ const SectionHuduUrProjects = () => {
     if (sort) {
       setOptions({
         projectFilter: sort,
-        location: [currentLocation?.latitude, currentLocation?.longitude],
+        location: [currentLocation?.longitude, currentLocation?.latitude],
         where: {huduId: {eq: userData?.id}},
       });
     }

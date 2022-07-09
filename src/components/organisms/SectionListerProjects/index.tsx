@@ -81,7 +81,7 @@ const SectionListerProjects = () => {
     if (sort) {
       setOptions({
         projectFilter: sort,
-        location: [currentLocation?.latitude, currentLocation?.longitude],
+        location: [currentLocation?.longitude, currentLocation?.latitude],
         where: {project: {userId: {eq: userData?.id}}},
       });
     }
