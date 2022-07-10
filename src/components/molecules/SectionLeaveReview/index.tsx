@@ -18,7 +18,7 @@ const SectionLeaveReview = ({bidId}: {bidId?: number}) => {
     setReviewModalVisible(false);
   };
 
-  const onSubmitReviewModal = (formData: any) => {
+  const onSubmitReviewModal = (formData: any, resetForm: any) => {
     const input = {
       bidId,
       hudusRate: formData?.rate,
@@ -32,6 +32,7 @@ const SectionLeaveReview = ({bidId}: {bidId?: number}) => {
           successData?.project_addFeedBack?.status === ResponseStatus.Success
         ) {
           setReviewModalVisible(false);
+          resetForm();
         }
       },
     });
