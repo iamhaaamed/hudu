@@ -38,10 +38,15 @@ const ReviewModal = ({
     mode: 'onChange',
   });
 
-  const {handleSubmit, register, formState} = methods;
+  const {handleSubmit, register, formState, reset} = methods;
 
   const onCloseHandler = () => {
     onClose?.();
+  };
+
+  const resetForm = () => {
+    reset();
+    setRate(0);
   };
 
   const onSubmitHandler = (formData: any) => {
@@ -49,7 +54,7 @@ const ReviewModal = ({
       ...formData,
       rate,
     };
-    onSubmit?.(input);
+    onSubmit?.(input, resetForm);
   };
 
   return (

@@ -51,7 +51,7 @@ const SectionFinishProject = ({
     setReviewModalVisible(false);
   };
 
-  const onSubmitReviewModal = (formData: any) => {
+  const onSubmitReviewModal = (formData: any, resetForm: any) => {
     const input = {
       bidId: currentBid?.id,
       hudusRate: formData?.rate,
@@ -66,6 +66,7 @@ const SectionFinishProject = ({
         ) {
           queryClient.invalidateQueries(queryKeys.projects);
           setReviewModalVisible(false);
+          resetForm();
         }
       },
     });
