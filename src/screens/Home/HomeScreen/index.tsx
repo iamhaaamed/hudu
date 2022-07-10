@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Linking, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, VStack} from 'native-base';
 import {
   CustomContainer,
@@ -22,7 +22,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   const profile = getProfile?.user_getProfile?.result ?? {};
 
   const questionHandler = () => {
-    navigation.navigate('AuthStack', {screen: 'Support'});
+    Linking.openURL('https://hudu.heyhudu.com/support');
   };
 
   return (
