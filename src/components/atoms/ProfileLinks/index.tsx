@@ -52,8 +52,8 @@ const LINKS = [
   {
     id: 8,
     title: 'Support',
-    navLink: 'Support',
-    url: null,
+    navLink: 'null',
+    url: 'https://hudu.heyhudu.com/support',
   },
 ];
 
